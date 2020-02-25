@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+    <com.fsck.k9.ui.ContactBadge
+        android:id="@+id/contact_badge"
+        android:layout_width="60dip"
+        android:layout_height="60dip"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="4dip"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="3dip"
+        android:background="@android:color/transparent"
+        tools:src="@drawable/ic_contact_picture" />
+
+
+    <RelativeLayout
+        android:id="@+id/list_item_inner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="6dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:paddingTop="5dip"
+        android:paddingBottom="6dp">
+
+        <TextView
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_below="@+id/subject_wrapper"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="false"
+            android:layout_marginLeft="1dip"
+            android:layout_marginRight="3dip"
+            android:layout_toLeftOf="@+id/star"
+            android:bufferType="spannable"
+            android:gravity="top"
+            android:longClickable="false"
+            android:singleLine="false"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <LinearLayout
+            android:id="@+id/subject_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/attachment">
+
+            <ImageView
+                android:id="@+id/account_color_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/ic_account_color" />
+
+            <ImageView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="?attr/messageListAnswered"
+                tools:src="@drawable/ic_messagelist_answered_light" />
+
+            <TextView
+                android:id="@+id/subject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dip"
+                android:layout_marginBottom="1dip"
+                android:layout_weight="0.7"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?android:attr/textColorPrimary" />
+
+            <TextView
+                android:id="@+id/thread_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dip"
+                android:layout_marginRight="4dip"
+                android:background="?attr/messageListThreadCountBackground"
+                android:focusable="false"
+                android:paddingLeft="4dip"
+                android:paddingRight="4dip"
+                android:paddingBottom="1dip"
+                android:textColor="?attr/messageListThreadCountForegroundColor" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/attachment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_alignTop="@+id/date"
+            android:layout_alignBottom="@+id/date"
+            android:layout_toStartOf="@+id/date"
+            android:src="?attr/messageListAttachment" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_alignTop="@+id/subject_wrapper"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="3dip"
+            android:paddingRight="8dip"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:attr/textColorSecondary" />
+
+        <CheckBox
+            android:id="@+id/star"
+            style="@style/MessageStarStyle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/date"
+            android:layout_alignParentRight="true"
+            android:focusable="false"
+            android:gravity="center_vertical"
+            android:paddingLeft="2dip"
+            android:paddingTop="5dip"
+            android:paddingRight="4dip"
+            android:visibility="visible" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>
