@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import androidx.drawerlayout.widget.DrawerLayout
@@ -33,14 +34,18 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IProfile
+import org.greenrobot.eventbus.EventBus
 import java.util.ArrayList
 import java.util.HashSet
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
-
+//将RecyclerView传进来
 class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : KoinComponent {
+    /**
+     * 这是请求数据的
+     */
     private val viewModel: FoldersViewModel by parent.viewModel()
     private val folderNameFormatter: FolderNameFormatter by inject { parametersOf(parent) }
     private val preferences: Preferences by inject()
@@ -56,6 +61,8 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
     private var accentColor: Int = 0
     private var selectedColor: Int = 0
     private var openedFolderServerId: String? = null
+    val mViewModel :FoldersViewModel
+      get() =viewModel
 
     val layout: DrawerLayout
         get() = drawer.drawerLayout
@@ -75,9 +82,13 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
                 .build()
 
         addFooterItems()
+        /**
+         * 网络请求获取到的Folders
+         */
 
         viewModel.getFolderListLiveData().observe(parent) { folders ->
             setUserFolders(folders)
+            Log.i("tag","tag+111111111111")
         }
     }
 
@@ -108,8 +119,8 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
 
             val pdi = ProfileDrawerItem()
                     .withNameShown(true)
-                    .withName(account.description)
-                    .withEmail(account.email)
+                    .withName(account.description)   //用户名
+                    .withEmail(account.email)   //邮箱名
                     .withIdentifier(drawerId)
                     .withSelected(false)
                     .withTag(account)
@@ -178,6 +189,11 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
         return folderNameFormatter.displayName(folder)
     }
 
+    /**
+     * updateUserAccounts更新用户帐户和文件夹AndFolders
+     *
+     * @param account   是当前用户
+     */
     fun updateUserAccountsAndFolders(account: Account?) {
         if (account == null) {
             selectUnifiedInbox()
@@ -192,7 +208,7 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
             accountHeader.headerBackgroundView.setColorFilter(account.chipColor, PorterDuff.Mode.MULTIPLY)
 
             viewModel.loadFolders(account)
-
+            Log.i("tag","tag+222222222")
             updateFooterItems()
         }
     }
@@ -217,6 +233,7 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
             }
         }
     }
+
 
     private fun setUserFolders(folders: List<DisplayFolder>?) {
         clearUserFolders()

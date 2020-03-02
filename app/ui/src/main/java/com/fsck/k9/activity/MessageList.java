@@ -1,6 +1,7 @@
 package com.fsck.k9.activity;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import android.content.IntentSender.SendIntentException;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 
@@ -21,6 +23,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +36,6 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.fsck.k9.Account;
 import com.fsck.k9.Account.SortType;
 import com.fsck.k9.DI;
@@ -36,11 +43,14 @@ import com.fsck.k9.K9;
 import com.fsck.k9.K9.SplitViewMode;
 import com.fsck.k9.Preferences;
 import com.fsck.k9.activity.compose.MessageActions;
+import com.fsck.k9.adapter.HeaderRecyclerView;
+import com.fsck.k9.adapter.RecyclerViewAdapter;
 import com.fsck.k9.controller.MessageReference;
 import com.fsck.k9.fragment.MessageListFragment;
 import com.fsck.k9.fragment.MessageListFragment.MessageListFragmentListener;
 import com.fsck.k9.helper.Contacts;
 import com.fsck.k9.helper.ParcelableUtil;
+import com.fsck.k9.mailstore.DisplayFolder;
 import com.fsck.k9.mailstore.SearchStatusManager;
 import com.fsck.k9.mailstore.StorageManager;
 import com.fsck.k9.notification.NotificationChannelManager;
@@ -52,8 +62,10 @@ import com.fsck.k9.search.SearchSpecification.SearchCondition;
 import com.fsck.k9.search.SearchSpecification.SearchField;
 import com.fsck.k9.ui.BuildConfig;
 import com.fsck.k9.ui.K9Drawer;
+import com.fsck.k9.ui.LiveDataExtrasKt;
 import com.fsck.k9.ui.R;
 import com.fsck.k9.ui.Theme;
+import com.fsck.k9.ui.folders.FoldersViewModel;
 import com.fsck.k9.ui.managefolders.ManageFoldersActivity;
 import com.fsck.k9.ui.messagelist.DefaultFolderProvider;
 import com.fsck.k9.ui.messageview.MessageViewFragment;
@@ -64,6 +76,7 @@ import com.fsck.k9.view.ViewSwitcher;
 import com.fsck.k9.view.ViewSwitcher.OnSwitchCompleteListener;
 import com.mikepenz.materialdrawer.Drawer.OnDrawerListener;
 import de.cketti.library.changelog.ChangeLog;
+import kotlin.jvm.functions.Function1;
 import timber.log.Timber;
 
 
@@ -99,6 +112,12 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     private static final int NEXT = 2;
 
     public static final int REQUEST_MASK_PENDING_INTENT = 1 << 15;
+    private RecyclerView mRecyclerView;
+    private RecyclerViewAdapter adapter;
+    private List<DisplayFolder> list;
+    private RecyclerView mHeaderRecyclerView;
+    private List<Account> accounts;
+    private HeaderRecyclerView headerRecyclerView;
 
     public static void actionDisplaySearch(Context context, SearchSpecification search,
             boolean noThreading, boolean newTask) {
@@ -221,7 +240,10 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        List<Account> accounts = preferences.getAccounts();
+        /**
+         * 获取用户的List
+         */
+        accounts = preferences.getAccounts();
         if (accounts.isEmpty()) {
             OnboardingActivity.launch(this);
             finish();
@@ -244,18 +266,34 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             viewSwitcher.setSecondOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_left));
             viewSwitcher.setOnSwitchCompleteListener(this);
         }
-
+        /**
+         * 得到Actionbar
+         */
         initializeActionBar();
+        /**
+         * 设置抽屉布局
+         */
         initializeDrawer(savedInstanceState);
+
 
         if (!decodeExtras(getIntent())) {
             return;
         }
 
         if (isDrawerEnabled()) {
+            /**
+             * 当前用户
+             */
             drawer.updateUserAccountsAndFolders(account);
         }
-
+        /**
+         * 头部RecyclerView的name
+         */
+        initializeHeaderRecyclerView();
+        /**
+         * 左侧RecyclerView的folder
+         */
+        initializeRecyclerView();
         findFragments();
         initializeDisplayMode(savedInstanceState);
         initializeLayout();
@@ -273,16 +311,72 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         }
     }
 
+    private void initializeHeaderRecyclerView() {
+        mHeaderRecyclerView = findViewById(R.id.header_RecyclerView);
+        LinearLayoutManager headerManager=new LinearLayoutManager(MessageList.this);
+        headerRecyclerView = new HeaderRecyclerView(MessageList.this, accounts);
+        mHeaderRecyclerView.addItemDecoration(new DividerItemDecoration(MessageList.this,DividerItemDecoration.VERTICAL));
+        mHeaderRecyclerView.setLayoutManager(headerManager);
+        mHeaderRecyclerView.setAdapter(headerRecyclerView);
+        headerRecyclerView.setOnItemClickListener(new HeaderRecyclerView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Account account = accounts.get(position);
+                openRealAccount(account);
+                drawer.updateUserAccountsAndFolders(account);
+            }
+        });
+    }
+
+    /**
+     * 绑定RecyclerView
+     */
+    private void initializeRecyclerView() {
+        mRecyclerView = findViewById(R.id.Folder_RecyclerView);
+        adapter = new RecyclerViewAdapter( MessageList.this);
+        FoldersViewModel viewModel = drawer.getMViewModel();
+        //TODO 获取RecyclerView的数据
+        viewModel.loadFolders(account);
+        LiveDataExtrasKt.observe(viewModel.getFolderListLiveData(), (LifecycleOwner)this, new Function1() {
+            @Override
+            public Object invoke(Object o) {
+                list = new ArrayList<>();
+                list.addAll((Collection<? extends DisplayFolder>) o);
+                //这拿到了数据
+                LinearLayoutManager manager = new LinearLayoutManager(MessageList.this, LinearLayoutManager.VERTICAL, false);
+                adapter.setData(list);
+//                mRecyclerView.addItemDecoration(new DividerItemDecoration(MessageList.this,DividerItemDecoration.VERTICAL));
+                mRecyclerView.setLayoutManager(manager);
+                mRecyclerView.setAdapter(adapter);
+                return o;
+            }
+        });
+
+        //TODO 文件的点击事件
+        adapter.setOnItemClickListener((view, position) -> {
+            DisplayFolder folder = list.get(position);
+            String serverId = folder.getFolder().getServerId();
+            openFolderItem(serverId);
+        });
+    }
+    public void openFolderItem(String folderName) {
+        LocalSearch search = new LocalSearch(folderName);
+        search.addAccountUuid(account.getUuid());
+        search.addAllowedFolder(folderName);
+        initializeFromLocalSearch(search);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        openFolderTransaction = fragmentManager.beginTransaction();
+        messageListFragment = MessageListFragment.newInstance(search, false, K9.isThreadedViewEnabled());
+        openFolderTransaction.replace(R.id.message_list_container, messageListFragment);
+        openFolderTransaction.commit();
+    }
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
         if (isFinishing()) {
             return;
         }
-
         setIntent(intent);
-
         if (firstBackStackId >= 0) {
             getSupportFragmentManager().popBackStackImmediate(firstBackStackId,
                     FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -293,16 +387,25 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
         messageReference = null;
         search = null;
-
+        /**
+         * 里面有获取当前用户的操作
+         */
         if (!decodeExtras(intent)) {
             return;
         }
 
         if (isDrawerEnabled()) {
+            /**
+             * 更新用户帐户和文件夹
+             *
+             */
             drawer.updateUserAccountsAndFolders(account);
         }
 
         initializeDisplayMode(null);
+        /**
+         * 添加Fragment
+         */
         initializeFragments();
         displayViews();
     }
@@ -495,6 +598,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
                 // We've most likely been started by an old unread widget or accounts shortcut
                 String folderServerId = intent.getStringExtra("folder");
                 if (folderServerId == null) {
+                    //获取当前用户
                     account = preferences.getAccount(accountUuid);
                     folderServerId = defaultFolderProvider.getDefaultFolder(account);
                 }
@@ -503,6 +607,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
                 search.addAccountUuid(accountUuid);
                 search.addAllowedFolder(folderServerId);
             } else {
+                //获取默认用户
                 account = preferences.getDefaultAccount();
                 search = new LocalSearch();
                 search.addAccountUuid(account.getUuid());
@@ -552,12 +657,18 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         StorageManager.getInstance(getApplication()).addListener(mStorageListener);
     }
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
         Contacts.clearCache();
     }
 
+    /**
+     * 在锁屏的时候保存一些记录
+     * @param outState
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -567,6 +678,10 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         outState.putInt(STATE_FIRST_BACK_STACK_ID, firstBackStackId);
     }
 
+    /**
+     * 在恢复的时候拿到保存的东西
+     * @param savedInstanceState
+     */
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -577,6 +692,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
     private void initializeActionBar() {
         actionBar = getSupportActionBar();
+        //控制抽屉布局
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
@@ -892,7 +1008,8 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
                 goBack();
             }
             return true;
-        } else if (id == R.id.compose) {
+        } else
+            if (id == R.id.compose) {
             messageListFragment.onCompose();
             return true;
         } else if (id == R.id.toggle_message_view_theme) {
@@ -1006,6 +1123,10 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        /**
+         * 配置菜单
+         * 这控制着主Activity的菜单
+         */
         configureMenu(menu);
         return true;
     }
@@ -1033,7 +1154,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
         if (displayMode == DisplayMode.MESSAGE_LIST
                 || messageViewFragment == null
-                || !messageViewFragment.isInitialized()) {
+                || !messageViewFragment.isInitialized()) { //111
             menu.findItem(R.id.next_message).setVisible(false);
             menu.findItem(R.id.previous_message).setVisible(false);
             menu.findItem(R.id.single_message_options).setVisible(false);
@@ -1142,8 +1263,8 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
          */
 
         // Hide both search menu items by default and enable one when appropriate
-        menu.findItem(R.id.search).setVisible(false);
-        menu.findItem(R.id.search_remote).setVisible(false);
+        menu.findItem(R.id.search).setVisible(false);  // 222
+        menu.findItem(R.id.search_remote).setVisible(false);// 333
 
         if (displayMode == DisplayMode.MESSAGE_VIEW || messageListFragment == null ||
                 !messageListFragment.isInitialized()) {
@@ -1153,7 +1274,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             menu.findItem(R.id.expunge).setVisible(false);
             menu.findItem(R.id.empty_trash).setVisible(false);
             menu.findItem(R.id.mark_all_as_read).setVisible(false);
-        } else {
+        } else { // 444
             menu.findItem(R.id.set_sort).setVisible(true);
             menu.findItem(R.id.select_all).setVisible(true);
             menu.findItem(R.id.compose).setVisible(true);
@@ -1163,18 +1284,18 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             if (!messageListFragment.isSingleAccountMode()) {
                 menu.findItem(R.id.expunge).setVisible(false);
                 menu.findItem(R.id.send_messages).setVisible(false);
-            } else {
+            } else { // 555
                 menu.findItem(R.id.send_messages).setVisible(messageListFragment.isOutbox());
                 menu.findItem(R.id.expunge).setVisible(messageListFragment.isRemoteFolder() &&
                         messageListFragment.shouldShowExpungeAction());
             }
-            menu.findItem(R.id.empty_trash).setVisible(messageListFragment.isShowingTrashFolder());
+            menu.findItem(R.id.empty_trash).setVisible(messageListFragment.isShowingTrashFolder()); // 666
 
             // If this is an explicit local search, show the option to search on the server
             if (!messageListFragment.isRemoteSearch() &&
                     messageListFragment.isRemoteSearchAllowed()) {
                 menu.findItem(R.id.search_remote).setVisible(true);
-            } else if (!messageListFragment.isManualSearch()) {
+            } else if (!messageListFragment.isManualSearch()) { //777
                 menu.findItem(R.id.search).setVisible(true);
             }
         }
@@ -1502,7 +1623,9 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
                 unlockDrawer();
             }
         }
-
+        /**
+         * 设置title
+         */
         showDefaultTitleView();
         configureMenu(menu);
     }
@@ -1609,6 +1732,10 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         configureDrawer();
     }
 
+    /**
+     * 配置左边的Drwwer
+     *里面有从服务器上同步的 文件信息 与用户信息
+     */
     private void configureDrawer() {
         if (drawer == null)
             return;
@@ -1621,4 +1748,5 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             drawer.deselect();
         }
     }
+
 }

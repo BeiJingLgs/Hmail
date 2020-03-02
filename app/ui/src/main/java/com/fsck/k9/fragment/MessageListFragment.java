@@ -225,6 +225,10 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     private void setWindowTitle() {
         // regular folder content display
         if (!isManualSearch() && singleFolderMode) {
+            /**
+             * 当前Folder 是收件箱
+             * 收件箱是在这获取的
+              */
             fragmentListener.setMessageListTitle(currentFolder.displayName);
         } else {
             // query result display.  This may be for a search folder as opposed to a user-initiated search.

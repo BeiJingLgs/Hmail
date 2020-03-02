@@ -16,6 +16,10 @@ import android.view.View;
 import com.fsck.k9.ui.R;
 import com.fsck.k9.ui.ThemeManager;
 import com.fsck.k9.ui.permissions.PermissionRationaleDialogFragment;
+
+
+import org.greenrobot.eventbus.EventBus;
+
 import timber.log.Timber;
 
 
@@ -35,6 +39,7 @@ public abstract class K9Activity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         base.preOnCreate();
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -67,6 +72,8 @@ public abstract class K9Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+
+
     public boolean hasPermission(Permission permission) {
         return ContextCompat.checkSelfPermission(this, permission.permission) == PackageManager.PERMISSION_GRANTED;
     }
@@ -86,7 +93,6 @@ public abstract class K9Activity extends AppCompatActivity {
         Timber.i("Requesting permission: " + permission.permission);
         ActivityCompat.requestPermissions(this, new String[] { permission.permission }, permission.requestCode);
     }
-
 
     public enum Permission {
         READ_CONTACTS(

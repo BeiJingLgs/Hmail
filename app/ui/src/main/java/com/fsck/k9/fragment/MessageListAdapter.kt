@@ -142,7 +142,6 @@ class MessageListAdapter internal constructor(
         appearance.fontSizes.setViewTextSize(holder.threadCount, 24) // 内容
         holder.flagged.isVisible = appearance.stars
         holder.flagged.setOnClickListener(holder)
-
         view.tag = holder
 
         return view

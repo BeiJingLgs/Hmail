@@ -15,4 +15,6 @@
     <color name="color_c">#00ffff</color>
     <color name="color_d">#00ff00</color>
     <color name="color_black">#99000000</color>
+    <color name="color_black1">#000000</color>
+    <color name="color_hui">#99cccccc</color>
 </resources>
