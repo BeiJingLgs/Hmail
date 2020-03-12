@@ -88,7 +88,6 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
 
         viewModel.getFolderListLiveData().observe(parent) { folders ->
             setUserFolders(folders)
-            Log.i("tag","tag+111111111111")
         }
     }
 
@@ -208,7 +207,6 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
             accountHeader.headerBackgroundView.setColorFilter(account.chipColor, PorterDuff.Mode.MULTIPLY)
 
             viewModel.loadFolders(account)
-            Log.i("tag","tag+222222222")
             updateFooterItems()
         }
     }

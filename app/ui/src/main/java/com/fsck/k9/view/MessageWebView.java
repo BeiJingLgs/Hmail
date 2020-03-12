@@ -88,11 +88,13 @@ public class MessageWebView extends WebView {
         webSettings.setRenderPriority(RenderPriority.HIGH);
 
         // TODO:  Review alternatives.  NARROW_COLUMNS is deprecated on KITKAT
-        webSettings.setLayoutAlgorithm(LayoutAlgorithm.NARROW_COLUMNS);
+        webSettings.setLayoutAlgorithm(LayoutAlgorithm.NORMAL);
 
         setOverScrollMode(OVER_SCROLL_NEVER);
-
-        webSettings.setTextZoom(config.getTextZoom());
+        /**
+         * 控制着收件箱内容区WebView的字体大小
+         */
+        webSettings.setTextZoom(170);
 
         // Disable network images by default.  This is overridden by preferences.
         blockNetworkData(true);

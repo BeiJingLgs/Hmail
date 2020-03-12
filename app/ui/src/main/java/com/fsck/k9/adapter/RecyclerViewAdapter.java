@@ -18,8 +18,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<DisplayFolder> mList;
     private MessageList mContent;
     private OnItemClickListener mOnItemClickListener;
-    public RecyclerViewAdapter(MessageList messageList) {
+    private CallBack mCallBack;
+
+    public void setCallBack(CallBack CallBack) {
+        this.mCallBack = CallBack;
+    }
+
+    public interface CallBack {
+        <T extends Object> void convert(MyHolder holder, T bean, int position);
+    }
+    public RecyclerViewAdapter(MessageList messageList, List<DisplayFolder> mList) {
         this.mContent=messageList;
+        this.mList=mList;
     }
     public  void setData(List<DisplayFolder> list){
         this.mList=list;
@@ -38,6 +48,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         DisplayFolder folder = mList.get(position);
+        if (mCallBack != null)
+            mCallBack.convert(holder, mList.get(position), position);
         String name = folder.getFolder().getName();
         if (name.equals("INBOX")){
             name=mContent.getResources().getString(R.string.special_mailbox_name_inbox);
@@ -61,13 +73,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mList.size()>0?mList.size():0;
     }
 
-    class MyHolder extends  RecyclerView.ViewHolder{
+    public class MyHolder extends  RecyclerView.ViewHolder{
 
-        private final TextView folder_tv;
-        private final View checked_folder_item;
+        public final TextView folder_tv;
+        public final View checked_folder_item;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);

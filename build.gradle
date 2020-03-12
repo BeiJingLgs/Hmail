@@ -54,6 +54,9 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${versions.kotlin}"
         classpath "org.jlleitschuh.gradle:ktlint-gradle:9.1.1"
 
+
+
+
     }
 }
 

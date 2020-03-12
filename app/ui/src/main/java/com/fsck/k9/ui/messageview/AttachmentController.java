@@ -15,6 +15,8 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import androidx.annotation.WorkerThread;
+
+import android.util.Log;
 import android.widget.Toast;
 
 import com.fsck.k9.Account;
@@ -42,6 +44,7 @@ public class AttachmentController {
 
     AttachmentController(MessagingController controller, MessageViewFragment messageViewFragment,
             AttachmentViewInfo attachment) {
+        Log.i("tag","tag+333333333");
         this.context = messageViewFragment.getApplicationContext();
         this.controller = controller;
         this.messageViewFragment = messageViewFragment;
@@ -57,7 +60,10 @@ public class AttachmentController {
     }
 
     public void saveAttachmentTo(Uri documentUri) {
+           //TODO 在这处理文件
+
         if (!attachment.isContentAvailable()) {
+            Log.i("tag","tag+4444444444");
             downloadAndSaveAttachmentTo((LocalPart) attachment.part, documentUri);
         } else {
             saveLocalAttachmentTo(documentUri);
@@ -105,6 +111,7 @@ public class AttachmentController {
     }
 
     private void viewLocalAttachment() {
+        Log.i("tag","tag+55555555");
         new ViewAttachmentAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -183,7 +190,9 @@ public class AttachmentController {
 
     private int getResolvedIntentActivitiesCount(Intent intent) {
         PackageManager packageManager = context.getPackageManager();
-
+        /**
+         * 这有个查询
+         */
         List<ResolveInfo> resolveInfos =
                 packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 

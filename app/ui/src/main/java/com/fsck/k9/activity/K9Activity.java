@@ -13,12 +13,11 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.MotionEvent;
 
 import android.view.View;
+
 import com.fsck.k9.ui.R;
 import com.fsck.k9.ui.ThemeManager;
 import com.fsck.k9.ui.permissions.PermissionRationaleDialogFragment;
 
-
-import org.greenrobot.eventbus.EventBus;
 
 import timber.log.Timber;
 
@@ -26,6 +25,9 @@ import timber.log.Timber;
 public abstract class K9Activity extends AppCompatActivity {
     public static final int PERMISSIONS_REQUEST_READ_CONTACTS  = 1;
     public static final int PERMISSIONS_REQUEST_WRITE_CONTACTS = 2;
+    public static final int PERMISSIONS_REQUEST_WRITE_CONTACTS1 = 3;
+    public static final int PERMISSIONS_REQUEST_WRITE_CONTACTS2 = 4;
+    public static final int PERMISSIONS_REQUEST_WRITE_CONTACTS3 = 5;
     private static final String FRAGMENT_TAG_RATIONALE = "rationale";
 
 
@@ -41,6 +43,8 @@ public abstract class K9Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
     }
+
+
 
     @Override
     protected void onResume() {
@@ -107,7 +111,6 @@ public abstract class K9Activity extends AppCompatActivity {
                 R.string.permission_contacts_rationale_title,
                 R.string.permission_contacts_rationale_message
         );
-
 
         public final String permission;
         public final int requestCode;

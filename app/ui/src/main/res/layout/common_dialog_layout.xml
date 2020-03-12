@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="560dp"
+    android:layout_height="wrap_content"
+
+    android:background="@drawable/bg_dialog"
+    android:orientation="vertical"
+    android:paddingTop="20dp">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="保存文件"
+        android:textColor="@color/color_black1"
+        android:textSize="30sp"
+        android:visibility="visible" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/color_black1" />
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="10dp"
+        android:maxWidth="150dp"
+        android:maxHeight="150dp"
+        android:src="@drawable/shezhi"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/dialog_fujian_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center|left"
+        android:lineSpacingExtra="3dp"
+        android:lineSpacingMultiplier="1.2"
+        android:text="文件名称：   aaaaa.gif"
+        android:textColor="@color/color_black1"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/fujian_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center|left"
+        android:layout_marginTop="20dp"
+        android:lineSpacingExtra="3dp"
+        android:lineSpacingMultiplier="1.2"
+        android:text="文件大小：   aaaaa.gif"
+        android:textColor="@color/color_black1"
+        android:textSize="24sp" />
+    <TextView
+        android:id="@+id/save_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center|left"
+        android:layout_marginTop="20dp"
+        android:lineSpacingExtra="3dp"
+        android:lineSpacingMultiplier="1.2"
+        android:text="保存位置：   aaaaa.gif"
+        android:textColor="@color/color_black1"
+        android:textSize="24sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginTop="16dp"
+        android:background="@color/color_black1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/negtive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:singleLine="true"
+            android:text="取消"
+            android:textColor="@color/color_black1"
+            android:textSize="24sp" />
+
+        <View
+            android:id="@+id/column_line"
+            android:layout_width="2px"
+            android:layout_height="match_parent"
+            android:background="@color/color_black1" />
+
+        <Button
+            android:id="@+id/positive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:singleLine="true"
+            android:text="确定"
+            android:textColor="@color/color_black1"
+            android:textSize="24sp" />
+    </LinearLayout>
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

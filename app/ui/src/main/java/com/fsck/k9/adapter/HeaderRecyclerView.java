@@ -5,10 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fsck.k9.Account;
@@ -21,19 +21,21 @@ public class HeaderRecyclerView  extends RecyclerView.Adapter<HeaderRecyclerView
     private  MessageList mContent;
     private  List<Account> mList;
     private OnItemClickListener mOnItemClickListener;
+    private HeaderRecyclerView.CallBack mCallBack;
 
-    public Boolean getChecked() {
-        return isChecked;
+    public void setCallBack(HeaderRecyclerView.CallBack CallBack) {
+        this.mCallBack = CallBack;
     }
 
-    public void setChecked(Boolean checked) {
-        isChecked = checked;
+    public interface CallBack {
+        <T extends Object> void convert(HeaderRecyclerView.MyHolder holder, T bean, int position);
     }
-
-    private Boolean  isChecked;
     public HeaderRecyclerView(MessageList messageList, List<Account> accounts) {
      this.mContent=messageList;
      this.mList=accounts;
+    }
+    public void  setData(List<Account> accounts){
+        this.mList=accounts;
     }
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
         this.mOnItemClickListener = mOnItemClickListener;
@@ -50,9 +52,9 @@ public class HeaderRecyclerView  extends RecyclerView.Adapter<HeaderRecyclerView
         Account account = mList.get(position);
         String email = account.getEmail();
         String description = account.getDescription();
-        Log.i("tag","0000000000000"+email+"22222"+description);
         holder.header_item_name.setText(email);
-
+        if (mCallBack != null)
+            mCallBack.convert(holder, account, position);
 
 
 
@@ -76,12 +78,14 @@ public class HeaderRecyclerView  extends RecyclerView.Adapter<HeaderRecyclerView
         return mList.size();
     }
 
-    class MyHolder extends  RecyclerView.ViewHolder{
+    public class MyHolder extends  RecyclerView.ViewHolder{
 
-        private final TextView header_item_name;
+        public final TextView header_item_name;
+        public final LinearLayout header_ll;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
+            header_ll = itemView.findViewById(R.id.header_ll);
             header_item_name = itemView.findViewById(R.id.header_item_name);
         }
     }

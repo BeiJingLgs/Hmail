@@ -33,14 +33,20 @@ public class FontSizes {
     private static final String MESSAGE_COMPOSE_INPUT = "fontSizeMessageComposeInput";
 
     public static final int FONT_DEFAULT = -1;   // Don't force-reset the size of this setting
-    public static final int FONT_10SP = 10;
-    public static final int FONT_12SP = 12;
-    public static final int SMALL = 14;         // ?android:attr/textAppearanceSmall
-    public static final int FONT_16SP = 16;
-    public static final int MEDIUM = 18;        // ?android:attr/textAppearanceMedium
-    public static final int FONT_20SP = 20;
-    public static final int LARGE = 22;         // ?android:attr/textAppearanceLarge
-
+//    public static final int FONT_10SP = 10;
+//    public static final int FONT_12SP = 12;
+//    public static final int SMALL = 14;         // ?android:attr/textAppearanceSmall
+//    public static final int FONT_16SP = 16;
+//    public static final int MEDIUM = 18;        // ?android:attr/textAppearanceMedium
+//    public static final int FONT_20SP = 20;
+//    public static final int LARGE = 22;         // ?android:attr/textAppearanceLarge
+public static final int FONT_10SP = 100;
+    public static final int FONT_12SP = 120;
+    public static final int SMALL = 140;         // ?android:attr/textAppearanceSmall
+    public static final int FONT_16SP = 160;
+    public static final int MEDIUM = 180;        // ?android:attr/textAppearanceMedium
+    public static final int FONT_20SP = 200;
+    public static final int LARGE = 220;         // ?android:attr/textAppearanceLarge
 
     private int accountName;
     private int accountDescription;
@@ -141,7 +147,7 @@ public class FontSizes {
             int oldValue = storage.getInt(MESSAGE_VIEW_CONTENT, 3);
             fallbackValue = GlobalSettings.SettingsUpgraderV31.convertFromOldSize(oldValue);
         }
-
+        int anInt = storage.getInt(MESSAGE_VIEW_CONTENT_PERCENT, fallbackValue);
         setMessageViewContentAsPercent(storage.getInt(MESSAGE_VIEW_CONTENT_PERCENT, fallbackValue));
     }
 

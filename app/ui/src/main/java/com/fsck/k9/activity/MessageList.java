@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.IntentSender.SendIntentException;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.net.Uri;
@@ -17,6 +19,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentManager.OnBackStackChangedListener;
 import androidx.fragment.app.FragmentTransaction;
@@ -28,19 +32,22 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import com.fsck.k9.Account;
 import com.fsck.k9.Account.SortType;
 import com.fsck.k9.DI;
 import com.fsck.k9.K9;
 import com.fsck.k9.K9.SplitViewMode;
+import com.fsck.k9.MyApplication;
 import com.fsck.k9.Preferences;
 import com.fsck.k9.activity.compose.MessageActions;
 import com.fsck.k9.adapter.HeaderRecyclerView;
@@ -72,9 +79,12 @@ import com.fsck.k9.ui.messageview.MessageViewFragment;
 import com.fsck.k9.ui.messageview.MessageViewFragment.MessageViewFragmentListener;
 import com.fsck.k9.ui.messageview.PlaceholderFragment;
 import com.fsck.k9.ui.onboarding.OnboardingActivity;
+import com.fsck.k9.ui.settings.SettingsActivity;
+import com.fsck.k9.util.WrapRecyclerView;
 import com.fsck.k9.view.ViewSwitcher;
 import com.fsck.k9.view.ViewSwitcher.OnSwitchCompleteListener;
 import com.mikepenz.materialdrawer.Drawer.OnDrawerListener;
+
 import de.cketti.library.changelog.ChangeLog;
 import kotlin.jvm.functions.Function1;
 import timber.log.Timber;
@@ -112,7 +122,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     private static final int NEXT = 2;
 
     public static final int REQUEST_MASK_PENDING_INTENT = 1 << 15;
-    private RecyclerView mRecyclerView;
+    private WrapRecyclerView mRecyclerView;
     private RecyclerViewAdapter adapter;
     private List<DisplayFolder> list;
     private RecyclerView mHeaderRecyclerView;
@@ -120,18 +130,18 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     private HeaderRecyclerView headerRecyclerView;
 
     public static void actionDisplaySearch(Context context, SearchSpecification search,
-            boolean noThreading, boolean newTask) {
+                                           boolean noThreading, boolean newTask) {
         actionDisplaySearch(context, search, noThreading, newTask, true);
     }
 
     public static void actionDisplaySearch(Context context, SearchSpecification search,
-            boolean noThreading, boolean newTask, boolean clearTop) {
+                                           boolean noThreading, boolean newTask, boolean clearTop) {
         context.startActivity(
                 intentDisplaySearch(context, search, noThreading, newTask, clearTop));
     }
 
     public static Intent intentDisplaySearch(Context context, SearchSpecification search,
-            boolean noThreading, boolean newTask, boolean clearTop) {
+                                             boolean noThreading, boolean newTask, boolean clearTop) {
         Intent intent = new Intent(context, MessageList.class);
         intent.putExtra(EXTRA_SEARCH, ParcelableUtil.marshall(search));
         intent.putExtra(EXTRA_NO_THREADING, noThreading);
@@ -169,7 +179,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     }
 
     public static Intent actionDisplayMessageIntent(Context context,
-            MessageReference messageReference) {
+                                                    MessageReference messageReference) {
         Intent intent = new Intent(context, MessageList.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -214,7 +224,8 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     private Account account;
     private LocalSearch search;
     private boolean singleFolderMode;
-
+    private int currentPosition = 0;
+    private int headercurrentPosition = 0;
     private int lastDirection = (K9.isMessageViewShowNext()) ? NEXT : PREVIOUS;
 
     /**
@@ -254,7 +265,6 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             finish();
             return;
         }
-
         if (useSplitView()) {
             setLayout(R.layout.split_message_list);
         } else {
@@ -290,10 +300,15 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
          * 头部RecyclerView的name
          */
         initializeHeaderRecyclerView();
+
         /**
          * 左侧RecyclerView的folder
          */
         initializeRecyclerView();
+        /**
+         * 加载数据
+         */
+        loadData();
         findFragments();
         initializeDisplayMode(savedInstanceState);
         initializeLayout();
@@ -308,22 +323,69 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
         if (savedInstanceState == null) {
             checkAndRequestPermissions();
+            // 检查权限
+            if (ContextCompat.checkSelfPermission(MessageList.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                // 申请授权
+                ActivityCompat
+                        .requestPermissions(
+                                MessageList.this,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS},
+                                1);
+
+            }
         }
     }
 
+    private void loadData() {
+        FoldersViewModel viewModel = drawer.getMViewModel();
+        //TODO 获取RecyclerView的数据
+        viewModel.loadFolders(account);
+
+        LiveDataExtrasKt.observe(viewModel.getFolderListLiveData(), (LifecycleOwner) this, new Function1() {
+            @Override
+            public Object invoke(Object o) {
+                list.clear();
+                list.addAll((Collection<? extends DisplayFolder>) o);
+                adapter.setData(list);
+                adapter.notifyDataSetChanged();
+                return o;
+            }
+        });
+    }
+
+
     private void initializeHeaderRecyclerView() {
         mHeaderRecyclerView = findViewById(R.id.header_RecyclerView);
-        LinearLayoutManager headerManager=new LinearLayoutManager(MessageList.this);
+        LinearLayoutManager headerManager = new LinearLayoutManager(MessageList.this);
         headerRecyclerView = new HeaderRecyclerView(MessageList.this, accounts);
-        mHeaderRecyclerView.addItemDecoration(new DividerItemDecoration(MessageList.this,DividerItemDecoration.VERTICAL));
+        mHeaderRecyclerView.addItemDecoration(new DividerItemDecoration(MessageList.this, DividerItemDecoration.VERTICAL));
         mHeaderRecyclerView.setLayoutManager(headerManager);
         mHeaderRecyclerView.setAdapter(headerRecyclerView);
-        headerRecyclerView.setOnItemClickListener(new HeaderRecyclerView.OnItemClickListener() {
+        headerRecyclerView.setOnItemClickListener((view, position) -> {
+            Account account = accounts.get(position);
+            openRealAccount(account);
+            drawer.updateUserAccountsAndFolders(account);
+            headercurrentPosition = position;
+            currentPosition = 0;
+            headerRecyclerView.notifyDataSetChanged();
+        });
+        headerRecyclerView.setCallBack(new HeaderRecyclerView.CallBack() {
             @Override
-            public void onItemClick(View view, int position) {
-                Account account = accounts.get(position);
-                openRealAccount(account);
-                drawer.updateUserAccountsAndFolders(account);
+            public <T> void convert(HeaderRecyclerView.MyHolder holder, T bean, int position) {
+                if (position == headercurrentPosition) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        holder.header_ll.setBackgroundColor(getColor(R.color.color_qian_bai));
+                        holder.header_item_name.setTextSize(26F);
+                    }
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        holder.header_ll.setBackgroundColor(getColor(R.color.color_bai));
+                        holder.header_item_name.setTextSize(20F);
+                    }
+                }
+
             }
         });
     }
@@ -331,34 +393,61 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     /**
      * 绑定RecyclerView
      */
-    private void initializeRecyclerView() {
-        mRecyclerView = findViewById(R.id.Folder_RecyclerView);
-        adapter = new RecyclerViewAdapter( MessageList.this);
-        FoldersViewModel viewModel = drawer.getMViewModel();
-        //TODO 获取RecyclerView的数据
-        viewModel.loadFolders(account);
-        LiveDataExtrasKt.observe(viewModel.getFolderListLiveData(), (LifecycleOwner)this, new Function1() {
-            @Override
-            public Object invoke(Object o) {
-                list = new ArrayList<>();
-                list.addAll((Collection<? extends DisplayFolder>) o);
-                //这拿到了数据
-                LinearLayoutManager manager = new LinearLayoutManager(MessageList.this, LinearLayoutManager.VERTICAL, false);
-                adapter.setData(list);
-//                mRecyclerView.addItemDecoration(new DividerItemDecoration(MessageList.this,DividerItemDecoration.VERTICAL));
-                mRecyclerView.setLayoutManager(manager);
-                mRecyclerView.setAdapter(adapter);
-                return o;
-            }
-        });
 
+
+    private void initializeRecyclerView() {
+        list = new ArrayList<>();
+        mRecyclerView = findViewById(R.id.Folder_RecyclerView);
+        adapter = new RecyclerViewAdapter(MessageList.this, list);
+        LinearLayoutManager manager = new LinearLayoutManager(MessageList.this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.setAdapter(adapter);
+        View footerView = LayoutInflater.from(MessageList.this).inflate(R.layout.layout_footer_view, mRecyclerView, false);
+        mRecyclerView.addFooterView(footerView);
+        //TODO 设置底部的一些操作
+        FooterViewSetting(footerView);
         //TODO 文件的点击事件
         adapter.setOnItemClickListener((view, position) -> {
             DisplayFolder folder = list.get(position);
             String serverId = folder.getFolder().getServerId();
             openFolderItem(serverId);
+            currentPosition = position;
+            adapter.notifyDataSetChanged();
+        });
+
+
+        adapter.setCallBack(new RecyclerViewAdapter.CallBack() {
+            @Override
+            public <T> void convert(RecyclerViewAdapter.MyHolder holder, T bean, int position) {
+                if (position == currentPosition) {
+                    holder.checked_folder_item.setVisibility(View.VISIBLE);
+                } else {
+                    holder.checked_folder_item.setVisibility(View.GONE);
+                }
+            }
         });
     }
+
+    private void FooterViewSetting(View footerView) {
+        TextView folder_gunali = footerView.findViewById(R.id.folder_guanli);
+        TextView folder_settings = footerView.findViewById(R.id.folder_settings);
+        TextView folder_fujian = footerView.findViewById(R.id.fujian_guanli);
+        //TODO 文件管理的点击事件
+        folder_gunali.setOnClickListener(v -> launchManageFoldersScreen());
+        //TODO 设置的点击事件
+        folder_settings.setOnClickListener(v -> SettingsActivity.launch(MessageList.this));
+        //TODO 附件管理的点击事件
+        folder_fujian.setOnClickListener(v -> {
+            Intent intent = new Intent(MessageList.this, EnclosureActivity.class);
+            startActivity(intent);
+
+//            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+//            intent.addCategory(Intent.CATEGORY_OPENABLE);
+//            startActivity(intent);
+        });
+    }
+
+
     public void openFolderItem(String folderName) {
         LocalSearch search = new LocalSearch(folderName);
         search.addAccountUuid(account.getUuid());
@@ -370,6 +459,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         openFolderTransaction.replace(R.id.message_list_container, messageListFragment);
         openFolderTransaction.commit();
     }
+
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -458,9 +548,8 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
      * the availability of a {@link MessageViewFragment} instance.
      * </p>
      *
-     * @param savedInstanceState
-     *         The saved instance state that was passed to the activity as argument to
-     *         {@link #onCreate(Bundle)}. May be {@code null}.
+     * @param savedInstanceState The saved instance state that was passed to the activity as argument to
+     *                           {@link #onCreate(Bundle)}. May be {@code null}.
      */
     private void initializeDisplayMode(Bundle savedInstanceState) {
         if (useSplitView()) {
@@ -658,7 +747,6 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     }
 
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -667,6 +755,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
     /**
      * 在锁屏的时候保存一些记录
+     *
      * @param outState
      */
     @Override
@@ -680,6 +769,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
     /**
      * 在恢复的时候拿到保存的东西
+     *
      * @param savedInstanceState
      */
     @Override
@@ -693,7 +783,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     private void initializeActionBar() {
         actionBar = getSupportActionBar();
         //控制抽屉布局
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
     }
 
     private void initializeDrawer(Bundle savedInstanceState) {
@@ -810,11 +900,8 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
      * to consume this key event.
      * </p>
      *
-     * @param keyCode
-     *         The value in {@code event.getKeyCode()}.
-     * @param event
-     *         Description of the key event.
-     *
+     * @param keyCode The value in {@code event.getKeyCode()}.
+     * @param event   Description of the key event.
      * @return {@code true} if this event was consumed.
      */
     public boolean onCustomKeyDown(final int keyCode, final KeyEvent event) {
@@ -1008,8 +1095,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
                 goBack();
             }
             return true;
-        } else
-            if (id == R.id.compose) {
+        } else if (id == R.id.compose) {
             messageListFragment.onCompose();
             return true;
         } else if (id == R.id.toggle_message_view_theme) {
@@ -1139,9 +1225,8 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
      * visibility of a menu item in this method.
      * </p>
      *
-     * @param menu
-     *         The {@link Menu} instance that should be modified. May be {@code null}; in that case
-     *         the method does nothing and immediately returns.
+     * @param menu The {@link Menu} instance that should be modified. May be {@code null}; in that case
+     *             the method does nothing and immediately returns.
      */
     private void configureMenu(Menu menu) {
         if (menu == null) {
@@ -1207,10 +1292,10 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             int[] drawableAttr;
             if (messageViewFragment.isMessageRead()) {
                 menu.findItem(R.id.toggle_unread).setTitle(R.string.mark_as_unread_action);
-                drawableAttr = new int[] { R.attr.iconActionMarkAsUnread };
+                drawableAttr = new int[]{R.attr.iconActionMarkAsUnread};
             } else {
                 menu.findItem(R.id.toggle_unread).setTitle(R.string.mark_as_read_action);
-                drawableAttr = new int[] { R.attr.iconActionMarkAsRead };
+                drawableAttr = new int[]{R.attr.iconActionMarkAsRead};
             }
             TypedArray ta = obtainStyledAttributes(drawableAttr);
             menu.findItem(R.id.toggle_unread).setIcon(ta.getDrawable(0));
@@ -1339,7 +1424,6 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             if (messageListFragment != null) {
                 messageListFragment.setActiveMessage(messageReference);
             }
-
             MessageViewFragment fragment = MessageViewFragment.newInstance(messageReference);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.message_view_container, fragment, FRAGMENT_TAG_MESSAGE_VIEW);
@@ -1412,6 +1496,11 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
         MessageListFragment fragment = MessageListFragment.newInstance(tmpSearch, false, false);
         addMessageListFragment(fragment, true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -1680,7 +1769,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
     @Override
     public void startIntentSenderForResult(IntentSender intent, int requestCode, Intent fillInIntent,
-            int flagsMask, int flagsValues, int extraFlags) throws SendIntentException {
+                                           int flagsMask, int flagsValues, int extraFlags) throws SendIntentException {
         requestCode |= REQUEST_MASK_PENDING_INTENT;
         super.startIntentSenderForResult(intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags);
     }
@@ -1734,7 +1823,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
     /**
      * 配置左边的Drwwer
-     *里面有从服务器上同步的 文件信息 与用户信息
+     * 里面有从服务器上同步的 文件信息 与用户信息
      */
     private void configureDrawer() {
         if (drawer == null)

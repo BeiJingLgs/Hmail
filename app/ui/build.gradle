@@ -3,6 +3,10 @@ apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'org.jetbrains.kotlin.android.extensions'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
+
+
+
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
 
@@ -16,6 +20,8 @@ dependencies {
 
 
 
+
+    implementation 'com.google.code.gson:gson:2.8.4'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation "androidx.fragment:fragment-ktx:1.2.0"
     implementation "androidx.fragment:fragment:1.2.0"

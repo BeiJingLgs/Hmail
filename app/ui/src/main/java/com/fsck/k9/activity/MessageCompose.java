@@ -453,6 +453,9 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         updateMessageFormat();
 
         // Set font size of input controls
+        /**
+         *设置输入控件的字体大小
+         */
         int fontSize = K9.getFontSizes().getMessageComposeInput();
         recipientMvpView.setFontSizes(K9.getFontSizes(), fontSize);
         quotedMessageMvpView.setFontSizes(K9.getFontSizes(), fontSize);

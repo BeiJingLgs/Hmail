@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2007-2008 OpenIntents.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+ <MimeTypes>
+ 	
+<!-- 	<type extension=".txt" mimetype="document/txt/hanvon.aebr.txtreader/hanvon.aebr.txtreader.mainActivity" />
+								说明：document/txt/txt_reader中  
+									 	 document：类别
+									 	 txt：显示图标相关
+									 	 hanvon.aebr.txtreader：应用的包名  
+									 	 hanvon.aebr.txtreader.mainActivity：应用中的目标Acitivity  
+ -->
+
+ 	<!-- Audio types-->   
+	<type extension=".mp3" mimetype="audio/mp3/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+<!-- 	<type extension=".wav" mimetype="audio/x-wav/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".ogg" mimetype="application/ogg/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".mid" mimetype="audio/midi/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".midi" mimetype="audio/midi/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" /> -->
+	<type extension=".amr" mimetype="audio/AMR/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<!-- <type extension=".ape" mimetype="audio/x-ape/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".aac" mimetype="audio/aac/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".3gp" mimetype="audio/3gpp/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".3gpp" mimetype="audio/3gpp/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".wpl" mimetype="audio/wpl/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" /> -->
+
+ </MimeTypes>
+ 

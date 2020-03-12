@@ -1,24 +1,40 @@
 package com.fsck.k9.ui.messageview;
 
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
 
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.IntentSender.SendIntentException;
+import android.database.Cursor;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.os.SystemClock;
+
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener;
+
+import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,7 +48,10 @@ import android.widget.Toast;
 import com.fsck.k9.Account;
 import com.fsck.k9.DI;
 import com.fsck.k9.K9;
+import com.fsck.k9.MyApplication;
 import com.fsck.k9.Preferences;
+import com.fsck.k9.activity.EnclosureActivity;
+import com.fsck.k9.db.FujianBeanDB;
 import com.fsck.k9.ui.choosefolder.ChooseFolderActivity;
 import com.fsck.k9.activity.MessageLoaderHelper;
 import com.fsck.k9.activity.MessageLoaderHelper.MessageLoaderCallbacks;
@@ -48,10 +67,17 @@ import com.fsck.k9.mailstore.LocalMessage;
 import com.fsck.k9.mailstore.MessageViewInfo;
 import com.fsck.k9.ui.R;
 import com.fsck.k9.ui.ThemeManager;
+import com.fsck.k9.ui.dialog.CommonDialog;
+import com.fsck.k9.ui.helper.SizeFormatter;
 import com.fsck.k9.ui.messageview.CryptoInfoDialog.OnClickShowCryptoKeyListener;
 import com.fsck.k9.ui.messageview.MessageCryptoPresenter.MessageCryptoMvpView;
 import com.fsck.k9.ui.settings.account.AccountSettingsActivity;
+import com.fsck.k9.util.Filepath;
+import com.fsck.k9.util.MimeTypes;
+import com.fsck.k9.util.OpenFile;
+import com.fsck.k9.util.hvMimeTypeFileUtils;
 import com.fsck.k9.view.MessageCryptoDisplayStatus;
+
 import timber.log.Timber;
 
 
@@ -68,10 +94,10 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     public static final int REQUEST_MASK_CRYPTO_PRESENTER = (1 << 9);
 
     public static final int PROGRESS_THRESHOLD_MILLIS = 500 * 1000;
+    private final String Fujian_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/我的文档/附件管理";
 
     public static MessageViewFragment newInstance(MessageReference reference) {
         MessageViewFragment fragment = new MessageViewFragment();
-
         Bundle args = new Bundle();
         args.putString(ARG_REFERENCE, reference.toIdentityString());
         fragment.setArguments(args);
@@ -93,7 +119,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     private MessageLoaderHelper messageLoaderHelper;
     private MessageCryptoPresenter messageCryptoPresenter;
     private Long showProgressThreshold;
-
+    private final String FILEPATH = "/storage/emulated/0/我的文档/附件管理/";
     /**
      * Used to temporarily store the destination folder for refile operations if a confirmation
      * dialog is shown.
@@ -129,11 +155,10 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // This fragments adds options to the action bar
         setHasOptionsMenu(true);
-
         Context context = getActivity().getApplicationContext();
+//        setDatabase(context);
         mController = MessagingController.getInstance(context);
         downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         messageCryptoPresenter = new MessageCryptoPresenter(messageCryptoMvpView);
@@ -162,6 +187,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
 
         messageLoaderHelper.onDestroy();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -298,6 +324,41 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
             showDialog(R.id.dialog_confirm_delete);
         } else {
             delete();
+        }
+    }
+
+
+    //TODO 创建文件夹
+    public String filePath() {
+        File file1 = new File(Fujian_path);
+        if (!file1.exists()) {
+            //创建文件夹
+            boolean mkdirs = file1.mkdirs();
+            if (mkdirs) {
+                Log.i("tag", "bbbbbbbb11111222");
+            }
+            notifySystemToScan(mContext, file1);
+        }
+
+
+        return Fujian_path;
+    }
+
+
+    public static void notifyDirUpdate(Context context, File file) {
+        ContentResolver resolver = context.getContentResolver();
+        Uri uri = Uri.parse("content://" + MediaStore.AUTHORITY + "/external/file");
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Files.FileColumns.DATA, file.getAbsolutePath());
+        values.put(MediaStore.Files.FileColumns.PARENT, file.getParent());
+        values.put(MediaStore.Files.FileColumns.DATE_ADDED, System.currentTimeMillis() / 1000);
+        values.put(MediaStore.Files.FileColumns.TITLE, file.getName());
+        values.put("format", "12289");
+        values.put("storage_id", "65537");
+        try {
+            resolver.insert(uri, values);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -442,6 +503,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         }
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
@@ -450,10 +512,26 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
 
         // Note: because fragments do not have a startIntentSenderForResult method, pending intent activities are
         // launched through the MessageList activity, and delivered back via onPendingIntentResult()
-
+        //TODO 在这里保存的数据库
         switch (requestCode) {
             case REQUEST_CODE_CREATE_DOCUMENT: {
+                Log.i("tag", "tag+22222222");
                 if (data != null && data.getData() != null) {
+                    String mimeType = currentAttachmentViewInfo.mimeType;
+                    String displayName = currentAttachmentViewInfo.displayName;
+                    String ReturnUri = data.getData().toString();
+                    long size = currentAttachmentViewInfo.size;
+                    long currentTimeMillis = System.currentTimeMillis();
+                    String InternalUri = currentAttachmentViewInfo.internalUri.toString();
+                    ContentValues values = new ContentValues();
+                    values.put(FujianBeanDB.DISPLAYNAME, currentAttachmentViewInfo.displayName);
+                    values.put(FujianBeanDB.RETURNURI, data.getData().toString());
+                    values.put(FujianBeanDB.INTERNALURI, currentAttachmentViewInfo.internalUri.toString());
+                    values.put(FujianBeanDB.FILE_SIZE, String.valueOf(currentAttachmentViewInfo.size));
+                    values.put(FujianBeanDB.MIMETYPE, currentAttachmentViewInfo.mimeType);
+                    values.put(FujianBeanDB.DATE, String.valueOf(currentTimeMillis));
+                    MyApplication.getInstance().getDb().insert(FujianBeanDB.BIAO_NAME, null, values);
+                    values.clear();
                     getAttachmentController(currentAttachmentViewInfo).saveAttachmentTo(data.getData());
                 }
                 break;
@@ -664,7 +742,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
 
         @Override
         public void startPendingIntentForCryptoPresenter(IntentSender si, Integer requestCode, Intent fillIntent,
-                int flagsMask, int flagValues, int extraFlags) throws SendIntentException {
+                                                         int flagsMask, int flagValues, int extraFlags) throws SendIntentException {
             if (requestCode == null) {
                 getActivity().startIntentSender(si, fillIntent, flagsMask, flagValues, extraFlags);
                 return;
@@ -711,17 +789,24 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
 
     public interface MessageViewFragmentListener {
         void onForward(MessageReference messageReference, Parcelable decryptionResultForReply);
+
         void onForwardAsAttachment(MessageReference messageReference, Parcelable decryptionResultForReply);
+
         void disableDeleteAction();
+
         void onReplyAll(MessageReference messageReference, Parcelable decryptionResultForReply);
+
         void onReply(MessageReference messageReference, Parcelable decryptionResultForReply);
+
         void setProgress(boolean b);
+
         void showNextMessageOrReturn();
+
         void updateMenu();
     }
 
     public boolean isInitialized() {
-        return mInitialized ;
+        return mInitialized;
     }
 
 
@@ -787,7 +872,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
 
         @Override
         public void startIntentSenderForMessageLoaderHelper(IntentSender si, int requestCode, Intent fillIntent,
-                int flagsMask, int flagValues, int extraFlags) {
+                                                            int flagsMask, int flagValues, int extraFlags) {
             showProgressThreshold = null;
             try {
                 requestCode |= REQUEST_MASK_LOADER_HELPER;
@@ -803,22 +888,136 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     @Override
     public void onViewAttachment(AttachmentViewInfo attachment) {
         currentAttachmentViewInfo = attachment;
-        getAttachmentController(attachment).viewAttachment();
+//        getAttachmentController(attachment).viewAttachment();
+        /**
+         * save_name_path：拼凑的本地路径
+         * 查看数据库中时候有该文件，有的话说明保存过
+         * 没有的话，调用下载然后保存，最后打开
+         */
+        String save_name_path = filePath() + File.separator + attachment.displayName;
+        Cursor cursor = MyApplication.getInstance().getDb().query(FujianBeanDB.BIAO_NAME, null, FujianBeanDB.RETURNURI + "=?", new String[]{save_name_path}, null, null, null, null);
+        int count = cursor.getCount();
+        if (count > 0) {
+            new OpenFile(mContext).openFile(new File(save_name_path));
+        } else {
+            SaveDateBase(attachment.displayName, save_name_path);
+            new OpenFile(mContext).openFile(new File(save_name_path));
+        }
     }
 
+    //TODO 保存附件
     @Override
     public void onSaveAttachment(final AttachmentViewInfo attachment) {
+
         currentAttachmentViewInfo = attachment;
+//        Log.i("tag", "tag+111111111111");
+//        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+//        intent.setType(attachment.mimeType);
+//        intent.putExtra(Intent.EXTRA_TITLE, attachment.displayName);
+//        intent.addCategory(Intent.CATEGORY_OPENABLE);
+//        startActivityForResult(intent, REQUEST_CODE_CREATE_DOCUMENT);
+        filePath();
+        String displayName = setFileReleaseNames(Fujian_path, attachment.displayName, attachment.displayName);
+        String save_name_path = filePath() + File.separator + displayName;
+        initDialog(attachment, displayName, save_name_path);
+    }
 
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        intent.setType(attachment.mimeType);
-        intent.putExtra(Intent.EXTRA_TITLE, attachment.displayName);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
+    public static void notifySystemToScan(Context context, File file) {
+        if (file.isDirectory()) {
+            notifyDirUpdate(context, file);
+        } else {
+            notifyFileUpdate(context, file);
+        }
+    }
 
-        startActivityForResult(intent, REQUEST_CODE_CREATE_DOCUMENT);
+    public static void notifyFileUpdate(Context context, File file) {
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri uri = Uri.fromFile(file);
+        intent.setData(uri);
+        context.sendBroadcast(intent);
+    }
+
+    private void SaveDateBase(String displayName, String save_name_path) {
+        if (!save_name_path.isEmpty()) {
+            Uri uri = FileProvider.getUriForFile(getActivity(), "com.fsck.k9.ui.fileprovider", new File(save_name_path));
+            notifySystemToScan(mContext,new File(save_name_path));
+            getAttachmentController(currentAttachmentViewInfo).saveAttachmentTo(uri);
+            ContentValues values = new ContentValues();
+            values.put(FujianBeanDB.DISPLAYNAME, displayName);
+            values.put(FujianBeanDB.RETURNURI, save_name_path);
+            values.put(FujianBeanDB.INTERNALURI, currentAttachmentViewInfo.internalUri.toString());
+            values.put(FujianBeanDB.FILE_SIZE, String.valueOf(currentAttachmentViewInfo.size));
+            values.put(FujianBeanDB.MIMETYPE, currentAttachmentViewInfo.mimeType);
+            values.put(FujianBeanDB.DATE, String.valueOf(System.currentTimeMillis()));
+            MyApplication.getInstance().getDb().insert(FujianBeanDB.BIAO_NAME, null, values);
+            values.clear();
+        }
     }
 
     private AttachmentController getAttachmentController(AttachmentViewInfo attachment) {
         return new AttachmentController(mController, this, attachment);
+    }
+
+
+    private void initDialog(AttachmentViewInfo attachment, String displayName, String save_name_path) {
+        final CommonDialog dialog = new CommonDialog(getActivity());
+        dialog.setFujian_names(displayName);
+        dialog.setDialog_title("保存文件");
+        dialog.setSave_path1("保存位置:  附件管理");
+        dialog.setFile_size("文件大小:  " + new SizeFormatter(mContext.getResources()).formatSize(attachment.size));
+        dialog.setFujian_names("文件名称:  " + displayName);
+        dialog.setSingle(false).setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {
+            @Override
+            public void onPositiveClick() {
+                dialog.dismiss();
+                SaveDateBase(displayName, save_name_path);
+            }
+
+            @Override
+            public void onNegtiveClick() {
+                dialog.dismiss();
+                Toast.makeText(getActivity(), "ssss", Toast.LENGTH_SHORT).show();
+            }
+        }).show();
+    }
+
+    /**
+     * 传入文件默认名
+     *
+     * @return
+     */
+    private String fileReleaseName;//文件最终名字
+
+    private String setFileReleaseNames(String fujianPath, String mFileName, String mFileName1) {
+        File f = new File(fujianPath);
+        if (f.exists()) { //判断路径是否存在
+            File[] files = f.listFiles();
+            HashSet<String> hashSet = new HashSet<>();
+            for (File file : files) {
+                if (file.isFile()) {
+                    String name = file.getName();
+                    hashSet.add(name);
+                }
+            }
+            int size = hashSet.size();
+            if (size > 0) {
+                int a = 1;
+                while (true) {
+                    if (a != 1) {
+                        String[] split = mFileName1.split("\\.");
+                        mFileName = split[0] + "(" + a + ")." + split[1];
+                    }
+                    if (!hashSet.contains(mFileName)) {
+                        fileReleaseName = mFileName;
+                        break;
+                    } else {
+                        a++;
+                    }
+                }
+            } else {
+                fileReleaseName = mFileName;
+            }
+        }
+        return fileReleaseName;
     }
 }

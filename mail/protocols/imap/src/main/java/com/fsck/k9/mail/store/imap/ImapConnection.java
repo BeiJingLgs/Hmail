@@ -250,7 +250,7 @@ class ImapConnection {
     private void setUpStreamsAndParserFromSocket() throws IOException {
         setUpStreamsAndParser(socket.getInputStream(), socket.getOutputStream());
     }
-
+     //网络请求
     private void setUpStreamsAndParser(InputStream input, OutputStream output) {
         inputStream = new PeekableInputStream(new BufferedInputStream(input, BUFFER_SIZE));
         responseParser = new ImapResponseParser(inputStream);

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2007-2008 OpenIntents.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+ <MimeTypes>
+ 	<!-- Document types -->   
+	<type extension=".txt" mimetype="document/txt/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity" />
+								<!-- 说明：document/txt/txt_reader中  
+									 	 document：类别
+									 	 txt：显示图标相关
+									 	 hanvon.aebr.txtreader：应用的包名  
+									 	 hanvon.aebr.txtreader.mainActivity：应用中的目标Acitivity-->  
+	<type extension=".htxt" mimetype="document/htxt/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity"/>  
+	<type extension=".pdf" mimetype="document/pdf/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity"/>  
+	<type extension=".epub" mimetype="document/epub/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity"/>  
+	<type extension=".chm" mimetype="document/chm/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity"/>  
+ 	<type extension=".hveb" mimetype="document/hveb/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity"/>
+ 	<type extension=".heb" mimetype="document/heb/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity"/>  
+  
+
+<!-- 	<type extension=".doc" mimetype="document/doc/hanvon.aebr.hvOffice/hanvon.aebr.hvOffice.view.HWDocActivity" />
+	<type extension=".docx" mimetype="document/doc/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity" /> 
+	<type extension=".ppt" mimetype="document/ppt/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity" /> 
+	<type extension=".xls" mimetype="document/xls/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity" />  
+	<type extension=".doc" mimetype="document/doc/com.hanvon.hwofficesdk/com.hanvon.hwofficesdk.MainActivity" />
+	<type extension=".docx" mimetype="document/doc/com.hanvon.hwofficesdk/com.hanvon.hwofficesdk.MainActivity" />-->
+	
+	<type extension=".mobi" mimetype="document/mobi/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity" /> 
+	<type extension=".fb2" mimetype="document/fb2/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity" /> 
+	
+	<!-- <type extension=".cebx" mimetype="document/cebx" /> --> 
+	<!-- <type extension=".xml" mimetype="document/xml/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity" />  -->
+			
+	<type extension=".htm" mimetype="document/html/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity" />
+	<type extension=".html" mimetype="document/html/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity" />
+	<type extension=".php" mimetype="document/php/hanvon.aebr.hvreader/hanvon.aebr.hvreader.MainActivity" />
+		
+	
+ 	<!-- Image types-->   
+ 	<!-- com.android.camera.ViewImage" -->
+ 	<!-- Image types-->   
+	<type extension=".png" mimetype="image/png/hanvon.aebr.hvimageshow/hanvon.aebr.hvimageshow.HvImageShowActivity" />
+	<type extension=".gif" mimetype="image/gif/hanvon.aebr.hvimageshow/hanvon.aebr.hvimageshow.HvImageShowActivity" />
+	<type extension=".jpg" mimetype="image/jpeg/hanvon.aebr.hvimageshow/hanvon.aebr.hvimageshow.HvImageShowActivity" />
+	<type extension=".jpeg" mimetype="image/jpeg/hanvon.aebr.hvimageshow/hanvon.aebr.hvimageshow.HvImageShowActivity" />
+	<type extension=".bmp" mimetype="image/bmp/hanvon.aebr.hvimageshow/hanvon.aebr.hvimageshow.HvImageShowActivity" />   	  
+	
+ 	<!-- Audio types-->   
+	<type extension=".mp3" mimetype="audio/mp3/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+<!-- 	<type extension=".wav" mimetype="audio/x-wav/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".ogg" mimetype="application/ogg/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".mid" mimetype="audio/midi/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".midi" mimetype="audio/midi/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" /> -->
+	<type extension=".amr" mimetype="audio/AMR/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<!-- <type extension=".ape" mimetype="audio/x-ape/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".aac" mimetype="audio/aac/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".3gp" mimetype="audio/3gpp/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".3gpp" mimetype="audio/3gpp/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" />
+	<type extension=".wpl" mimetype="audio/wpl/hanvon.aebr.hvaudio/hanvon.aebr.hvaudio.HvAudioActivity" /> -->
+	
+ 	<!-- Video types-->   
+	<!-- <type extension=".mpeg" mimetype="video/mpeg" /> -->
+	
+ 	<!-- Local App types   
+	<type extension=".apk" mimetype="image/png/com.android.gallery/com.android.camera.GalleryPicker" />-->	
+	<type extension=".doc" mimetype="document/doc/com.yozo.office.read/com.yozo.AppFrameActivity" /> 
+	<type extension=".docx" mimetype="document/doc/com.yozo.office.read/com.yozo.AppFrameActivity" /> 
+	<type extension=".ppt" mimetype="document/ppt/com.yozo.office.read/com.yozo.AppFrameActivity" /> 
+	<type extension=".pptx" mimetype="document/ppt/com.yozo.office.read/com.yozo.AppFrameActivity" /> 
+	<type extension=".xls" mimetype="document/xls/com.yozo.office.read/com.yozo.AppFrameActivity" />  
+	<type extension=".xlsx" mimetype="document/xls/com.yozo.office.read/com.yozo.AppFrameActivity" /> 
+	
+	<type extension=".apk" mimetype="application/packageinstaller/application/vnd.android.package-archive" />
+	<type extension=".ofdx" mimetype="document/ofdx/com.xys.xysreader/com.reader.refact.enter.StartActivity"/>
+	<type extension=".cebx" mimetype="document/ofdx/com.xys.xysreader/com.reader.refact.enter.StartActivity"/>
+	<type extension=".ofd" mimetype="document/ofdx/com.xys.xysreader/com.reader.refact.enter.StartActivity"/>
+ </MimeTypes>
+ 

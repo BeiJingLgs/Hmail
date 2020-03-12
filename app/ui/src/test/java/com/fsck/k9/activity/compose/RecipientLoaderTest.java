@@ -80,7 +80,6 @@ public class RecipientLoaderTest extends RobolectricTest {
         shadowApp = Shadows.shadowOf(application);
         shadowApp.grantPermissions(Manifest.permission.READ_CONTACTS);
         shadowApp.grantPermissions(Manifest.permission.WRITE_CONTACTS);
-
         context = mock(Context.class);
         contentResolver = mock(ContentResolver.class);
 
