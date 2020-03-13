@@ -72,10 +72,7 @@ import com.fsck.k9.ui.helper.SizeFormatter;
 import com.fsck.k9.ui.messageview.CryptoInfoDialog.OnClickShowCryptoKeyListener;
 import com.fsck.k9.ui.messageview.MessageCryptoPresenter.MessageCryptoMvpView;
 import com.fsck.k9.ui.settings.account.AccountSettingsActivity;
-import com.fsck.k9.util.Filepath;
-import com.fsck.k9.util.MimeTypes;
 import com.fsck.k9.util.OpenFile;
-import com.fsck.k9.util.hvMimeTypeFileUtils;
 import com.fsck.k9.view.MessageCryptoDisplayStatus;
 
 import timber.log.Timber;

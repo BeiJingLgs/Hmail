@@ -57,9 +57,9 @@ import static org.mockito.Mockito.when;
 
 @SuppressWarnings("WeakerAccess")
 public class MessageViewInfoExtractorTest extends K9RobolectricTest {
-    public static final String BODY_TEXT = "K-9 Mail rocks :>";
-    public static final String BODY_TEXT_HTML = "K-9 Mail rocks :&gt;";
-    public static final String BODY_TEXT_FLOWED = "K-9 Mail rocks :> \r\nflowed line\r\nnot flowed line";
+    public static final String BODY_TEXT = "Hmail rocks :>";
+    public static final String BODY_TEXT_HTML = "Hmail rocks :&gt;";
+    public static final String BODY_TEXT_FLOWED = "Hmail rocks :> \r\nflowed line\r\nnot flowed line";
     public static final String SUBJECT = "sabject";
     public static final String PROTECTED_SUBJECT = "protected subject";
 
@@ -125,7 +125,7 @@ public class MessageViewInfoExtractorTest extends K9RobolectricTest {
 
         String expectedHtml =
                 "<pre class=\"k9mail\">" +
-                "K-9 Mail rocks :&gt;" +
+                "Hmail rocks :&gt;" +
                 "</pre>";
 
         assertEquals(BODY_TEXT, container.text);
@@ -148,11 +148,11 @@ public class MessageViewInfoExtractorTest extends K9RobolectricTest {
         MessageExtractor.findViewablesAndAttachments(message, outputViewableParts, outputNonViewableParts);
         ViewableExtractedText container = messageViewInfoExtractor.extractTextFromViewables(outputViewableParts);
 
-        String expectedText = "K-9 Mail rocks :> flowed line\r\n" +
+        String expectedText = "Hmail rocks :> flowed line\r\n" +
                 "not flowed line";
         String expectedHtml =
                 "<pre class=\"k9mail\">" +
-                        "K-9 Mail rocks :&gt; flowed line<br>not flowed line" +
+                        "Hmail rocks :&gt; flowed line<br>not flowed line" +
                         "</pre>";
 
         assertEquals(expectedText, container.text);
@@ -161,7 +161,7 @@ public class MessageViewInfoExtractorTest extends K9RobolectricTest {
 
     @Test
     public void testSimpleHtmlMessage() throws MessagingException {
-        String bodyText = "<strong>K-9 Mail</strong> rocks :&gt;";
+        String bodyText = "<strong>Hmail</strong> rocks :&gt;";
 
         // Create text/plain body
         TextBody body = new TextBody(bodyText);

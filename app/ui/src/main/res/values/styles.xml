@@ -2,12 +2,12 @@
 <resources>
 
     <style name="ComposeTextLabel" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">30sp</item>
         <item name="android:textColor">#aaa</item>
     </style>
     <style name="ComposeEditText" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">15sp</item>
-        <item name="android:textColorHint">#aaa</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColorHint">@color/color_black1</item>
     </style>
     <style name="ComposeEditTextLarge" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColorHint">#aaa</item>

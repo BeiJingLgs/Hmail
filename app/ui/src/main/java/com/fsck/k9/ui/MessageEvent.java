@@ -1,17 +1,12 @@
 package com.fsck.k9.ui;
-
-import com.fsck.k9.mailstore.DisplayFolder;
-
-import java.util.List;
-
 public class MessageEvent {
-    private List<DisplayFolder> message;
+     private  String mMessage;
 
-    public List<DisplayFolder> getMessage() {
-        return message;
+    public String getmMessage() {
+        return mMessage;
     }
 
-    public void setMessage( List<DisplayFolder> message) {
-        this.message = message;
+    public void setmMessage(String mMessage) {
+        this.mMessage = mMessage;
     }
 }

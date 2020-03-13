@@ -6,9 +6,12 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextPaint;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -87,6 +90,9 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
     }
 
     private void initView() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("附件管理");
+        actionBar.setDisplayHomeAsUpEnabled(true);
         mRecyclerView = findViewById(R.id.mRecyclerView);
         rb_one = findViewById(R.id.RB_one);
         rb_two = findViewById(R.id.RB_two);
@@ -137,6 +143,15 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
 
         }
         cursor.close();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return  false;
     }
 
     @Override

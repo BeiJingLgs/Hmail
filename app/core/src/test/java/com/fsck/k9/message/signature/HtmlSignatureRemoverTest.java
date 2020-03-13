@@ -13,7 +13,7 @@ public class HtmlSignatureRemoverTest {
         String html = "This is the body text" +
                 "<br>" +
                 "-- <br>" +
-                "Sent from my Android device with K-9 Mail. Please excuse my brevity.";
+                "Sent from my Android device with Hmail. Please excuse my brevity.";
 
         String withoutSignature = HtmlSignatureRemover.stripSignature(html);
 
@@ -30,7 +30,7 @@ public class HtmlSignatureRemoverTest {
                 "    <p>This is the body text<br>\r\n" +
                 "    </p>\r\n" +
                 "    -- <br>\r\n" +
-                "    <div class=\"moz-signature\">Sent from my Android device with K-9 Mail." +
+                "    <div class=\"moz-signature\">Sent from my Android device with Hmail." +
                 " Please excuse my brevity.</div>\r\n" +
                 "  </body>\r\n" +
                 "</html>";
@@ -48,7 +48,7 @@ public class HtmlSignatureRemoverTest {
                 "<br>" +
                 "-- <br>" +
                 "<blockquote>" +
-                "Sent from my Android device with K-9 Mail. Please excuse my brevity." +
+                "Sent from my Android device with Hmail. Please excuse my brevity." +
                 "</blockquote>" +
                 "</div>" +
                 "</body></html>";
@@ -100,7 +100,7 @@ public class HtmlSignatureRemoverTest {
                 "<br>" +
                 "-- <br>" +
                 "<blockquote>" +
-                "Sent from my Android device with K-9 Mail. Please excuse my brevity." +
+                "Sent from my Android device with Hmail. Please excuse my brevity." +
                 "</blockquote>" +
                 "<br>" +
                 "-- <br>" +
@@ -127,7 +127,7 @@ public class HtmlSignatureRemoverTest {
                 "</blockquote>" +
                 "<br>" +
                 "-- <br>" +
-                "Sent from my Android device with K-9 Mail. Please excuse my brevity." +
+                "Sent from my Android device with Hmail. Please excuse my brevity." +
                 "</body></html>";
 
         String withoutSignature = HtmlSignatureRemover.stripSignature(html);

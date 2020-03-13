@@ -3,7 +3,7 @@
   <!--=== App-specific strings =============================================================-->
   <!--This should make it easier for forks to change the branding-->
   <!--Used in AndroidManifest.xml-->
-  <string name="app_name">K-9 Mail</string>
+  <string name="app_name">Hmail</string>
   <string name="shortcuts_title">Cyfrifon K-9</string>
   <string name="unread_widget_label">K-9 Heb eu Darllen</string>
   <!--Used in the about dialog-->
@@ -14,10 +14,10 @@
   <string name="about_libraries">Llyfrgelloedd</string>
   <string name="license">Trwydded</string>
   <!--Welcome message-->
-  <string name="welcome_message_title">Croeso i K-9 Mail</string>
+  <string name="welcome_message_title">Croeso i Hmail</string>
   <string name="accounts_welcome"><![CDATA[
 <p>
-Mae K-9 Mail yn gleient e-bost pwerus ar gyfer Android.
+Mae Hmail yn gleient e-bost pwerus ar gyfer Android.
 </p><p>
 Mae ei nodweddion gwell yn cynnwys:
 </p><ul>
@@ -46,9 +46,9 @@ Plîs rho wybod am unrhyw wallau, syniadau am nodweddion newydd, neu ofyn cwesti
 </p>
     ]]></string>
   <!--Default signature-->
-  <string name="default_signature">-- \nAnfonwyd gyda K-9 Mail ar Android\n - yr ap ebost cyntaf yn y Gymraeg.</string>
+  <string name="default_signature">-- \nAnfonwyd gyda Hmail ar Android\n - yr ap ebost cyntaf yn y Gymraeg.</string>
   <!--General strings that include the app name-->
-  <string name="account_delete_dlg_instructions_fmt">Caiff y cyfrif \"<xliff:g id="account">%s</xliff:g>\" ei dynnu o K-9 Mail.</string>
+  <string name="account_delete_dlg_instructions_fmt">Caiff y cyfrif \"<xliff:g id="account">%s</xliff:g>\" ei dynnu o Hmail.</string>
   <!--=== General strings ==================================================================-->
   <string name="authors">Awduron</string>
   <string name="app_revision">Gwybodaeth am Ddiwygiad</string>
@@ -56,7 +56,7 @@ Plîs rho wybod am unrhyw wallau, syniadau am nodweddion newydd, neu ofyn cwesti
   <string name="read_messages_desc">Galluogi\'r ap hwn i ddarllen dy e-bost.</string>
   <string name="delete_messages_label">Dileu E-bost</string>
   <string name="delete_messages_desc">Galluogi\'r ap hwn i ddileu dy negeseuon e-bost.</string>
-  <string name="about_title">Ynghylch K-9 Mail</string>
+  <string name="about_title">Ynghylch Hmail</string>
   <string name="accounts_title">Cyfrifon</string>
   <string name="folders_title">Ffolderi</string>
   <string name="advanced">Uwch</string>
@@ -956,7 +956,7 @@ Plîs rho wybod am unrhyw wallau, syniadau am nodweddion newydd, neu ofyn cwesti
   <string name="unsigned_text_divider_label">Testun heb ei lofnodi</string>
   <string name="apg_deprecated_title">Rhybudd Anghymeradwyaeth APG</string>
   <string name="apg_deprecated_1">Dyw APG ddim yn cael ei cadw a chynnal bellach!</string>
-  <string name="apg_deprecated_2">Oherwydd hyn, mae cymorth ar gyfer APG wedi ei dynnu o K-9 Mail.</string>
+  <string name="apg_deprecated_2">Oherwydd hyn, mae cymorth ar gyfer APG wedi ei dynnu o Hmail.</string>
   <string name="apg_deprecated_bullet_1">Daeth datblygiad i ben yn gynnar yn 2014.</string>
   <string name="apg_deprecated_bullet_2">Yn cynnwys materion diogelwch heb eu datrys</string>
   <string name="apg_learn_more">Gelli di <a href="https://k9mail.github.io/2017/01/13/Why-APG-is-no-longer-supported.html">glicio yma </a>i ddysgu mwy.</string>
@@ -988,7 +988,7 @@ Plîs rho wybod am unrhyw wallau, syniadau am nodweddion newydd, neu ofyn cwesti
   <string name="general_settings_title">Gosodiadau cyffredinol</string>
   <string name="dialog_openkeychain_info_title">Nid oes ap OpenPGP wedi\'i osod</string>
   <string name="dialog_openkeychain_info_install">Gosod</string>
-  <string name="dialog_openkeychain_info_text">Mae ar K-9 Mail angen OpenKeychain ar gyfer amgryptiad pen-i-ben.</string>
+  <string name="dialog_openkeychain_info_text">Mae ar Hmail angen OpenKeychain ar gyfer amgryptiad pen-i-ben.</string>
   <string name="encrypted_subject">Neges wedi\'i Hamgryptio</string>
   <string name="account_settings_crypto_encrypt_subject">Amgryptio pynciau negeseuon</string>
   <string name="account_settings_crypto_encrypt_subject_subtitle">Mae\'n bosib na fydd rhai derbynwyr yn medru ei brosesu</string>

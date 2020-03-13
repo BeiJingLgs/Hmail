@@ -27,16 +27,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public interface CallBack {
         <T extends Object> void convert(MyHolder holder, T bean, int position);
     }
+
     public RecyclerViewAdapter(MessageList messageList, List<DisplayFolder> mList) {
-        this.mContent=messageList;
-        this.mList=mList;
+        this.mContent = messageList;
+        this.mList = mList;
     }
-    public  void setData(List<DisplayFolder> list){
-        this.mList=list;
+
+    public void setData(List<DisplayFolder> list) {
+        this.mList = list;
     }
+
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
         this.mOnItemClickListener = mOnItemClickListener;
     }
+
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -51,11 +55,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (mCallBack != null)
             mCallBack.convert(holder, mList.get(position), position);
         String name = folder.getFolder().getName();
-        if (name.equals("INBOX")){
-            name=mContent.getResources().getString(R.string.special_mailbox_name_inbox);
-        }
-        if (name.equals("Outbox")){
-            name=mContent.getResources().getString(R.string.special_mailbox_name_outbox);
+        if (name.equals("INBOX")) {
+            name = mContent.getResources().getString(R.string.special_mailbox_name_inbox);
+        } else if (name.equals("Outbox")) {
+            name = mContent.getResources().getString(R.string.special_mailbox_name_outbox);
+        }else if (name.equals("Deleted Messages")){
+            name="已删除";
+        }else if (name.equals("Sent Messages")){
+            name="已发送";
+        }else if (name.equals("Drafts")){
+            name="草稿箱";
+        }else if (name.equals("Junk")){
+            name="垃圾箱";
         }
         holder.folder_tv.setText(name);
         //判断是否设置了监听器
@@ -73,10 +84,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return mList.size()>0?mList.size():0;
+        return mList.size() > 0 ? mList.size() : 0;
     }
 
-    public class MyHolder extends  RecyclerView.ViewHolder{
+    public class MyHolder extends RecyclerView.ViewHolder {
 
         public final TextView folder_tv;
         public final View checked_folder_item;
@@ -87,6 +98,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             checked_folder_item = itemView.findViewById(R.id.checked_folder_item_cu);
         }
     }
+
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }

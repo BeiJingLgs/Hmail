@@ -69,7 +69,7 @@ public class MessageBuilderTest extends RobolectricTest {
             "CC: cc recip <cc@example.org>\r\n" +
             "BCC: bcc recip <bcc@example.org>\r\n" +
             "Subject: test_subject\r\n" +
-            "User-Agent: K-9 Mail for Android\r\n" +
+            "User-Agent: Hmail for Android\r\n" +
             "In-Reply-To: inreplyto\r\n" +
             "References: references\r\n" +
             "Message-ID: " + TEST_MESSAGE_ID + "\r\n" +

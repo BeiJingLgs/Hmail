@@ -24,7 +24,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentManager.OnBackStackChangedListener;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.lifecycle.LifecycleOwner;
@@ -47,7 +46,6 @@ import com.fsck.k9.Account.SortType;
 import com.fsck.k9.DI;
 import com.fsck.k9.K9;
 import com.fsck.k9.K9.SplitViewMode;
-import com.fsck.k9.MyApplication;
 import com.fsck.k9.Preferences;
 import com.fsck.k9.activity.compose.MessageActions;
 import com.fsck.k9.adapter.HeaderRecyclerView;
@@ -122,10 +120,10 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     private static final int NEXT = 2;
 
     public static final int REQUEST_MASK_PENDING_INTENT = 1 << 15;
-    private WrapRecyclerView mRecyclerView;
+    private static WrapRecyclerView mRecyclerView;
     private RecyclerViewAdapter adapter;
     private List<DisplayFolder> list;
-    private RecyclerView mHeaderRecyclerView;
+    private  static  RecyclerView mHeaderRecyclerView;
     private List<Account> accounts;
     private HeaderRecyclerView headerRecyclerView;
 
@@ -195,6 +193,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     }
 
 
+
     private enum DisplayMode {
         MESSAGE_LIST,
         MESSAGE_VIEW,
@@ -246,11 +245,9 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     private boolean messageListWasDisplayed = false;
     private ViewSwitcher viewSwitcher;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         /**
          * 获取用户的List
          */
@@ -459,7 +456,16 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         openFolderTransaction.replace(R.id.message_list_container, messageListFragment);
         openFolderTransaction.commit();
     }
-
+    //TODO 左边框不可见
+    public  static void  Bukejian(){
+        mHeaderRecyclerView.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.GONE);
+    }
+    //TODO 左边框可见
+    public  void  Kejian(){
+        mHeaderRecyclerView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -793,13 +799,13 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
         drawer = new K9Drawer(this, savedInstanceState);
 
-        DrawerLayout drawerLayout = drawer.getLayout();
-        drawerToggle = new ActionBarDrawerToggle(
-                this, drawerLayout, null,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close
-        );
-        drawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
+//        DrawerLayout drawerLayout = drawer.getLayout();
+//        drawerToggle = new ActionBarDrawerToggle(
+//                this, drawerLayout, null,
+//                R.string.navigation_drawer_open, R.string.navigation_drawer_close
+//        );
+//        drawerLayout.addDrawerListener(drawerToggle);
+//        drawerToggle.syncState();
     }
 
     public OnDrawerListener createOnDrawerListener() {
@@ -1082,20 +1088,23 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         int id = item.getItemId();
         if (id == android.R.id.home) {
             if (displayMode != DisplayMode.MESSAGE_VIEW && !isAdditionalMessageListDisplayed()) {
-                if (isDrawerEnabled()) {
-                    if (drawer.isOpen()) {
-                        drawer.close();
-                    } else {
-                        drawer.open();
-                    }
-                } else {
-                    finish();
-                }
+//                if (isDrawerEnabled()) {
+//                    if (drawer.isOpen()) {
+//                        drawer.close();
+//                    } else {
+//                        drawer.open();
+//                    }
+//                } else {
+//                    finish();
+//                }
             } else {
+                actionBar.setDisplayHomeAsUpEnabled(false);
                 goBack();
             }
             return true;
-        } else if (id == R.id.compose) {
+        } else
+            if (id == R.id.compose) {
+                //在这里打开新邮件
             messageListFragment.onCompose();
             return true;
         } else if (id == R.id.toggle_message_view_theme) {
@@ -1399,8 +1408,15 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     @Override
     public void setMessageListTitle(String title) {
         if (displayMode != DisplayMode.MESSAGE_VIEW) {
+
             setActionBarTitle(title);
+
         }
+    }
+
+    @Override
+    public void setActionbar(Boolean b) {
+        actionBar.setDisplayHomeAsUpEnabled(b);
     }
 
     @Override
@@ -1704,7 +1720,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         viewSwitcher.showFirstView();
 
         messageListFragment.setActiveMessage(null);
-
+        Kejian();
         if (isDrawerEnabled()) {
             if (isAdditionalMessageListDisplayed()) {
                 lockDrawer();
@@ -1793,12 +1809,12 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
     private void lockDrawer() {
         drawer.lock();
-        drawerToggle.setDrawerIndicatorEnabled(false);
+//        drawerToggle.setDrawerIndicatorEnabled(false);
     }
 
     private void unlockDrawer() {
         drawer.unlock();
-        drawerToggle.setDrawerIndicatorEnabled(true);
+//        drawerToggle.setDrawerIndicatorEnabled(true);
     }
 
     private void initializeFromLocalSearch(LocalSearch search) {

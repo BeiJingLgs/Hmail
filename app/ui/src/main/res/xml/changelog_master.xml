@@ -50,12 +50,12 @@
         <change>Major redesign of the user interface</change>
         <change>Temporarily disabled Push (IMAP IDLE) until we can make it work reliable; your accounts will be polled every 15 minutes instead</change>
         <change>Deprecated support for the WebDAV protocol; new accounts can no longer be added</change>
-        <change>K-9 Mail now requires Android 5.0 and newer</change>
+        <change>Hmail now requires Android 5.0 and newer</change>
         <change>Added support for Autocrypt setup message</change>
         <change>Added support for encrypted subjects</change>
         <change>Allow installation on external media (Android 6+ with adopted storage)</change>
         <change>Removed the broken option to store the message database on external storage</change>
-        <change>Removed the 'remote control' interface third-party apps could use to change some settings in K-9 Mail</change>
+        <change>Removed the 'remote control' interface third-party apps could use to change some settings in Hmail</change>
         <change>Fixed a lot of bugs and probably introduced some new ones. Please report bugs.</change>
     </release>
     <release version="5.600" versioncode="26000">
@@ -205,7 +205,7 @@
         <change>User interface tweaks for encryption-related functionality</change>
         <change>Fixed crash caused by new message notifications</change>
         <change>Fixed bug with downloading attachments</change>
-        <change>Fixed structure of emails created with K-9 Mail</change>
+        <change>Fixed structure of emails created with Hmail</change>
         <change>Fixed bug where message list was displayed twice</change>
         <change>Updated translations</change>
     </release>
@@ -257,7 +257,7 @@
         <change>Added option to copy sender/recipient addresses to clipboard</change>
         <change>Show warning when user tries to send an email without a subject</change>
         <change>New database structure; temporarily disables fulltext search</change>
-        <change>Allow importing of settings created with newer versions of K-9 Mail</change>
+        <change>Allow importing of settings created with newer versions of Hmail</change>
         <change>Added support for Server Name Indication</change>
         <change>Disabled support for SSLv3 protocol/ciphers and all RC4 ciphers</change>
         <change>Fixed bug where third-party apps couldn't delete messages from certain folders</change>
@@ -514,7 +514,7 @@
         <change>Fix dialog message when deleting multiple messages from a notification</change>
         <change>Message view / list: fix NPE when list is empty</change>
         <change>If there is no message when resuming, K-9 should return to a MessageList.</change>
-        <change>Add a caching layer to EmailProvider.  Database updates can be surprisingly slow. This lead to slow updates of the user interface which in turn made working with K-9 Mail not as fun as it should be. This commit hopefully changes that.</change>
+        <change>Add a caching layer to EmailProvider.  Database updates can be surprisingly slow. This lead to slow updates of the user interface which in turn made working with Hmail not as fun as it should be. This commit hopefully changes that.</change>
         <change>Updated Japanese translation</change>
         <change>Updated French translation</change>
         <change>Updated Czech localization</change>

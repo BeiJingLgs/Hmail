@@ -91,7 +91,7 @@ public class TracingPowerManager implements com.fsck.k9.mail.power.PowerManager 
             }
             raiseNotification();
             if (K9MailLib.isDebug()) {
-                Timber.w("TracingWakeLock for tag %s / id %d: acquired with no timeout.  K-9 Mail should not do this",
+                Timber.w("TracingWakeLock for tag %s / id %d: acquired with no timeout.  Hmail should not do this",
                         tag, id);
             }
             if (startTime == null) {

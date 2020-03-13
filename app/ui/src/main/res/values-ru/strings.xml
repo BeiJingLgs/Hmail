@@ -17,7 +17,7 @@
   <string name="welcome_message_title">Добро пожаловать!</string>
   <string name="accounts_welcome"><![CDATA[
 <p>
-K-9 Mail — почтовый клиент для Android.
+Hmail — почтовый клиент для Android.
 </p><p>
 Возможности:
 </p>
@@ -38,14 +38,14 @@ K-9 Mail — почтовый клиент для Android.
   <li>…и многое другое!</li>
 </ul>
 <p>
-Отметим, что K-9 Mail не полностью совместим с MS Exchange и не поддерживает бесплатные ящики Hotmail.
+Отметим, что Hmail не полностью совместим с MS Exchange и не поддерживает бесплатные ящики Hotmail.
 </p><p>
 Вопросы, сообщения об ошибках и участие в разработке:
 <a href="https://github.com/k9mail/k-9/">https://github.com/k9mail/k-9/</a>.
 </p>
     ]]></string>
   <!--Default signature-->
-  <string name="default_signature">-- \nПростите за краткость, создано в K-9 Mail.</string>
+  <string name="default_signature">-- \nПростите за краткость, создано в Hmail.</string>
   <!--General strings that include the app name-->
   <string name="account_delete_dlg_instructions_fmt">Ящик \"<xliff:g id="account">%s</xliff:g>\" будет удалён из приложения</string>
   <!--=== General strings ==================================================================-->
@@ -953,7 +953,7 @@ K-9 Mail — почтовый клиент для Android.
   <string name="unsigned_text_divider_label">Неподписанный текст</string>
   <string name="apg_deprecated_title">Прекращение поддержки APG</string>
   <string name="apg_deprecated_1">Разработка APG прекращена!</string>
-  <string name="apg_deprecated_2">В связи с этим, поддержка APG удалена из K-9 Mail</string>
+  <string name="apg_deprecated_2">В связи с этим, поддержка APG удалена из Hmail</string>
   <string name="apg_deprecated_bullet_1">Разработка прекращена в начале 2014 г.</string>
   <string name="apg_deprecated_bullet_2">Имеются неисправленные уязвимости</string>
   <string name="apg_learn_more">Нажмите <a href="https://k9mail.github.io/2017/01/13/Why-APG-is-no-longer-supported.html">здесь</a> для подробностей.</string>

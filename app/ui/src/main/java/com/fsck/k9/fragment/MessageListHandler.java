@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Parcelable;
 
+import com.fsck.k9.activity.MessageList;
 import com.fsck.k9.controller.MessageReference;
 
 /**
@@ -135,6 +136,9 @@ public class MessageListHandler extends Handler {
             case ACTION_OPEN_MESSAGE: {
                 MessageReference messageReference = (MessageReference) msg.obj;
                 fragment.fragmentListener.openMessage(messageReference);
+                if (activity instanceof MessageList){
+                    ((MessageList) activity).Bukejian();
+                }
                 break;
             }
         }

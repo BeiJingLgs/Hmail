@@ -12,7 +12,7 @@ Tell us what happens instead
 3.
 
 ### Environment
-K-9 Mail version:
+Hmail version:
 
 Android version:
 

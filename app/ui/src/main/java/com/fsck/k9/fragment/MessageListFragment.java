@@ -47,6 +47,7 @@ import com.fsck.k9.Account.SortType;
 import com.fsck.k9.DI;
 import com.fsck.k9.K9;
 import com.fsck.k9.Preferences;
+import com.fsck.k9.activity.MessageList;
 import com.fsck.k9.controller.SimpleMessagingListener;
 import com.fsck.k9.ui.choosefolder.ChooseFolderActivity;
 import com.fsck.k9.activity.FolderInfoHolder;
@@ -229,7 +230,17 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
              * 当前Folder 是收件箱
              * 收件箱是在这获取的
               */
-            fragmentListener.setMessageListTitle(currentFolder.displayName);
+            String displayName = currentFolder.displayName;
+            if (displayName.equals("Deleted Messages")){
+                displayName="已删除";
+            }else if (displayName.equals("Sent Messages")){
+                displayName="已发送";
+            }else if (displayName.equals("Drafts")){
+                displayName="草稿箱";
+            }else if (displayName.equals("Junk")){
+                displayName="垃圾箱";
+            }
+            fragmentListener.setMessageListTitle(displayName);
         } else {
             // query result display.  This may be for a search folder as opposed to a user-initiated search.
             if (title != null) {
@@ -281,7 +292,8 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
 
         int adapterPosition = listViewToAdapterPosition(position);
         MessageListItem messageListItem = adapter.getItem(adapterPosition);
-
+        //在这里加
+        fragmentListener.setActionbar(true);
         if (selectedCount > 0) {
             toggleMessageSelect(position);
         } else {
@@ -2199,6 +2211,8 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         void onReplyAll(MessageReference message);
         void openMessage(MessageReference messageReference);
         void setMessageListTitle(String title);
+        //显示Actionbar
+        void setActionbar(Boolean b);
         void onCompose(Account account);
         boolean startSearch(Account account, String folderServerId);
         void remoteSearchStarted();

@@ -12,7 +12,7 @@ public class TextSignatureRemoverTest {
         String text = "This is the body text\r\n" +
                 "\r\n" +
                 "-- \r\n" +
-                "Sent from my Android device with K-9 Mail. Please excuse my brevity.";
+                "Sent from my Android device with Hmail. Please excuse my brevity.";
 
         String withoutSignature = TextSignatureRemover.stripSignature(text);
 

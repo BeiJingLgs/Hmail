@@ -3,7 +3,7 @@
   <!--=== App-specific strings =============================================================-->
   <!--This should make it easier for forks to change the branding-->
   <!--Used in AndroidManifest.xml-->
-  <string name="app_name">K-9 Mail</string>
+  <string name="app_name">Hmail</string>
   <string name="shortcuts_title">K-9 Kontod</string>
   <string name="unread_widget_label">K-9 Lugemata</string>
   <!--Used in the about dialog-->
@@ -26,7 +26,7 @@
   <string name="read_messages_desc">Lubab sellel rakendusel lugeda sinu e-kirju.</string>
   <string name="delete_messages_label">Kustuta e-kirjad</string>
   <string name="delete_messages_desc">Lubab sellel rakendusel kustutada sinu e-kirju.</string>
-  <string name="about_title">Programmist K-9 Mail</string>
+  <string name="about_title">Programmist Hmail</string>
   <string name="accounts_title">Kontod</string>
   <string name="folders_title">Kaustad</string>
   <string name="advanced">Täpsemalt</string>
