@@ -82,23 +82,23 @@ class SettingsListFragment : Fragment() {
         accountSection.setHeader(SettingsDividerItem(getString(R.string.accounts_title)))
         settingsAdapter.add(accountSection)
 
-        val backupSection = Section().apply {
-            val exportSettingsActionItem = SettingsActionItem(
-                    getString(R.string.settings_export_title),
-                    R.id.action_settingsListScreen_to_settingsExportScreen,
-                    R.attr.iconSettingsExport
-            )
-            add(exportSettingsActionItem)
-
-            val importSettingsActionItem = SettingsActionItem(
-                    getString(R.string.settings_import_title),
-                    R.id.action_settingsListScreen_to_settingsImportScreen,
-                    R.attr.iconSettingsImport
-            )
-            add(importSettingsActionItem)
-        }
-        backupSection.setHeader(SettingsDividerItem(getString(R.string.settings_list_backup_category)))
-        settingsAdapter.add(backupSection)
+//        val backupSection = Section().apply {
+//            val exportSettingsActionItem = SettingsActionItem(
+//                    getString(R.string.settings_export_title),
+//                    R.id.action_settingsListScreen_to_settingsExportScreen,
+//                    R.attr.iconSettingsExport
+//            )
+//            add(exportSettingsActionItem)
+//
+//            val importSettingsActionItem = SettingsActionItem(
+//                    getString(R.string.settings_import_title),
+//                    R.id.action_settingsListScreen_to_settingsImportScreen,
+//                    R.attr.iconSettingsImport
+//            )
+//            add(importSettingsActionItem)
+//        }
+//        backupSection.setHeader(SettingsDividerItem(getString(R.string.settings_list_backup_category)))
+//        settingsAdapter.add(backupSection)
 
 //        val miscSection = Section().apply {
 //            val accountActionItem = SettingsActionItem(

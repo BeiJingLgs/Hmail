@@ -37,13 +37,13 @@ Hmail 是 Android 上一款功能强大的自由 email 客户端。
   <li>消息排序</li>
   <li>…以及更多</li>
 </ul>
-<p>
-请注意 K-9 不支持大部分免费 Hotmail 账户，而且和其他大部分邮件客户端一样，
-在使用 Microsoft Exchange 协议时会有一些问题。
-</p><p>
-请到下述网址提交问题报告，新功能建议或者提问：
-<a href="https://github.com/k9mail/k-9/">https://github.com/k9mail/k-9/</a>.
-</p>
+<!--<p>-->
+<!--请注意 K-9 不支持大部分免费 Hotmail 账户，而且和其他大部分邮件客户端一样，-->
+<!--在使用 Microsoft Exchange 协议时会有一些问题。-->
+<!--</p><p>-->
+<!--请到下述网址提交问题报告，新功能建议或者提问：-->
+<!--<a href="https://github.com/k9mail/k-9/">https://github.com/k9mail/k-9/</a>.-->
+<!--</p>-->
     ]]></string>
     <!--Default signature-->
     <string name="default_signature">-- \n使用 Hmail 发送自我的Android设备。</string>
@@ -396,7 +396,7 @@ Hmail 是 Android 上一款功能强大的自由 email 客户端。
     <string name="account_setup_failed_dlg_auth_message_fmt">用户名或密码不正确。\n(<xliff:g id="error">%s</xliff:g>)</string>
     <string name="account_setup_failed_dlg_certificate_message_fmt">服务器提供了一个无效的SSL证书。有时候这是由于不正确的服务器配置导致的；有时候这也可能是由于某人正在试图攻击您或者您的邮件服务器。如果您不能确定到底是什么原因，请单击”拒绝“，并联系您的邮件服务器管理人员。\n\n(<xliff:g id="error">%s</xliff:g>)</string>
     <string name="account_setup_failed_dlg_server_message_fmt">无法连接到服务器。\n(<xliff:g id="error">%s</xliff:g>)</string>
-    <string name="account_setup_failed_dlg_edit_details_action">编辑详细信息</string>
+    <string name="account_setup_failed_dlg_edit_details_action">重新完成设置</string>
     <string name="account_setup_failed_dlg_continue_action">继续</string>
     <string name="account_settings_push_advanced_title">高级</string>
     <string name="account_settings_title_fmt">通用设置</string>
@@ -476,7 +476,8 @@ Hmail 是 Android 上一款功能强大的自由 email 客户端。
     <string name="account_settings_autodownload_message_size_4">4Kb</string>
     <string name="account_settings_autodownload_message_size_8">8Kb</string>
     <string name="account_settings_autodownload_message_size_16">16Kb</string>
-    <string name="account_settings_autodownload_message_size_32">32Kb</string>
+<!--    <string name="account_settings_autodownload_message_size_32">32Kb</string>-->
+    <string name="account_settings_autodownload_message_size_32">任意（无限制）</string>
     <string name="account_settings_autodownload_message_size_64">64Kb</string>
     <string name="account_settings_autodownload_message_size_128">128Kb</string>
     <string name="account_settings_autodownload_message_size_256">256Kb</string>

@@ -13,10 +13,28 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <View
+<!--        <View-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:layout_weight="1" />-->
+        <Button
+            android:id="@+id/back"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground"
+            android:text="@string/previous_action" />
+
+        <Button
+            android:id="@+id/back1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:background="?selectableItemBackground"
+             />
 
         <Button
             android:id="@+id/next"

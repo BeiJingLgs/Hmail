@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <View
         android:id="@+id/divider"
@@ -11,17 +11,24 @@
         style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/manual_setup"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    android:background="?selectableItemBackground"
+                    android:text="@string/account_setup_basics_manual_setup_action" />
         <Button
-            android:id="@+id/manual_setup"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?selectableItemBackground"
-            android:text="@string/account_setup_basics_manual_setup_action" />
-
+            />
         <Button
             android:id="@+id/next"
             style="?android:attr/buttonBarButtonStyle"

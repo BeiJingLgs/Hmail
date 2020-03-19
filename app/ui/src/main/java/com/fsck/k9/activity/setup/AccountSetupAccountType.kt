@@ -38,8 +38,22 @@ class AccountSetupAccountType : K9Activity() {
 
     private fun decodeArguments() {
         val accountUuid = intent.getStringExtra(EXTRA_ACCOUNT) ?: error("No account UUID provided")
+        val domain = intent.getStringExtra(EXTRA_DOMAIN)
         account = preferences.getAccount(accountUuid) ?: error("No account with given UUID found")
         makeDefault = intent.getBooleanExtra(EXTRA_MAKE_DEFAULT, false)
+        if (domain.equals("qq.com")) {
+            findViewById<View>(R.id.pop).visibility = View.GONE
+            findViewById<View>(R.id.imap).visibility = View.VISIBLE
+        } else if (domain.equals("163.com")) {
+            findViewById<View>(R.id.imap).visibility = View.GONE
+            findViewById<View>(R.id.pop).visibility = View.VISIBLE
+        } else if (domain.equals("126.com")) {
+            findViewById<View>(R.id.imap).visibility = View.GONE
+            findViewById<View>(R.id.pop).visibility = View.VISIBLE
+        } else {
+            findViewById<View>(R.id.pop).visibility = View.VISIBLE
+            findViewById<View>(R.id.imap).visibility = View.VISIBLE
+        }
     }
 
     private fun setupPop3Account() {
@@ -56,7 +70,8 @@ class AccountSetupAccountType : K9Activity() {
     }
 
     private fun setupStoreAndSmtpTransport(serverType: String, schemePrefix: String) {
-        val domainPart = getDomainFromEmailAddress(account.email) ?: error("Couldn't get domain from email address")
+        val domainPart = getDomainFromEmailAddress(account.email)
+            ?: error("Couldn't get domain from email address")
 
         setupStoreUri(serverType, domainPart, schemePrefix)
         setupTransportUri(domainPart)
@@ -73,7 +88,8 @@ class AccountSetupAccountType : K9Activity() {
     }
 
     private fun setupTransportUri(domainPart: String) {
-        val suggestedTransportServerName = serverNameSuggester.suggestServerName(Protocols.SMTP, domainPart)
+        val suggestedTransportServerName =
+            serverNameSuggester.suggestServerName(Protocols.SMTP, domainPart)
         val transportUriForDecode = URI(account.transportUri)
         val transportUri = URI(
             "smtp+tls+", transportUriForDecode.userInfo, suggestedTransportServerName,
@@ -90,12 +106,13 @@ class AccountSetupAccountType : K9Activity() {
     companion object {
         private const val EXTRA_ACCOUNT = "account"
         private const val EXTRA_MAKE_DEFAULT = "makeDefault"
-
+        private const val EXTRA_DOMAIN = "domain"
         @JvmStatic
-        fun actionSelectAccountType(context: Context, account: Account, makeDefault: Boolean) {
+        fun actionSelectAccountType(context: Context, account: Account, makeDefault: Boolean, domain: String) {
             val intent = Intent(context, AccountSetupAccountType::class.java).apply {
                 putExtra(EXTRA_ACCOUNT, account.uuid)
                 putExtra(EXTRA_MAKE_DEFAULT, makeDefault)
+                putExtra(EXTRA_DOMAIN, domain)
             }
             context.startActivity(intent)
         }

@@ -264,31 +264,31 @@ public class AccountSetupCheckSettings extends K9Activity implements OnClickList
                         }
                     }
                 }
-
-                // TODO: refactor with DialogFragment.
+                acceptCertificate(chain[0]);
+                // TODO: refactor with DialogFragment.  无法识别的证书信息
                 // This is difficult because we need to pass through chain[0] for onClick()
-                new AlertDialog.Builder(AccountSetupCheckSettings.this)
-                .setTitle(getString(R.string.account_setup_failed_dlg_invalid_certificate_title))
-                //.setMessage(getString(R.string.account_setup_failed_dlg_invalid_certificate)
-                .setMessage(getString(msgResId, exMessage)
-                            + " " + chainInfo.toString()
-                           )
-                .setCancelable(true)
-                .setPositiveButton(
-                    getString(R.string.account_setup_failed_dlg_invalid_certificate_accept),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        acceptCertificate(chain[0]);
-                    }
-                })
-                .setNegativeButton(
-                    getString(R.string.account_setup_failed_dlg_invalid_certificate_reject),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
-                .show();
+//                new AlertDialog.Builder(AccountSetupCheckSettings.this)
+//                .setTitle(getString(R.string.account_setup_failed_dlg_invalid_certificate_title))
+//                //.setMessage(getString(R.string.account_setup_failed_dlg_invalid_certificate)
+//                .setMessage(getString(msgResId, exMessage)
+//                            + " " + chainInfo.toString()
+//                           )
+//                .setCancelable(true)
+//                .setPositiveButton(
+//                    getString(R.string.account_setup_failed_dlg_invalid_certificate_accept),
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        acceptCertificate(chain[0]);
+//                    }
+//                })
+//                .setNegativeButton(
+//                    getString(R.string.account_setup_failed_dlg_invalid_certificate_reject),
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        finish();
+//                    }
+//                })
+//                .show();
             }
         });
     }

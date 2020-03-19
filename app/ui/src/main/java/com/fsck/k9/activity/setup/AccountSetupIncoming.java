@@ -53,6 +53,9 @@ import java.util.Map;
 
 import timber.log.Timber;
 
+/**
+ * pop3服务器配置
+ */
 public class AccountSetupIncoming extends K9Activity implements OnClickListener {
     private static final String EXTRA_ACCOUNT = "account";
     private static final String EXTRA_MAKE_DEFAULT = "makeDefault";
@@ -91,6 +94,7 @@ public class AccountSetupIncoming extends K9Activity implements OnClickListener 
     private CheckBox mSubscribedFoldersOnly;
     private AuthTypeAdapter mAuthTypeAdapter;
     private ConnectionSecurity[] mConnectionSecurityChoices = ConnectionSecurity.values();
+    private Button mBackButton;
 
     public static void actionIncomingSettings(Activity context, Account account, boolean makeDefault) {
         Intent i = new Intent(context, AccountSetupIncoming.class);
@@ -139,13 +143,14 @@ public class AccountSetupIncoming extends K9Activity implements OnClickListener 
         mWebdavAuthPathView = findViewById(R.id.webdav_auth_path);
         mWebdavMailboxPathView = findViewById(R.id.webdav_mailbox_path);
         mNextButton = findViewById(R.id.next);
+        mBackButton = findViewById(R.id.back);
         mCompressionMobile = findViewById(R.id.compression_mobile);
         mCompressionWifi = findViewById(R.id.compression_wifi);
         mCompressionOther = findViewById(R.id.compression_other);
         mSubscribedFoldersOnly = findViewById(R.id.subscribed_folders_only);
 
         mNextButton.setOnClickListener(this);
-
+        mBackButton.setOnClickListener(this);
         mImapAutoDetectNamespaceView.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -614,6 +619,8 @@ public class AccountSetupIncoming extends K9Activity implements OnClickListener 
         try {
             if (v.getId() == R.id.next) {
                 onNext();
+            }else if (v.getId()==R.id.back){
+                startActivity(new Intent(AccountSetupIncoming.this,AccountSetupBasics.class));
             }
         } catch (Exception e) {
             failure(e);

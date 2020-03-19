@@ -95,30 +95,22 @@ import timber.log.Timber;
  */
 public class MessageList extends K9Activity implements MessageListFragmentListener,
         MessageViewFragmentListener, OnBackStackChangedListener, OnSwitchCompleteListener {
-
     private static final String EXTRA_SEARCH = "search_bytes";
     private static final String EXTRA_NO_THREADING = "no_threading";
-
     private static final String ACTION_SHORTCUT = "shortcut";
     private static final String EXTRA_SPECIAL_FOLDER = "special_folder";
-
     private static final String EXTRA_MESSAGE_REFERENCE = "message_reference";
-
     // used for remote search
     public static final String EXTRA_SEARCH_ACCOUNT = "com.fsck.k9.search_account";
     private static final String EXTRA_SEARCH_FOLDER = "com.fsck.k9.search_folder";
-
     private static final String STATE_DISPLAY_MODE = "displayMode";
     private static final String STATE_MESSAGE_LIST_WAS_DISPLAYED = "messageListWasDisplayed";
     private static final String STATE_FIRST_BACK_STACK_ID = "firstBackstackId";
-
     private static final String FRAGMENT_TAG_MESSAGE_VIEW = "MessageViewFragment";
     private static final String FRAGMENT_TAG_PLACEHOLDER = "MessageViewPlaceholder";
-
     // Used for navigating to next/previous message
     private static final int PREVIOUS = 1;
     private static final int NEXT = 2;
-
     public static final int REQUEST_MASK_PENDING_INTENT = 1 << 15;
     private static WrapRecyclerView mRecyclerView;
     private RecyclerViewAdapter adapter;
@@ -293,6 +285,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
              */
             drawer.updateUserAccountsAndFolders(account);
         }
+        findFragments();
         /**
          * 头部RecyclerView的name
          */
@@ -306,7 +299,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
          * 加载数据
          */
         loadData();
-        findFragments();
+
         initializeDisplayMode(savedInstanceState);
         initializeLayout();
         initializeFragments();
@@ -405,6 +398,8 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         FooterViewSetting(footerView);
         //TODO 文件的点击事件
         adapter.setOnItemClickListener((view, position) -> {
+            MessageViewFragment messageViewFragment = new MessageViewFragment();
+//            messageViewFragment.onClose();
             DisplayFolder folder = list.get(position);
             String serverId = folder.getFolder().getServerId();
             openFolderItem(serverId);
@@ -1720,7 +1715,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         viewSwitcher.showFirstView();
 
         messageListFragment.setActiveMessage(null);
-        Kejian();
+//        Kejian();
         if (isDrawerEnabled()) {
             if (isAdditionalMessageListDisplayed()) {
                 lockDrawer();
@@ -1739,8 +1734,8 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         displayMode = DisplayMode.MESSAGE_VIEW;
 
         if (!messageListWasDisplayed) {
-            viewSwitcher.setAnimateFirstView(false);
-        }
+        viewSwitcher.setAnimateFirstView(false);
+    }
         viewSwitcher.showSecondView();
 
         if (isDrawerEnabled()) {

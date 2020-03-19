@@ -14,17 +14,17 @@
     </string-array>
 
     <string-array name="display_count_entries">
-        <item>@string/account_setup_options_mail_display_count_10</item>
+<!--        <item>@string/account_setup_options_mail_display_count_10</item>-->
         <item>@string/account_setup_options_mail_display_count_25</item>
-        <item>@string/account_setup_options_mail_display_count_50</item>
-        <item>@string/account_setup_options_mail_display_count_100</item>
-        <item>@string/account_setup_options_mail_display_count_250</item>
-        <item>@string/account_setup_options_mail_display_count_500</item>
-        <item>@string/account_setup_options_mail_display_count_1000</item>
-        <item>@string/account_setup_options_mail_display_count_2500</item>
-        <item>@string/account_setup_options_mail_display_count_5000</item>
-        <item>@string/account_setup_options_mail_display_count_10000</item>
-        <item>@string/account_setup_options_mail_display_count_all</item>
+<!--        <item>@string/account_setup_options_mail_display_count_50</item>-->
+<!--        <item>@string/account_setup_options_mail_display_count_100</item>-->
+<!--        <item>@string/account_setup_options_mail_display_count_250</item>-->
+<!--        <item>@string/account_setup_options_mail_display_count_500</item>-->
+<!--        <item>@string/account_setup_options_mail_display_count_1000</item>-->
+<!--        <item>@string/account_setup_options_mail_display_count_2500</item>-->
+<!--        <item>@string/account_setup_options_mail_display_count_5000</item>-->
+<!--        <item>@string/account_setup_options_mail_display_count_10000</item>-->
+<!--        <item>@string/account_setup_options_mail_display_count_all</item>-->
     </string-array>
 
     <string-array name="message_age_entries">
@@ -43,21 +43,21 @@
     </string-array>
 
     <string-array name="autodownload_message_size_entries">
-        <item>@string/account_settings_autodownload_message_size_1</item>
-        <item>@string/account_settings_autodownload_message_size_2</item>
-        <item>@string/account_settings_autodownload_message_size_4</item>
-        <item>@string/account_settings_autodownload_message_size_8</item>
-        <item>@string/account_settings_autodownload_message_size_16</item>
+<!--        <item>@string/account_settings_autodownload_message_size_1</item>-->
+<!--        <item>@string/account_settings_autodownload_message_size_2</item>-->
+<!--        <item>@string/account_settings_autodownload_message_size_4</item>-->
+<!--        <item>@string/account_settings_autodownload_message_size_8</item>-->
+<!--        <item>@string/account_settings_autodownload_message_size_16</item>-->
         <item>@string/account_settings_autodownload_message_size_32</item>
-        <item>@string/account_settings_autodownload_message_size_64</item>
-        <item>@string/account_settings_autodownload_message_size_128</item>
-        <item>@string/account_settings_autodownload_message_size_256</item>
-        <item>@string/account_settings_autodownload_message_size_512</item>
-        <item>@string/account_settings_autodownload_message_size_1024</item>
-        <item>@string/account_settings_autodownload_message_size_2048</item>
-        <item>@string/account_settings_autodownload_message_size_5120</item>
-        <item>@string/account_settings_autodownload_message_size_10240</item>
-        <item>@string/account_settings_autodownload_message_size_any</item>
+<!--        <item>@string/account_settings_autodownload_message_size_64</item>-->
+<!--        <item>@string/account_settings_autodownload_message_size_128</item>-->
+<!--        <item>@string/account_settings_autodownload_message_size_256</item>-->
+<!--        <item>@string/account_settings_autodownload_message_size_512</item>-->
+<!--        <item>@string/account_settings_autodownload_message_size_1024</item>-->
+<!--        <item>@string/account_settings_autodownload_message_size_2048</item>-->
+<!--        <item>@string/account_settings_autodownload_message_size_5120</item>-->
+<!--        <item>@string/account_settings_autodownload_message_size_10240</item>-->
+<!--        <item>@string/account_settings_autodownload_message_size_any</item>-->
     </string-array>
 
     <string-array name="folder_display_mode_entries">

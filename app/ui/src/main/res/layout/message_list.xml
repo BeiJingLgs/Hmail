@@ -59,13 +59,13 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/message_list_container"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/message_view_container"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
         </com.fsck.k9.view.ViewSwitcher>
 

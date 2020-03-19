@@ -43,6 +43,7 @@ import timber.log.Timber;
  * domain is known the settings are handed off to the AccountSetupCheckSettings
  * activity. If no settings are found the settings are handed off to the
  * AccountSetupAccountType activity.
+ * 账号 密码页面
  */
 public class AccountSetupBasics extends K9Activity
     implements OnClickListener, TextWatcher, OnCheckedChangeListener, OnClientCertificateChangedListener {
@@ -333,7 +334,7 @@ public class AccountSetupBasics extends K9Activity
         mAccount.setStoreUri(storeUri);
         mAccount.setTransportUri(transportUri);
 
-        AccountSetupAccountType.actionSelectAccountType(this, mAccount, false);
+        AccountSetupAccountType.actionSelectAccountType(this, mAccount, false,domain);
 
         finish();
     }

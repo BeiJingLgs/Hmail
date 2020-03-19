@@ -19,9 +19,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:visibility="gone"
             android:background="?selectableItemBackground"
             android:text="@string/settings_import" />
-
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground"
+            />
         <Button
             android:id="@+id/next"
             style="?android:attr/buttonBarButtonStyle"

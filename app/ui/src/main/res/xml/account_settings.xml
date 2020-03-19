@@ -70,13 +70,13 @@
             android:summary="%s"
             android:title="@string/account_settings_message_age_label" />
 
-        <ListPreference
-            android:dialogTitle="@string/account_settings_autodownload_message_size_label"
-            android:entries="@array/autodownload_message_size_entries"
-            android:entryValues="@array/autodownload_message_size_values"
-            android:key="account_autodownload_size"
-            android:summary="%s"
-            android:title="@string/account_settings_autodownload_message_size_label" />
+<!--        <ListPreference-->
+<!--            android:dialogTitle="@string/account_settings_autodownload_message_size_label"-->
+<!--            android:entries="@array/autodownload_message_size_entries"-->
+<!--            android:entryValues="@array/autodownload_message_size_values"-->
+<!--            android:key="account_autodownload_size"-->
+<!--            android:summary="%s"-->
+<!--            android:title="@string/account_settings_autodownload_message_size_label" />-->
 
         <ListPreference
             android:dialogTitle="@string/account_settings_mail_check_frequency_label"

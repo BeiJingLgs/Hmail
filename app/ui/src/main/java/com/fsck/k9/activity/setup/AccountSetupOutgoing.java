@@ -44,6 +44,9 @@ import com.fsck.k9.view.ClientCertificateSpinner;
 import com.fsck.k9.view.ClientCertificateSpinner.OnClientCertificateChangedListener;
 import timber.log.Timber;
 
+/**
+ * smtp服务器配置
+ */
 public class AccountSetupOutgoing extends K9Activity implements OnClickListener,
     OnCheckedChangeListener {
     private static final String EXTRA_ACCOUNT = "account";
@@ -74,6 +77,7 @@ public class AccountSetupOutgoing extends K9Activity implements OnClickListener,
     private Button mNextButton;
     private Account mAccount;
     private boolean mMakeDefault;
+    private Button mBackButton;
 
     public static void actionOutgoingSettings(Context context, Account account, boolean makeDefault) {
         Intent i = new Intent(context, AccountSetupOutgoing.class);
@@ -131,9 +135,9 @@ public class AccountSetupOutgoing extends K9Activity implements OnClickListener,
         mSecurityTypeView = findViewById(R.id.account_security_type);
         mAuthTypeView = findViewById(R.id.account_auth_type);
         mNextButton = findViewById(R.id.next);
-
+        mBackButton = findViewById(R.id.back);
         mNextButton.setOnClickListener(this);
-
+        mBackButton.setOnClickListener(this);
         mSecurityTypeView.setAdapter(ConnectionSecurityAdapter.get(this));
 
         mAuthTypeAdapter = AuthTypeAdapter.get(this);
@@ -500,6 +504,8 @@ public class AccountSetupOutgoing extends K9Activity implements OnClickListener,
     public void onClick(View v) {
         if (v.getId() == R.id.next) {
             onNext();
+        }else if (v.getId() == R.id.back) {
+            startActivity(new Intent(AccountSetupOutgoing.this,AccountSetupBasics.class));
         }
     }
 

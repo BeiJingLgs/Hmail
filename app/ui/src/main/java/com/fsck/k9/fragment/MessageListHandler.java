@@ -137,7 +137,7 @@ public class MessageListHandler extends Handler {
                 MessageReference messageReference = (MessageReference) msg.obj;
                 fragment.fragmentListener.openMessage(messageReference);
                 if (activity instanceof MessageList){
-                    ((MessageList) activity).Bukejian();
+//                    ((MessageList) activity).Bukejian();
                 }
                 break;
             }

@@ -324,6 +324,9 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         }
     }
 
+    public  void onClose(){
+        getActivity().onBackPressed();//销毁自己
+}
 
     //TODO 创建文件夹
     public String filePath() {
