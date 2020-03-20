@@ -83,7 +83,7 @@ public class AttachmentController {
         downloadAttachment(localPart, new Runnable() {
             @Override
             public void run() {
-                messageViewFragment.refreshAttachmentThumbnail(attachment);
+//                messageViewFragment.refreshAttachmentThumbnail(attachment);
                 saveLocalAttachmentTo(documentUri);
             }
         });
@@ -93,14 +93,18 @@ public class AttachmentController {
         String accountUuid = localPart.getAccountUuid();
         Account account = Preferences.getPreferences(context).getAccount(accountUuid);
         LocalMessage message = localPart.getMessage();
-
+        //下载的时候显示Dialog
         messageViewFragment.showAttachmentLoadingDialog();
+        //这一步是在下载
         controller.loadAttachment(account, message, attachment.part, new SimpleMessagingListener() {
             @Override
             public void loadAttachmentFinished(Account account, Message message, Part part) {
                 attachment.setContentAvailable();
+                //下载完成关闭dialog
                 messageViewFragment.hideAttachmentLoadingDialogOnMainThread();
+                //发送到主线程
                 messageViewFragment.runOnMainThread(attachmentDownloadedCallback);
+                Toast.makeText(context,"下载完成",Toast.LENGTH_SHORT).show();
             }
 
             @Override

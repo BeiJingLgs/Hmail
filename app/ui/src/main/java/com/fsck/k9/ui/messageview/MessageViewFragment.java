@@ -2,15 +2,13 @@ package com.fsck.k9.ui.messageview;
 
 
 import java.io.File;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.function.ToDoubleBiFunction;
 
 import android.app.Activity;
 import android.app.DownloadManager;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,7 +16,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.IntentSender.SendIntentException;
 import android.database.Cursor;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -50,7 +47,7 @@ import com.fsck.k9.DI;
 import com.fsck.k9.K9;
 import com.fsck.k9.MyApplication;
 import com.fsck.k9.Preferences;
-import com.fsck.k9.activity.EnclosureActivity;
+import com.fsck.k9.activity.MessageList;
 import com.fsck.k9.db.FujianBeanDB;
 import com.fsck.k9.ui.choosefolder.ChooseFolderActivity;
 import com.fsck.k9.activity.MessageLoaderHelper;
@@ -68,10 +65,12 @@ import com.fsck.k9.mailstore.MessageViewInfo;
 import com.fsck.k9.ui.R;
 import com.fsck.k9.ui.ThemeManager;
 import com.fsck.k9.ui.dialog.CommonDialog;
+import com.fsck.k9.ui.dialog.DownloadDialog;
 import com.fsck.k9.ui.helper.SizeFormatter;
 import com.fsck.k9.ui.messageview.CryptoInfoDialog.OnClickShowCryptoKeyListener;
 import com.fsck.k9.ui.messageview.MessageCryptoPresenter.MessageCryptoMvpView;
 import com.fsck.k9.ui.settings.account.AccountSettingsActivity;
+import com.fsck.k9.util.NetworkUtils;
 import com.fsck.k9.util.OpenFile;
 import com.fsck.k9.view.MessageCryptoDisplayStatus;
 
@@ -92,14 +91,21 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
 
     public static final int PROGRESS_THRESHOLD_MILLIS = 500 * 1000;
     private final String Fujian_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/我的文档/附件管理";
+    private static MessageList mMessageList;
+    private String messageReferenceString;
+    private DownloadDialog dialog1;
 
-    public static MessageViewFragment newInstance(MessageReference reference) {
+    public static MessageViewFragment newInstance(MessageReference reference, MessageList messageList) {
+        mMessageList = messageList;
         MessageViewFragment fragment = new MessageViewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_REFERENCE, reference.toIdentityString());
         fragment.setArguments(args);
-
         return fragment;
+    }
+
+    public static void newInstance1(Activity mContext) {
+        mContext.onBackPressed();
     }
 
     private final ThemeManager themeManager = DI.get(ThemeManager.class);
@@ -231,8 +237,17 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         mMessageView.setOnDownloadButtonClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMessageView.disableDownloadButton();
-                messageLoaderHelper.downloadCompleteMessage();
+                //ToDO 下载完整邮件
+                if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+                    mMessageView.disableDownloadButton();
+                    dialog1 = new DownloadDialog(getActivity());
+
+                    dialog1.show();
+                    messageLoaderHelper.downloadCompleteMessage();
+                } else {
+                    Toast.makeText(getActivity(), "网络不可用", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -244,7 +259,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         super.onActivityCreated(savedInstanceState);
 
         Bundle arguments = getArguments();
-        String messageReferenceString = arguments.getString(ARG_REFERENCE);
+        messageReferenceString = arguments.getString(ARG_REFERENCE);
         MessageReference messageReference = MessageReference.parse(messageReferenceString);
 
         displayMessage(messageReference);
@@ -324,9 +339,11 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         }
     }
 
-    public  void onClose(){
-        getActivity().onBackPressed();//销毁自己
-}
+    public void onClose() {
+        if (messageReferenceString != null) {
+            mMessageList.onBackPressed();//销毁自己
+        }
+    }
 
     //TODO 创建文件夹
     public String filePath() {
@@ -787,6 +804,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         messageCryptoPresenter.onClickShowCryptoKey();
     }
 
+
     public interface MessageViewFragmentListener {
         void onForward(MessageReference messageReference, Parcelable decryptionResultForReply);
 
@@ -826,14 +844,24 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
             showProgressThreshold = null;
         }
 
+        /**
+         * 下载全部邮件成功的时候
+         * @param messageViewInfo
+         */
         @Override
         public void onMessageViewInfoLoadFinished(MessageViewInfo messageViewInfo) {
+            dialog1.dismiss();
             showMessage(messageViewInfo);
             showProgressThreshold = null;
         }
 
+        /**
+         * 下载全部邮件失败的时候
+         * @param messageViewInfo
+         */
         @Override
         public void onMessageViewInfoLoadFailed(MessageViewInfo messageViewInfo) {
+            dialog1.dismiss();
             showMessage(messageViewInfo);
             showProgressThreshold = null;
         }
@@ -884,7 +912,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         }
     };
 
-
+    //TODO 打开附件
     @Override
     public void onViewAttachment(AttachmentViewInfo attachment) {
         currentAttachmentViewInfo = attachment;
@@ -900,8 +928,12 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         if (count > 0) {
             new OpenFile(mContext).openFile(new File(save_name_path));
         } else {
-            SaveDateBase(attachment.displayName, save_name_path);
-            new OpenFile(mContext).openFile(new File(save_name_path));
+            if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+                SaveDateBase(attachment.displayName, save_name_path);
+                new OpenFile(mContext).openFile(new File(save_name_path));
+            } else {
+                Toast.makeText(mContext, "网络不可用", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -919,13 +951,29 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         filePath();
         String displayName = setFileReleaseNames(Fujian_path, attachment.displayName, attachment.displayName);
         String save_name_path = filePath() + File.separator + displayName;
-        initDialog(attachment, displayName, save_name_path);
+        if (NetworkUtils.isNetWorkAvailable(mContext)) {
+
+            initDialog(attachment, displayName, save_name_path);
+        } else {
+            Toast.makeText(mContext, "网络不可用", Toast.LENGTH_SHORT).show();
+        }
     }
+
 
     public static void notifySystemToScan(Context context, File file) {
         if (file.isDirectory()) {
+            /***
+             *创建目录后刷新  新创建的目录可以在电脑同步显示
+             * @param context
+             * @param file
+             */
             notifyDirUpdate(context, file);
         } else {
+            /***
+             *创建文件后刷新  新创建的目录可以在电脑同步显示
+             * @param context
+             * @param file
+             */
             notifyFileUpdate(context, file);
         }
     }
@@ -940,7 +988,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     private void SaveDateBase(String displayName, String save_name_path) {
         if (!save_name_path.isEmpty()) {
             Uri uri = FileProvider.getUriForFile(getActivity(), "com.fsck.k9.ui.fileprovider", new File(save_name_path));
-            notifySystemToScan(mContext,new File(save_name_path));
+            notifySystemToScan(mContext, new File(save_name_path));
             getAttachmentController(currentAttachmentViewInfo).saveAttachmentTo(uri);
             ContentValues values = new ContentValues();
             values.put(FujianBeanDB.DISPLAYNAME, displayName);

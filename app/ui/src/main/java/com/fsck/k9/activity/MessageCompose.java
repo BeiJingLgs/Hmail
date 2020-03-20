@@ -105,6 +105,7 @@ import com.fsck.k9.ui.ThemeManager;
 import com.fsck.k9.ui.compose.QuotedMessageMvpView;
 import com.fsck.k9.ui.compose.QuotedMessagePresenter;
 import com.fsck.k9.ui.messagelist.DefaultFolderProvider;
+import com.fsck.k9.util.NetworkUtils;
 
 import org.openintents.openpgp.OpenPgpApiManager;
 import org.openintents.openpgp.util.OpenPgpApi;
@@ -733,8 +734,12 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         if (attachmentPresenter.checkOkForSendingOrDraftSaving()) {
             return;
         }
+        if (NetworkUtils.isNetWorkAvailable(MessageCompose.this)){
 
-        performSendAfterChecks();
+            performSendAfterChecks();
+        }else{
+            Toast.makeText(MessageCompose.this,"网络不可用",Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void checkToSaveDraftAndSave() {
@@ -978,7 +983,9 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         if (id == android.R.id.home) {
             prepareToFinish(true);
         } else if (id == R.id.send) {
-            checkToSendMessage();
+            //TODO 发送邮件
+
+                checkToSendMessage();
         } else if (id == R.id.save) {
             checkToSaveDraftAndSave();
         } else if (id == R.id.discard) {

@@ -78,6 +78,7 @@ import com.fsck.k9.ui.messageview.MessageViewFragment.MessageViewFragmentListene
 import com.fsck.k9.ui.messageview.PlaceholderFragment;
 import com.fsck.k9.ui.onboarding.OnboardingActivity;
 import com.fsck.k9.ui.settings.SettingsActivity;
+import com.fsck.k9.util.NetworkUtils;
 import com.fsck.k9.util.WrapRecyclerView;
 import com.fsck.k9.view.ViewSwitcher;
 import com.fsck.k9.view.ViewSwitcher.OnSwitchCompleteListener;
@@ -296,9 +297,17 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
          */
         initializeRecyclerView();
         /**
-         * 加载数据
+         * 判断是否有网络
          */
-        loadData();
+        if (NetworkUtils.isNetWorkAvailable(MessageList.this)){
+            /**
+             * 加载数据
+             */
+            loadData();
+        }else{
+            Toast.makeText(MessageList.this,"网络不可用",Toast.LENGTH_SHORT).show();
+        }
+
 
         initializeDisplayMode(savedInstanceState);
         initializeLayout();
@@ -397,14 +406,24 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         //TODO 设置底部的一些操作
         FooterViewSetting(footerView);
         //TODO 文件的点击事件
-        adapter.setOnItemClickListener((view, position) -> {
-            MessageViewFragment messageViewFragment = new MessageViewFragment();
-//            messageViewFragment.onClose();
-            DisplayFolder folder = list.get(position);
-            String serverId = folder.getFolder().getServerId();
-            openFolderItem(serverId);
-            currentPosition = position;
-            adapter.notifyDataSetChanged();
+        adapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                /**
+                 * displayMode != DisplayMode.MESSAGE_VIEW 显示
+                 *  showMessageList();
+                 */
+                if (displayMode != DisplayMode.MESSAGE_VIEW && !isAdditionalMessageListDisplayed()) {
+                } else {
+                    actionBar.setDisplayHomeAsUpEnabled(false);
+                    goBack();
+                }
+                DisplayFolder folder = list.get(position);
+                String serverId = folder.getFolder().getServerId();
+                MessageList.this.openFolderItem(serverId);
+                currentPosition = position;
+                adapter.notifyDataSetChanged();
+            }
         });
 
 
@@ -1435,7 +1454,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             if (messageListFragment != null) {
                 messageListFragment.setActiveMessage(messageReference);
             }
-            MessageViewFragment fragment = MessageViewFragment.newInstance(messageReference);
+            MessageViewFragment fragment = MessageViewFragment.newInstance(messageReference,MessageList.this);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.message_view_container, fragment, FRAGMENT_TAG_MESSAGE_VIEW);
             fragmentTransaction.commit();

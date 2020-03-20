@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,7 +110,7 @@ public class MessageTopView extends LinearLayout {
 
     public void showMessage(Account account, MessageViewInfo messageViewInfo) {
         resetAndPrepareMessageView(messageViewInfo);
-
+        Log.i("tag","eeeeeeeee"+44444);
         ShowPictures showPicturesSetting = account.getShowPictures();
         boolean loadPictures = shouldAutomaticallyLoadPictures(showPicturesSetting, messageViewInfo.message) ||
                 showPicturesButtonClicked;
@@ -133,6 +134,7 @@ public class MessageTopView extends LinearLayout {
 
     public void showMessageEncryptedButIncomplete(MessageViewInfo messageViewInfo, Drawable providerIcon) {
         resetAndPrepareMessageView(messageViewInfo);
+        Log.i("tag","eeeeeeeee"+111111);
         View view = mInflater.inflate(R.layout.message_content_crypto_incomplete, containerView, false);
         setCryptoProviderIcon(providerIcon, view);
 
@@ -142,6 +144,7 @@ public class MessageTopView extends LinearLayout {
 
     public void showMessageCryptoErrorView(MessageViewInfo messageViewInfo, Drawable providerIcon) {
         resetAndPrepareMessageView(messageViewInfo);
+        Log.i("tag","eeeeeeeee"+22222);
         View view = mInflater.inflate(R.layout.message_content_crypto_error, containerView, false);
         setCryptoProviderIcon(providerIcon, view);
 
@@ -158,6 +161,7 @@ public class MessageTopView extends LinearLayout {
 
     public void showMessageCryptoCancelledView(MessageViewInfo messageViewInfo, Drawable providerIcon) {
         resetAndPrepareMessageView(messageViewInfo);
+        Log.i("tag","eeeeeeeee"+22222);
         View view = mInflater.inflate(R.layout.message_content_crypto_cancelled, containerView, false);
         setCryptoProviderIcon(providerIcon, view);
 
@@ -174,6 +178,7 @@ public class MessageTopView extends LinearLayout {
 
     public void showCryptoProviderNotConfigured(final MessageViewInfo messageViewInfo) {
         resetAndPrepareMessageView(messageViewInfo);
+        Log.i("tag","eeeeeeeee"+33333);
         View view = mInflater.inflate(R.layout.message_content_crypto_no_provider, containerView, false);
 
         view.findViewById(R.id.crypto_settings).setOnClickListener(new OnClickListener() {
@@ -256,6 +261,10 @@ public class MessageTopView extends LinearLayout {
         mDownloadRemainder.setEnabled(false);
     }
 
+    /**
+     * 下载完整邮件
+     * @param messageViewInfo
+     */
     private void setShowDownloadButton(MessageViewInfo messageViewInfo) {
         if (messageViewInfo.isMessageIncomplete) {
             mDownloadRemainder.setEnabled(true);
