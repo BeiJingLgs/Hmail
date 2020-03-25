@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -70,6 +71,7 @@ import com.fsck.k9.ui.K9Drawer;
 import com.fsck.k9.ui.LiveDataExtrasKt;
 import com.fsck.k9.ui.R;
 import com.fsck.k9.ui.Theme;
+import com.fsck.k9.ui.dialog.CommonDialog;
 import com.fsck.k9.ui.folders.FoldersViewModel;
 import com.fsck.k9.ui.managefolders.ManageFoldersActivity;
 import com.fsck.k9.ui.messagelist.DefaultFolderProvider;
@@ -79,6 +81,7 @@ import com.fsck.k9.ui.messageview.PlaceholderFragment;
 import com.fsck.k9.ui.onboarding.OnboardingActivity;
 import com.fsck.k9.ui.settings.SettingsActivity;
 import com.fsck.k9.util.NetworkUtils;
+import com.fsck.k9.util.UpdateUtil;
 import com.fsck.k9.util.WrapRecyclerView;
 import com.fsck.k9.view.ViewSwitcher;
 import com.fsck.k9.view.ViewSwitcher.OnSwitchCompleteListener;
@@ -116,7 +119,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     private static WrapRecyclerView mRecyclerView;
     private RecyclerViewAdapter adapter;
     private List<DisplayFolder> list;
-    private  static  RecyclerView mHeaderRecyclerView;
+    private static RecyclerView mHeaderRecyclerView;
     private List<Account> accounts;
     private HeaderRecyclerView headerRecyclerView;
 
@@ -186,7 +189,6 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     }
 
 
-
     private enum DisplayMode {
         MESSAGE_LIST,
         MESSAGE_VIEW,
@@ -241,6 +243,28 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            checkAndRequestPermissions();
+            //            // 检查权限
+            if (ContextCompat.checkSelfPermission(MessageList.this,
+                    Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS) != PackageManager.PERMISSION_GRANTED) {
+                // 申请授权
+                ActivityCompat
+                        .requestPermissions(
+                                MessageList.this,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                                        Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
+                                        Manifest.permission.INTERNET, Manifest.permission.READ_CONTACTS},
+                                1);
+            }
+        }
+        if (NetworkUtils.isNetWorkAvailable(MessageList.this)) {
+            Log.i("TAG", "hhhhhhhhhhhhhhhhh");
+            UpdateUtil updateUtil = new UpdateUtil(MessageList.this);
+            UpdateUtil.CheckApkTask task = updateUtil.new CheckApkTask();
+            task.execute();
+        }
         /**
          * 获取用户的List
          */
@@ -296,17 +320,11 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
          * 左侧RecyclerView的folder
          */
         initializeRecyclerView();
+
         /**
-         * 判断是否有网络
+         * 加载数据
          */
-        if (NetworkUtils.isNetWorkAvailable(MessageList.this)){
-            /**
-             * 加载数据
-             */
-            loadData();
-        }else{
-            Toast.makeText(MessageList.this,"网络不可用",Toast.LENGTH_SHORT).show();
-        }
+        loadData();
 
 
         initializeDisplayMode(savedInstanceState);
@@ -315,33 +333,18 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         displayViews();
         channelUtils.updateChannels();
 
-        ChangeLog cl = new ChangeLog(this);
-        if (cl.isFirstRun()) {
-            cl.getLogDialog().show();
-        }
+//        ChangeLog cl = new ChangeLog(this);
+//        if (cl.isFirstRun()) {
+//            cl.getLogDialog().show();
+//        }
 
-        if (savedInstanceState == null) {
-            checkAndRequestPermissions();
-            // 检查权限
-            if (ContextCompat.checkSelfPermission(MessageList.this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                // 申请授权
-                ActivityCompat
-                        .requestPermissions(
-                                MessageList.this,
-                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                        Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS},
-                                1);
 
-            }
-        }
     }
 
     private void loadData() {
         FoldersViewModel viewModel = drawer.getMViewModel();
         //TODO 获取RecyclerView的数据
         viewModel.loadFolders(account);
-
         LiveDataExtrasKt.observe(viewModel.getFolderListLiveData(), (LifecycleOwner) this, new Function1() {
             @Override
             public Object invoke(Object o) {
@@ -470,16 +473,19 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         openFolderTransaction.replace(R.id.message_list_container, messageListFragment);
         openFolderTransaction.commit();
     }
+
     //TODO 左边框不可见
-    public  static void  Bukejian(){
+    public static void Bukejian() {
         mHeaderRecyclerView.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.GONE);
     }
+
     //TODO 左边框可见
-    public  void  Kejian(){
+    public void Kejian() {
         mHeaderRecyclerView.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
+
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -737,8 +743,21 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
 
     private void checkAndRequestPermissions() {
+        if (!hasPermission(Permission.MOUNT_UNMOUNT_FILESYSTEMS)) {
+            requestPermissionOrShowRationale(Permission.MOUNT_UNMOUNT_FILESYSTEMS);
+        }
+        if (!hasPermission(Permission.WRITE_EXTERNAL_STORAGE)) {
+            requestPermissionOrShowRationale(Permission.WRITE_EXTERNAL_STORAGE);
+        }
         if (!hasPermission(Permission.READ_CONTACTS)) {
             requestPermissionOrShowRationale(Permission.READ_CONTACTS);
+        }
+        if (!hasPermission(Permission.WRITE_CONTACTS)) {
+            requestPermissionOrShowRationale(Permission.WRITE_CONTACTS);
+        }
+
+        if (!hasPermission(Permission.INTERNET)) {
+            requestPermissionOrShowRationale(Permission.INTERNET);
         }
     }
 
@@ -807,9 +826,9 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     }
 
     private void initializeDrawer(Bundle savedInstanceState) {
-        if (!isDrawerEnabled()) {
-            return;
-        }
+//        if (!isDrawerEnabled()) {
+//            return;
+//        }
 
         drawer = new K9Drawer(this, savedInstanceState);
 
@@ -1116,9 +1135,8 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
                 goBack();
             }
             return true;
-        } else
-            if (id == R.id.compose) {
-                //在这里打开新邮件
+        } else if (id == R.id.compose) {
+            //在这里打开新邮件
             messageListFragment.onCompose();
             return true;
         } else if (id == R.id.toggle_message_view_theme) {
@@ -1148,7 +1166,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         } else if (id == R.id.select_all) {
             messageListFragment.selectAll();
             return true;
-        } else if (id == R.id.search) {
+        } else if (id == R.id.search) {//搜索
             messageListFragment.onSearchRequested();
             return true;
         } else if (id == R.id.search_remote) {
@@ -1164,7 +1182,24 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             showPreviousMessage();
             return true;
         } else if (id == R.id.delete) {
-            messageViewFragment.onDelete();
+            final CommonDialog dialog = new CommonDialog(MessageList.this);
+            dialog.setDialog_title("删除邮件");
+            dialog.setSave_path1("");
+            dialog.setFile_size("请确认是否删除该邮件？");
+            dialog.setFujian_names("");
+            dialog.setSingle(false).setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {
+                @Override
+                public void onPositiveClick() {
+                    messageViewFragment.onDelete();
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onNegtiveClick() {
+                    dialog.dismiss();
+                }
+            }).show();
+
             return true;
         } else if (id == R.id.reply) {
             messageViewFragment.onReply();
@@ -1262,12 +1297,12 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
         if (displayMode == DisplayMode.MESSAGE_LIST
                 || messageViewFragment == null
-                || !messageViewFragment.isInitialized()) { //111
+                || !messageViewFragment.isInitialized()) { //111a
             menu.findItem(R.id.next_message).setVisible(false);
             menu.findItem(R.id.previous_message).setVisible(false);
             menu.findItem(R.id.single_message_options).setVisible(false);
             menu.findItem(R.id.delete).setVisible(false);
-            menu.findItem(R.id.compose).setVisible(false);
+            menu.findItem(R.id.compose).setVisible(false);//aaaaa
             menu.findItem(R.id.archive).setVisible(false);
             menu.findItem(R.id.move).setVisible(false);
             menu.findItem(R.id.copy).setVisible(false);
@@ -1277,38 +1312,43 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             menu.findItem(R.id.toggle_message_view_theme).setVisible(false);
             menu.findItem(R.id.show_headers).setVisible(false);
             menu.findItem(R.id.hide_headers).setVisible(false);
+            Log.i("tag", "xxxxxxxxx1111111111");
         } else {
             // hide prev/next buttons in split mode
             if (displayMode != DisplayMode.MESSAGE_VIEW) {
                 menu.findItem(R.id.next_message).setVisible(false);
                 menu.findItem(R.id.previous_message).setVisible(false);
+                Log.i("tag", "xxxxxxxxx2222222222222");
             } else {
-                MessageReference ref = messageViewFragment.getMessageReference();
+                MessageReference ref = messageViewFragment.getMessageReference();//bbbbbb
                 boolean initialized = (messageListFragment != null &&
                         messageListFragment.isLoadFinished());
                 boolean canDoPrev = (initialized && !messageListFragment.isFirst(ref));
                 boolean canDoNext = (initialized && !messageListFragment.isLast(ref));
-
+                Log.i("tag", "xxxxxxxxx3333333333333");
                 MenuItem prev = menu.findItem(R.id.previous_message);
                 prev.setEnabled(canDoPrev);
                 prev.getIcon().setAlpha(canDoPrev ? 255 : 127);
-
                 MenuItem next = menu.findItem(R.id.next_message);
                 next.setEnabled(canDoNext);
                 next.getIcon().setAlpha(canDoNext ? 255 : 127);
             }
-
-            MenuItem toggleTheme = menu.findItem(R.id.toggle_message_view_theme);
+            Log.i("tag", "xxxxxxxxx4444444444444");
+            MenuItem toggleTheme = menu.findItem(R.id.toggle_message_view_theme);//cccc
             if (K9.isFixedMessageViewTheme()) {
-                toggleTheme.setVisible(false);
+                toggleTheme.setVisible(false);//ddd
+                Log.i("tag", "xxxxxxxxx555555555555555");
             } else {
                 // Set title of menu item to switch to dark/light theme
                 if (getThemeManager().getMessageViewTheme() == Theme.DARK) {
                     toggleTheme.setTitle(R.string.message_view_theme_action_light);
+                    Log.i("tag", "xxxxxxxxx66666666666");
                 } else {
                     toggleTheme.setTitle(R.string.message_view_theme_action_dark);
+                    Log.i("tag", "xxxxxxxxx7777777777777777");
                 }
                 toggleTheme.setVisible(true);
+                Log.i("tag", "xxxxxxxxx888888888888888");
             }
 
             // Set title of menu item to toggle the read state of the currently displayed message
@@ -1316,31 +1356,35 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             if (messageViewFragment.isMessageRead()) {
                 menu.findItem(R.id.toggle_unread).setTitle(R.string.mark_as_unread_action);
                 drawableAttr = new int[]{R.attr.iconActionMarkAsUnread};
+                Log.i("tag", "xxxxxxxxx999999999");
             } else {
                 menu.findItem(R.id.toggle_unread).setTitle(R.string.mark_as_read_action);
-                drawableAttr = new int[]{R.attr.iconActionMarkAsRead};
+                drawableAttr = new int[]{R.attr.iconActionMarkAsRead};//eeeeee
+                Log.i("tag", "xxxxxxxxx101010101010");
             }
             TypedArray ta = obtainStyledAttributes(drawableAttr);
-            menu.findItem(R.id.toggle_unread).setIcon(ta.getDrawable(0));
+            menu.findItem(R.id.toggle_unread).setIcon(ta.getDrawable(0));//ffffff
             ta.recycle();
-
+            Log.i("tag", "xxxxxxxxx11 11  11 11");
             menu.findItem(R.id.delete).setVisible(K9.isMessageViewDeleteActionVisible());
 
             /*
              * Set visibility of copy, move, archive, spam in action bar and refile submenu
              */
             if (messageViewFragment.isCopyCapable()) {
+                Log.i("tag", "xxxxxxxxx1212121212");
                 menu.findItem(R.id.copy).setVisible(K9.isMessageViewCopyActionVisible());
                 menu.findItem(R.id.refile_copy).setVisible(true);
             } else {
-                menu.findItem(R.id.copy).setVisible(false);
+                menu.findItem(R.id.copy).setVisible(false);//gggggg
                 menu.findItem(R.id.refile_copy).setVisible(false);
+                Log.i("tag", "xxxxxxxxx13131313");
             }
 
             if (messageViewFragment.isMoveCapable()) {
                 boolean canMessageBeArchived = messageViewFragment.canMessageBeArchived();
                 boolean canMessageBeMovedToSpam = messageViewFragment.canMessageBeMovedToSpam();
-
+                Log.i("tag", "xxxxxxxxx14141414");
                 menu.findItem(R.id.move).setVisible(K9.isMessageViewMoveActionVisible());
                 menu.findItem(R.id.archive).setVisible(canMessageBeArchived &&
                         K9.isMessageViewArchiveActionVisible());
@@ -1353,15 +1397,17 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             } else {
                 menu.findItem(R.id.move).setVisible(false);
                 menu.findItem(R.id.archive).setVisible(false);
-                menu.findItem(R.id.spam).setVisible(false);
-
+                menu.findItem(R.id.spam).setVisible(false);//hhhhh
+                Log.i("tag", "xxxxxxxxx1515151515");
                 menu.findItem(R.id.refile).setVisible(false);
             }
 
             if (messageViewFragment.allHeadersVisible()) {
                 menu.findItem(R.id.show_headers).setVisible(false);
+                Log.i("tag", "xxxxxxxxx1616161616");
             } else {
-                menu.findItem(R.id.hide_headers).setVisible(false);
+                menu.findItem(R.id.hide_headers).setVisible(false);//jjjjj
+                Log.i("tag", "xxxxxxxxx17171717");
             }
         }
 
@@ -1371,40 +1417,45 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
          */
 
         // Hide both search menu items by default and enable one when appropriate
-        menu.findItem(R.id.search).setVisible(false);  // 222
-        menu.findItem(R.id.search_remote).setVisible(false);// 333
-
+        menu.findItem(R.id.search).setVisible(false);  // kkkkk
+        menu.findItem(R.id.search_remote).setVisible(false);
+        Log.i("tag", "xxxxxxxxx1818181818");
         if (displayMode == DisplayMode.MESSAGE_VIEW || messageListFragment == null ||
                 !messageListFragment.isInitialized()) {
             menu.findItem(R.id.set_sort).setVisible(false);
             menu.findItem(R.id.select_all).setVisible(false);
             menu.findItem(R.id.send_messages).setVisible(false);
             menu.findItem(R.id.expunge).setVisible(false);
-            menu.findItem(R.id.empty_trash).setVisible(false);
+            menu.findItem(R.id.empty_trash).setVisible(false);//llll
             menu.findItem(R.id.mark_all_as_read).setVisible(false);
+            Log.i("tag", "xxxxxxxxx191919");
         } else { // 444
             menu.findItem(R.id.set_sort).setVisible(true);
             menu.findItem(R.id.select_all).setVisible(true);
             menu.findItem(R.id.compose).setVisible(true);
             menu.findItem(R.id.mark_all_as_read).setVisible(
                     messageListFragment.isMarkAllAsReadSupported());
-
+            Log.i("tag", "xxxxxxxxx20202020");
             if (!messageListFragment.isSingleAccountMode()) {
                 menu.findItem(R.id.expunge).setVisible(false);
                 menu.findItem(R.id.send_messages).setVisible(false);
+                Log.i("tag", "xxxxxxxxx2121212121");
             } else { // 555
                 menu.findItem(R.id.send_messages).setVisible(messageListFragment.isOutbox());
                 menu.findItem(R.id.expunge).setVisible(messageListFragment.isRemoteFolder() &&
                         messageListFragment.shouldShowExpungeAction());
+                Log.i("tag", "xxxxxxxxx22 22 22 22");
             }
             menu.findItem(R.id.empty_trash).setVisible(messageListFragment.isShowingTrashFolder()); // 666
-
+            Log.i("tag", "xxxxxxxxx232323");
             // If this is an explicit local search, show the option to search on the server
             if (!messageListFragment.isRemoteSearch() &&
                     messageListFragment.isRemoteSearchAllowed()) {
                 menu.findItem(R.id.search_remote).setVisible(true);
+                Log.i("tag", "xxxxxxxxx24 24 24");
             } else if (!messageListFragment.isManualSearch()) { //777
                 menu.findItem(R.id.search).setVisible(true);
+                Log.i("tag", "xxxxxxxxx25 25 25");
             }
         }
     }
@@ -1454,7 +1505,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             if (messageListFragment != null) {
                 messageListFragment.setActiveMessage(messageReference);
             }
-            MessageViewFragment fragment = MessageViewFragment.newInstance(messageReference,MessageList.this);
+            MessageViewFragment fragment = MessageViewFragment.newInstance(messageReference, MessageList.this);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.message_view_container, fragment, FRAGMENT_TAG_MESSAGE_VIEW);
             fragmentTransaction.commit();
@@ -1753,8 +1804,8 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         displayMode = DisplayMode.MESSAGE_VIEW;
 
         if (!messageListWasDisplayed) {
-        viewSwitcher.setAnimateFirstView(false);
-    }
+            viewSwitcher.setAnimateFirstView(false);
+        }
         viewSwitcher.showSecondView();
 
         if (isDrawerEnabled()) {

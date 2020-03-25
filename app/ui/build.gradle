@@ -20,7 +20,7 @@ dependencies {
 
 
 
-
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
     implementation 'com.google.code.gson:gson:2.8.4'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation "androidx.fragment:fragment-ktx:1.2.0"

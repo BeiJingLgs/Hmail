@@ -1,12 +1,11 @@
 package com.fsck.k9.ui.messageview;
 
-
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.function.ToDoubleBiFunction;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ContentResolver;
@@ -20,6 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
 import android.os.SystemClock;
 
@@ -118,7 +118,38 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     private LocalMessage mMessage;
     private MessagingController mController;
     private DownloadManager downloadManager;
+    private int is_Open_Save = 0;
+    private int FileSize = 2187509;
+    private String NullString = "";
     private Handler handler = new Handler();
+    //Todo  Handler
+    @SuppressLint("HandlerLeak")
+    private Handler handler1 = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    Log.i("tag", "sssssssssssssssssss1212121212121212121212121212");
+                    if (currentAttachmentViewInfo != null) {
+                        String displayName = setFileReleaseNames(Fujian_path, currentAttachmentViewInfo.displayName, currentAttachmentViewInfo.displayName);
+                        String save_name_path = filePath() + File.separator + displayName;
+                        if (is_Open_Save == 1) { //保存
+                            SaveDateBase(displayName, save_name_path);
+                            Log.i("tag", "sssssssssssssssssss7777777777777777777777777");
+                        } else {//打开
+                            SaveDateBase(currentAttachmentViewInfo.displayName, save_name_path);
+                            Log.i("tag", "sssssssssssssssssss8888888888888888888888888");
+                            new OpenFile(mContext).openFile(new File(save_name_path));
+                        }
+                    }
+                    break;
+                case 2:
+                    Toast.makeText(getActivity(), "下载失败", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
     private MessageLoaderHelper messageLoaderHelper;
     private MessageCryptoPresenter messageCryptoPresenter;
     private Long showProgressThreshold;
@@ -237,21 +268,24 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         mMessageView.setOnDownloadButtonClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //ToDO 下载完整邮件
                 if (NetworkUtils.isNetWorkAvailable(getActivity())) {
-                    mMessageView.disableDownloadButton();
-                    dialog1 = new DownloadDialog(getActivity());
-
-                    dialog1.show();
-                    messageLoaderHelper.downloadCompleteMessage();
+                    /**
+                     *   下载完整邮件
+                     */
+                    DownloadEmail();
                 } else {
-                    Toast.makeText(getActivity(), "网络不可用", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
 
         return view;
+    }
+
+    private void ShowDialog() {
+        dialog1 = new DownloadDialog(getActivity());
+        dialog1.show();
     }
 
     @Override
@@ -850,9 +884,16 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
          */
         @Override
         public void onMessageViewInfoLoadFinished(MessageViewInfo messageViewInfo) {
-            dialog1.dismiss();
+            if (dialog1 != null) {
+                dialog1.dismiss();
+                Log.i("tag", "sssssssssssssssssss9999999999999999999999999");
+                Message message = new Message();
+                message.what = 1;
+                handler1.sendMessage(message);
+            }
             showMessage(messageViewInfo);
             showProgressThreshold = null;
+            dialog1 = null;
         }
 
         /**
@@ -861,9 +902,16 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
          */
         @Override
         public void onMessageViewInfoLoadFailed(MessageViewInfo messageViewInfo) {
-            dialog1.dismiss();
+            if (dialog1 != null) {
+                dialog1.dismiss();
+                Log.i("tag", "sssssssssssssssssss10101010101010101010101010");
+                Message message = new Message();
+                message.what = 2;
+                handler1.sendMessage(message);
+            }
             showMessage(messageViewInfo);
             showProgressThreshold = null;
+            dialog1 = null;
         }
 
         @Override
@@ -928,12 +976,59 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         if (count > 0) {
             new OpenFile(mContext).openFile(new File(save_name_path));
         } else {
-            if (NetworkUtils.isNetWorkAvailable(getActivity())) {
-                SaveDateBase(attachment.displayName, save_name_path);
-                new OpenFile(mContext).openFile(new File(save_name_path));
-            } else {
-                Toast.makeText(mContext, "网络不可用", Toast.LENGTH_SHORT).show();
+            if (attachment.displayName.endsWith(".apk")) {
+                if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+                    /**
+                     *   下载完整邮件
+                     */
+                    DownloadEmail();
+                    Log.i("tag", "sssssssssssssssssss44444444444444444444444");
+                } else {
+                    Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
+                }
+            } else
+//                if (attachment.size > FileSize)
+                {
+                if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+                    /**
+                     *   下载完整邮件
+                     */
+                    DownloadEmail();
+                    Log.i("tag", "sssssssssssssssssss55555555555555555555555");
+                } else {
+                    Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
+                }
             }
+
+//            else {
+//                if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+//                    ShowDialog();
+//                    SaveDateBase(attachment.displayName, save_name_path);
+//                    if (dialog1 != null) {
+//                        dialog1.dismiss();
+//                    }
+//                    Log.i("tag", "sssssssssssssssssss6666666666666666666666");
+//                    new OpenFile(mContext).openFile(new File(save_name_path));
+//                } else {
+//                    Toast.makeText(getActivity(), "网络不可用", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+            is_Open_Save = 2;
+//            if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+//                /**
+//                 *   下载完整邮件
+//                 */
+//                DownloadEmail();
+//
+//            } else {
+//                Toast.makeText(getActivity(), "网络不可用", Toast.LENGTH_SHORT).show();
+//            }
+//            if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+//                SaveDateBase(attachment.displayName, save_name_path);
+//                new OpenFile(mContext).openFile(new File(save_name_path));
+//            } else {
+//                Toast.makeText(mContext, "网络不可用", Toast.LENGTH_SHORT).show();
+//            }
         }
     }
 
@@ -952,11 +1047,17 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         String displayName = setFileReleaseNames(Fujian_path, attachment.displayName, attachment.displayName);
         String save_name_path = filePath() + File.separator + displayName;
         if (NetworkUtils.isNetWorkAvailable(mContext)) {
-
             initDialog(attachment, displayName, save_name_path);
         } else {
-            Toast.makeText(mContext, "网络不可用", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "请连接网络", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //ToDO 下载完整邮件
+    private void DownloadEmail() {
+        mMessageView.disableDownloadButton();
+        ShowDialog();
+        messageLoaderHelper.downloadCompleteMessage();
     }
 
 
@@ -1017,14 +1118,53 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         dialog.setSingle(false).setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {
             @Override
             public void onPositiveClick() {
+                if (attachment.displayName.endsWith(".apk")) {
+                    if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+                        /**
+                         *   下载完整邮件
+                         */
+                        DownloadEmail();
+                        Log.i("tag", "sssssssssssssssssss1111111111111111111");
+                    } else {
+                        Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
+                    }
+                    /**
+                     * 大于2.2Mb下载全部
+                     */
+                } else
+//                    if (attachment.size > FileSize)
+                    {
+                    if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+                        /**
+                         *   下载完整邮件
+                         */
+                        DownloadEmail();
+                        Log.i("tag", "sssssssssssssssssss222222222222222222");
+                    } else {
+                        Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+//                else {
+//                    if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+//                        ShowDialog();
+//                        SaveDateBase(displayName, save_name_path);
+//                        if (dialog1 != null) {
+//                            dialog1.dismiss();
+//                        }
+//                        Log.i("tag", "sssssssssssssssssss33333333333333333333333333333");
+//                    } else {
+//                        Toast.makeText(getActivity(), "网络不可用", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+
                 dialog.dismiss();
-                SaveDateBase(displayName, save_name_path);
+                is_Open_Save = 1;
             }
 
             @Override
             public void onNegtiveClick() {
                 dialog.dismiss();
-                Toast.makeText(getActivity(), "ssss", Toast.LENGTH_SHORT).show();
             }
         }).show();
     }

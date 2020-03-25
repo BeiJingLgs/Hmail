@@ -2,15 +2,19 @@ package com.fsck.k9.ui.settings
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.icu.text.RelativeDateTimeFormatter
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fsck.k9.ui.R
+import com.fsck.k9.util.UpdateUtil
 import de.cketti.library.changelog.ChangeLog
 import java.util.Calendar
 import kotlinx.android.synthetic.main.about_library.view.*
@@ -21,12 +25,13 @@ private data class Library(val name: String, val URL: String, val license: Strin
 
 class AboutFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_about, container, false)
+        val view = inflater.inflate(R.layout.fragment_about, container, false)
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         version.text = getVersionNumber()
         versionLayout.setOnClickListener { displayChangeLog() }
 
@@ -77,31 +82,33 @@ class AboutFragment : Fragment() {
 
     companion object {
         private val USED_LIBRARIES = arrayOf(
-                Library("Android Support Library", "https://developer.android.com/topic/libraries/support-library/index.html", "Apache License, Version 2.0"),
-                Library("Android-Support-Preference-V7-Fix", "https://github.com/Gericop/Android-Support-Preference-V7-Fix", "Unlicense/Apache License, Version 2.0"),
-                Library("ckChangeLog", "https://github.com/cketti/ckChangeLog", "Apache License, Version 2.0"),
-                Library("Commons IO", "https://commons.apache.org/io/", "Apache License, Version 2.0"),
-                Library("Glide", "https://github.com/bumptech/glide", "Mixed License"),
-                Library("jsoup", "https://jsoup.org/", "MIT License"),
-                Library("jutf7", "http://jutf7.sourceforge.net/", "MIT License"),
-                Library("JZlib", "http://www.jcraft.com/jzlib/", "BSD-style License"),
-                Library("Mime4j", "http://james.apache.org/mime4j/", "Apache License, Version 2.0"),
-                Library("Moshi", "https://github.com/square/moshi", "Apache License, Version 2.0"),
-                Library("Okio", "https://github.com/square/okio", "Apache License, Version 2.0"),
-                Library("SafeContentResolver", "https://github.com/cketti/SafeContentResolver", "Apache License, Version 2.0"),
-                Library("ShowcaseView", "https://github.com/amlcurran/ShowcaseView", "Apache License, Version 2.0"),
-                Library("Timber", "https://github.com/JakeWharton/timber", "Apache License, Version 2.0"),
-                Library("TokenAutoComplete", "https://github.com/splitwise/TokenAutoComplete/", "Apache License, Version 2.0"))
+            Library("Android Support Library", "https://developer.android.com/topic/libraries/support-library/index.html", "Apache License, Version 2.0"),
+            Library("Android-Support-Preference-V7-Fix", "https://github.com/Gericop/Android-Support-Preference-V7-Fix", "Unlicense/Apache License, Version 2.0"),
+            Library("ckChangeLog", "https://github.com/cketti/ckChangeLog", "Apache License, Version 2.0"),
+            Library("Commons IO", "https://commons.apache.org/io/", "Apache License, Version 2.0"),
+            Library("Glide", "https://github.com/bumptech/glide", "Mixed License"),
+            Library("jsoup", "https://jsoup.org/", "MIT License"),
+            Library("jutf7", "http://jutf7.sourceforge.net/", "MIT License"),
+            Library("JZlib", "http://www.jcraft.com/jzlib/", "BSD-style License"),
+            Library("Mime4j", "http://james.apache.org/mime4j/", "Apache License, Version 2.0"),
+            Library("Moshi", "https://github.com/square/moshi", "Apache License, Version 2.0"),
+            Library("Okio", "https://github.com/square/okio", "Apache License, Version 2.0"),
+            Library("SafeContentResolver", "https://github.com/cketti/SafeContentResolver", "Apache License, Version 2.0"),
+            Library("ShowcaseView", "https://github.com/amlcurran/ShowcaseView", "Apache License, Version 2.0"),
+            Library("Timber", "https://github.com/JakeWharton/timber", "Apache License, Version 2.0"),
+            Library("TokenAutoComplete", "https://github.com/splitwise/TokenAutoComplete/", "Apache License, Version 2.0")
+        )
     }
 }
 
 private class LibrariesAdapter(private val dataset: Array<Library>) :
-        RecyclerView.Adapter<LibrariesAdapter.ViewHolder>() {
+    RecyclerView.Adapter<LibrariesAdapter.ViewHolder>() {
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.about_library, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.about_library, parent, false)
         return ViewHolder(view)
     }
 

@@ -57,15 +57,15 @@ class SettingsListFragment : Fragment() {
     private fun populateSettingsList(accounts: List<Account>) {
         settingsAdapter.clear()
 
-        val generalSection = Section().apply {
-            val generalSettingsActionItem = SettingsActionItem(
-                    getString(R.string.general_settings_title),
-                    R.id.action_settingsListScreen_to_generalSettingsScreen,
-                    R.attr.iconSettingsGeneral
-            )
-            add(generalSettingsActionItem)
-        }
-        settingsAdapter.add(generalSection)
+//        val generalSection = Section().apply {
+//            val generalSettingsActionItem = SettingsActionItem(
+//                    getString(R.string.general_settings_title),
+//                    R.id.action_settingsListScreen_to_generalSettingsScreen,
+//                    R.attr.iconSettingsGeneral
+//            )
+//            add(generalSettingsActionItem)
+//        }
+//        settingsAdapter.add(generalSection)
 
         val accountSection = Section().apply {
             for (account in accounts) {
@@ -100,18 +100,22 @@ class SettingsListFragment : Fragment() {
 //        backupSection.setHeader(SettingsDividerItem(getString(R.string.settings_list_backup_category)))
 //        settingsAdapter.add(backupSection)
 
-//        val miscSection = Section().apply {
-//            val accountActionItem = SettingsActionItem(
-//                getString(R.string.about_action),
-//                R.id.action_settingsListScreen_to_aboutScreen,
-//                R.attr.iconSettingsAbout
-//            )
-//            add(accountActionItem)
-//        }
-//        miscSection.setHeader(SettingsDividerItem(getString(R.string.settings_list_miscellaneous_category)))
-//        settingsAdapter.add(miscSection)
+        val miscSection = Section().apply {
+            val accountActionItem = SettingsActionItem(
+                getString(R.string.about_action),
+                R.id.action_settingsListScreen_to_aboutScreen,
+                R.attr.iconSettingsAbout
+            )
+            add(accountActionItem)
+        }
+        miscSection.setHeader(SettingsDividerItem(getString(R.string.settings_list_miscellaneous_category)))
+        settingsAdapter.add(miscSection)
     }
 
+    /**
+     * item 点击事件
+     */
+    //Todo   在这加更新操作
     private fun handleItemClick(item: Item<*>) {
         when (item) {
             is AccountItem -> launchAccountSettings(item.account)

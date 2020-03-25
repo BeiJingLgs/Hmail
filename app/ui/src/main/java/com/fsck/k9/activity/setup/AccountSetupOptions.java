@@ -10,12 +10,14 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.fsck.k9.Account;
 import com.fsck.k9.Core;
 import com.fsck.k9.Preferences;
 import com.fsck.k9.ui.R;
 import com.fsck.k9.activity.K9Activity;
+import com.fsck.k9.util.NetworkUtils;
 
 
 public class AccountSetupOptions extends K9Activity implements OnClickListener {
@@ -126,7 +128,12 @@ public class AccountSetupOptions extends K9Activity implements OnClickListener {
 
     public void onClick(View v) {
         if (v.getId() == R.id.next) {
-            onDone();
+
+            if (NetworkUtils.isNetWorkAvailable(AccountSetupOptions.this)){
+                onDone();
+            }else{
+                Toast.makeText(AccountSetupOptions.this,"请连接网络",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

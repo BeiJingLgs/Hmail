@@ -40,6 +40,7 @@ import com.fsck.k9.mail.AuthType;
 import com.fsck.k9.mail.ConnectionSecurity;
 import com.fsck.k9.mail.MailServerDirection;
 import com.fsck.k9.mail.ServerSettings;
+import com.fsck.k9.util.NetworkUtils;
 import com.fsck.k9.view.ClientCertificateSpinner;
 import com.fsck.k9.view.ClientCertificateSpinner.OnClientCertificateChangedListener;
 import timber.log.Timber;
@@ -503,7 +504,12 @@ public class AccountSetupOutgoing extends K9Activity implements OnClickListener,
 
     public void onClick(View v) {
         if (v.getId() == R.id.next) {
-            onNext();
+
+            if (NetworkUtils.isNetWorkAvailable(AccountSetupOutgoing.this)){
+                onNext();
+            }else{
+                Toast.makeText(AccountSetupOutgoing.this,"请连接网络",Toast.LENGTH_SHORT).show();
+            }
         }else if (v.getId() == R.id.back) {
             startActivity(new Intent(AccountSetupOutgoing.this,AccountSetupBasics.class));
         }

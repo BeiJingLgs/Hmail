@@ -10,6 +10,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.MotionEvent;
 
 import android.view.View;
@@ -25,9 +27,9 @@ import timber.log.Timber;
 public abstract class K9Activity extends AppCompatActivity {
     public static final int PERMISSIONS_REQUEST_READ_CONTACTS  = 1;
     public static final int PERMISSIONS_REQUEST_WRITE_CONTACTS = 2;
-    public static final int PERMISSIONS_REQUEST_WRITE_CONTACTS1 = 3;
-    public static final int PERMISSIONS_REQUEST_WRITE_CONTACTS2 = 4;
-    public static final int PERMISSIONS_REQUEST_WRITE_CONTACTS3 = 5;
+    public static final int PERMISSIONS_MOUNT_UNMOUNT_FILESYSTEMS = 3;
+    public static final int PERMISSIONS_WRITE_EXTERNAL_STORAGE = 4;
+    public static final int PERMISSIONS_INTERNET = 5;
     private static final String FRAGMENT_TAG_RATIONALE = "rationale";
 
 
@@ -86,10 +88,11 @@ public abstract class K9Activity extends AppCompatActivity {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission.permission)) {
             PermissionRationaleDialogFragment dialogFragment =
                     PermissionRationaleDialogFragment.newInstance(permission);
-
+            Log.i("tag","bbbbbbbbbbb11"+permission.permission);
             dialogFragment.show(getSupportFragmentManager(), FRAGMENT_TAG_RATIONALE);
         } else {
             requestPermission(permission);
+            Log.i("tag","bbbbbbbbbbb22"+permission.permission);
         }
     }
 
@@ -110,7 +113,26 @@ public abstract class K9Activity extends AppCompatActivity {
                 PERMISSIONS_REQUEST_WRITE_CONTACTS,
                 R.string.permission_contacts_rationale_title,
                 R.string.permission_contacts_rationale_message
+        ),
+        MOUNT_UNMOUNT_FILESYSTEMS(
+                Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
+                PERMISSIONS_MOUNT_UNMOUNT_FILESYSTEMS,
+                R.string.permission_contacts_rationale_title,
+                R.string.permission_contacts_rationale_message
+        ),
+        WRITE_EXTERNAL_STORAGE(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                PERMISSIONS_WRITE_EXTERNAL_STORAGE,
+                R.string.permission_contacts_rationale_title,
+                R.string.permission_contacts_rationale_message
+        ),
+        INTERNET(
+                Manifest.permission.INTERNET,
+                PERMISSIONS_INTERNET,
+                R.string.permission_contacts_rationale_title,
+                R.string.permission_contacts_rationale_message
         );
+
 
         public final String permission;
         public final int requestCode;

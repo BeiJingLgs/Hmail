@@ -339,7 +339,9 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         decodeArguments();
 
         createCacheBroadcastReceiver(appContext);
-
+        /**
+         * 这是加载到的数据 传到adapter
+         */
         getViewModel().getMessageListLiveData().observe(this, this::setMessageList);
 
         initialized = true;
@@ -352,11 +354,11 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         layoutInflater = inflater;
 
         View view = inflater.inflate(R.layout.message_list_fragment, container, false);
-
+         //TODO 绑定控件
         initializePullToRefresh(view);
 
         initializeLayout();
-        listView.setVerticalFadingEdgeEnabled(false);
+//        listView.setVerticalFadingEdgeEnabled(false);
 
         return view;
     }
@@ -625,10 +627,10 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     }
 
     private void initializeLayout() {
-        listView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        listView.setLongClickable(true);
-        listView.setFastScrollEnabled(true);
-        listView.setScrollingCacheEnabled(false);
+//        listView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+//        listView.setLongClickable(true);
+//        listView.setFastScrollEnabled(true);
+//        listView.setScrollingCacheEnabled(false);
         listView.setOnItemClickListener(this);
 
         registerForContextMenu(listView);
@@ -1072,44 +1074,9 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
 
     }
 
-    public void onSwipeRightToLeft(final MotionEvent e1, final MotionEvent e2) {
-        // Handle right-to-left as an un-select
-        handleSwipe(e1, false);
-    }
 
-    public void onSwipeLeftToRight(final MotionEvent e1, final MotionEvent e2) {
-        // Handle left-to-right as a select.
-        handleSwipe(e1, true);
-    }
 
-    /**
-     * Handle a select or unselect swipe event.
-     *
-     * @param downMotion
-     *         Event that started the swipe
-     * @param selected
-     *         {@code true} if this was an attempt to select (i.e. left to right).
-     */
-    private void handleSwipe(final MotionEvent downMotion, final boolean selected) {
-        int x = (int) downMotion.getRawX();
-        int y = (int) downMotion.getRawY();
 
-        Rect headerRect = new Rect();
-        listView.getGlobalVisibleRect(headerRect);
-
-        // Only handle swipes in the visible area of the message list
-        if (headerRect.contains(x, y)) {
-            int[] listPosition = new int[2];
-            listView.getLocationOnScreen(listPosition);
-
-            int listX = x - listPosition[0];
-            int listY = y - listPosition[1];
-
-            int listViewPosition = listView.pointToPosition(listX, listY);
-
-            toggleMessageSelect(listViewPosition);
-        }
-    }
 
     private int listViewToAdapterPosition(int position) {
         if (position >= 0 && position < adapter.getCount()) {
@@ -2423,7 +2390,9 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         adapter.setSelected(selected);
 
         updateContextMenu(messageListItems);
-
+        /**
+         * 给Adapter传值
+         */
         adapter.setMessages(messageListItems);
 
         resetActionMode();

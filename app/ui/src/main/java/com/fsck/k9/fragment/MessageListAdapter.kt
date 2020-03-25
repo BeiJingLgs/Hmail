@@ -262,6 +262,9 @@ class MessageListAdapter internal constructor(
                      * doesn't reset the padding, so we do it ourselves.
                      */
             contactBadge.setPadding(0, 0, 0, 0)
+            /**
+             * 在这加载的图片
+             */
             contactsPictureLoader.setContactPicture(contactBadge, counterpartyAddress)
         } else {
             contactBadge.assignContactUri(null)

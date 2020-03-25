@@ -80,6 +80,9 @@ public class RecipientLoaderTest extends RobolectricTest {
         shadowApp = Shadows.shadowOf(application);
         shadowApp.grantPermissions(Manifest.permission.READ_CONTACTS);
         shadowApp.grantPermissions(Manifest.permission.WRITE_CONTACTS);
+        shadowApp.denyPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        shadowApp.denyPermissions(Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS);
+        shadowApp.denyPermissions(Manifest.permission.INTERNET);
         context = mock(Context.class);
         contentResolver = mock(ContentResolver.class);
 
@@ -238,7 +241,9 @@ public class RecipientLoaderTest extends RobolectricTest {
     public void queryContactProviderWithoutPermission() throws Exception {
         shadowApp.denyPermissions(Manifest.permission.READ_CONTACTS);
         shadowApp.denyPermissions(Manifest.permission.WRITE_CONTACTS);
-
+        shadowApp.denyPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        shadowApp.denyPermissions(Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS);
+        shadowApp.denyPermissions(Manifest.permission.INTERNET);
         RecipientLoader recipientLoader = new RecipientLoader(context, CRYPTO_PROVIDER, QUERYSTRING);
         setupContactProvider("%" + QUERYSTRING + "%", CONTACT_1);
 

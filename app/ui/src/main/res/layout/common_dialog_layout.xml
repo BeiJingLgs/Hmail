@@ -47,7 +47,7 @@
         android:gravity="center|left"
         android:lineSpacingExtra="3dp"
         android:lineSpacingMultiplier="1.2"
-        android:text="文件名称：   aaaaa.gif"
+        android:text=""
         android:textColor="@color/color_black1"
         android:textSize="24sp" />
 
@@ -61,7 +61,7 @@
         android:layout_marginTop="20dp"
         android:lineSpacingExtra="3dp"
         android:lineSpacingMultiplier="1.2"
-        android:text="文件大小：   aaaaa.gif"
+        android:text=""
         android:textColor="@color/color_black1"
         android:textSize="24sp" />
     <TextView
@@ -74,7 +74,7 @@
         android:layout_marginTop="20dp"
         android:lineSpacingExtra="3dp"
         android:lineSpacingMultiplier="1.2"
-        android:text="保存位置：   aaaaa.gif"
+        android:text=""
         android:textColor="@color/color_black1"
         android:textSize="24sp" />
     <View

@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
 import com.fsck.k9.db.FujianBaseHelper;
+import com.fsck.k9.util.AppCrashHandler;
 
 public class MyApplication extends Application {
 
@@ -15,6 +16,9 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        //初始化一下就行了，别忘记了
+
+        AppCrashHandler.getInstance().init(this);
         instance=this;
         setDatabase()  ;
     }

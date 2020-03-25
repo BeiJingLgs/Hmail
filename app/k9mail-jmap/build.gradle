@@ -10,7 +10,7 @@ if (rootProject.testCoverage) {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
-
+    implementation "androidx.fragment:fragment:1.2.0"
     implementation project(":app:ui")
     implementation project(":app:core")
     implementation project(":app:storage")

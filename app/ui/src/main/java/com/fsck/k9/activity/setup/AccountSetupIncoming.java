@@ -43,6 +43,7 @@ import com.fsck.k9.mail.store.imap.ImapStoreSettings;
 import com.fsck.k9.mail.store.webdav.WebDavStoreSettings;
 import com.fsck.k9.preferences.Protocols;
 import com.fsck.k9.ui.R;
+import com.fsck.k9.util.NetworkUtils;
 import com.fsck.k9.view.ClientCertificateSpinner;
 import com.fsck.k9.view.ClientCertificateSpinner.OnClientCertificateChangedListener;
 
@@ -618,7 +619,12 @@ public class AccountSetupIncoming extends K9Activity implements OnClickListener 
     public void onClick(View v) {
         try {
             if (v.getId() == R.id.next) {
-                onNext();
+                if (NetworkUtils.isNetWorkAvailable(AccountSetupIncoming.this)){
+                    onNext();
+
+                }else{
+                    Toast.makeText(AccountSetupIncoming.this,"请连接网络",Toast.LENGTH_SHORT).show();
+                }
             }else if (v.getId()==R.id.back){
                 startActivity(new Intent(AccountSetupIncoming.this,AccountSetupBasics.class));
             }

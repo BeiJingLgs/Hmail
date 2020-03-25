@@ -14,5 +14,9 @@
         android:divider="@color/color_black"
         android:dividerHeight="2dp"
         android:layout_weight="5" />
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_fragment_RecyclerView"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="match_parent"/>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

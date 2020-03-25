@@ -756,7 +756,7 @@ Hmail 是 Android 上一款功能强大的自由 email 客户端。
     <string name="messagelist_sent_to_me_sigil">»</string>
     <string name="messagelist_sent_cc_me_sigil">›</string>
     <string name="settings_list_backup_category">备份</string>
-    <string name="settings_list_miscellaneous_category">杂项</string>
+    <string name="settings_list_miscellaneous_category">版本</string>
     <string name="settings_export_title">导出设置</string>
     <string name="settings_export_button">导出</string>
     <string name="settings_export_share_button">分享</string>
@@ -989,7 +989,8 @@ Hmail 是 Android 上一款功能强大的自由 email 客户端。
     <string name="dialog_autocrypt_mutual_description_1">消息会按您的选择，或当回复加密消息时正常加密。</string>
     <string name="dialog_autocrypt_mutual_description_2">如果发件人和收件人均启用了互动模式，加密默认会被启用。</string>
     <string name="dialog_autocrypt_mutual_learn_more">您可以<a href="https://k9mail.github.io/2018/02/26/OpenPGP-Considerations-Part-III-Autocrypt.html">点击这里</a>了解详情。</string>
-    <string name="general_settings_title">常规设置</string>
+<!--    <string name="general_settings_title">常规设置</string>-->
+    <string name="general_settings_title">版本更新</string>
     <string name="dialog_openkeychain_info_title">未安装 OpenPGP 应用</string>
     <string name="dialog_openkeychain_info_install">安装</string>
     <string name="dialog_openkeychain_info_text">Hmail 需要 OpenKeychain 提供端到端加密。</string>

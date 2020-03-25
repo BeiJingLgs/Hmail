@@ -170,11 +170,9 @@ public class CommonDialog extends Dialog {
         negtiveBn = (Button) findViewById(R.id.negtive);
         positiveBn = (Button) findViewById(R.id.positive);
         titleTv = (TextView) findViewById(R.id.dialog_title);
-
         fujian_name = (TextView) findViewById(R.id.dialog_fujian_name);
         fujian_size = (TextView) findViewById(R.id.fujian_size);
         save_path = (TextView) findViewById(R.id.save_path);
-
         imageIv = (ImageView) findViewById(R.id.image);
         columnLineView = findViewById(R.id.column_line);
     }

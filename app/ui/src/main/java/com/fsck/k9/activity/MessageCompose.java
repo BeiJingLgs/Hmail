@@ -662,8 +662,21 @@ public class MessageCompose extends K9Activity implements OnClickListener,
     }
 
     private void checkAndRequestPermissions() {
+        if (!hasPermission(Permission.MOUNT_UNMOUNT_FILESYSTEMS)) {
+            requestPermissionOrShowRationale(Permission.MOUNT_UNMOUNT_FILESYSTEMS);
+        }
+        if (!hasPermission(Permission.WRITE_EXTERNAL_STORAGE)) {
+            requestPermissionOrShowRationale(Permission.WRITE_EXTERNAL_STORAGE);
+        }
         if (!hasPermission(Permission.READ_CONTACTS)) {
             requestPermissionOrShowRationale(Permission.READ_CONTACTS);
+        }
+        if (!hasPermission(Permission.WRITE_CONTACTS)) {
+            requestPermissionOrShowRationale(Permission.WRITE_CONTACTS);
+        }
+
+        if (!hasPermission(Permission.INTERNET)) {
+            requestPermissionOrShowRationale(Permission.INTERNET);
         }
     }
 
@@ -738,7 +751,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
 
             performSendAfterChecks();
         }else{
-            Toast.makeText(MessageCompose.this,"网络不可用",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MessageCompose.this,"请连接网络",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -984,7 +997,6 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             prepareToFinish(true);
         } else if (id == R.id.send) {
             //TODO 发送邮件
-
                 checkToSendMessage();
         } else if (id == R.id.save) {
             checkToSaveDraftAndSave();

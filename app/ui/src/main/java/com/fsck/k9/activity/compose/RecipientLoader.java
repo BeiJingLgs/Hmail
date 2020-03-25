@@ -294,7 +294,13 @@ public class RecipientLoader extends AsyncTaskLoader<List<Recipient>> {
                 Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
         boolean canWrite = ContextCompat.checkSelfPermission(getContext(),
                 Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED;
-        return  canRead && canWrite;
+        boolean write_external_storage = ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        boolean mount_unmount_filesystems = ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS) == PackageManager.PERMISSION_GRANTED;
+        boolean internet = ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED;
+        return  canRead && canWrite &&write_external_storage && mount_unmount_filesystems &&internet;
     }
 
     private Cursor getNicknameCursor(String nickname) {
