@@ -1,22 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swiperefresh"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/color_bai"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/message_list"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/color_black"
-        android:dividerHeight="2dp"
-        android:layout_weight="5" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_fragment_RecyclerView"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/color_bai">
+
+        <ListView
+            android:id="@+id/message_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/color_black"
+            android:dividerHeight="2dp" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <View
         android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/color_black1"/>
+    <TextView
+        android:id="@+id/tv_loading"
+        android:layout_width="match_parent"
+        android:layout_height="94dp"
+        android:text="正在加载中。。。"
         android:visibility="gone"
-        android:layout_height="match_parent"/>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:textColor="@color/color_black1"
+        android:gravity="center"
+        android:textSize="20sp"
+        />
+    <LinearLayout
+        android:id="@+id/LL"
+        android:layout_width="match_parent"
+        android:layout_height="94dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/left_message"
+            android:background="@drawable/shangyiye"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            />
+        <TextView
+            android:id="@+id/limit_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="第 1 页"
+            android:textSize="26sp"
+            android:layout_margin="5dp"
+            android:textColor="@color/color_black1"
+            />
+        <TextView
+            android:id="@+id/right_message"
+            android:background="@drawable/xiayiye"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            />
+    </LinearLayout>
+</LinearLayout>
+

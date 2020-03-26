@@ -59,7 +59,7 @@ class MessageListLoader(
             )
         }
         val hasMoreMessages = loadHasMoreMessages(accounts, config.search.folderServerIds)
-
+            //todo  在这返回加载的数据
         return MessageListInfo(messageListItems, hasMoreMessages)
     }
 

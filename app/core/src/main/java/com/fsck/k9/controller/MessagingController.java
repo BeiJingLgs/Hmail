@@ -572,6 +572,32 @@ public class MessagingController {
             throw new RuntimeException("Unable to set visible limit on folder", me);
         }
     }
+    public int getVisibleLimit(Account account,String folder){
+        LocalStore localStore = null;
+        try {
+            localStore = localStoreProvider.getInstance(account);
+            LocalFolder localFolder = localStore.getFolder(folder);
+            int limit = localFolder.getVisibleLimit();
+            if (limit>0){
+                return limit;
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public void loadMoreMessages_left(Account account, String folder, MessagingListener listener,int Count) {
+        try {
+            LocalStore localStore = localStoreProvider.getInstance(account);
+            LocalFolder localFolder = localStore.getFolder(folder);
+            if (localFolder.getVisibleLimit() > 0) {
+                localFolder.setVisibleLimit(Count);
+            }
+            synchronizeMailbox(account, folder, listener);
+        } catch (MessagingException me) {
+            throw new RuntimeException("Unable to set visible limit on folder", me);
+        }
+    }
 
     /**
      * Start background synchronization of the specified folder.
