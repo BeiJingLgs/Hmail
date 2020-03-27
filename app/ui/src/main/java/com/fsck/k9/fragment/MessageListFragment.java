@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -634,6 +635,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
 
     private void initializePullToRefresh(View layout) {
         ll_bar = layout.findViewById(R.id.LL);
+        ll_bar.setVisibility(View.VISIBLE);
         tv_loading = layout.findViewById(R.id.tv_loading);
         left_message_list = layout.findViewById(R.id.left_message);
         right_message_list = layout.findViewById(R.id.right_message);
@@ -2417,6 +2419,8 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     }
 
     public void setMessageList(MessageListInfo messageListInfo) {
+
+
         ll_bar.setVisibility(View.VISIBLE);
         tv_loading.setVisibility(View.GONE);
         List<MessageListItem> messageListItems = messageListInfo.getMessageListItems();
@@ -2448,36 +2452,39 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         this.adapter.setSelected(selected);
         updateContextMenu(messageListItems);
         Log.i("tag", "vvvvvvvvvvvvvv11111111....." + messageListItems.size());
-        mMessageList.clear();
-        //如果大于1说明翻页了
-        if (visibleLimit / 8 > 1 || (visibleLimit / 8 > 1&& visibleLimit % 8 != 0)) {
-            if (visibleLimit % 8 == 0) {
-                aaa = visibleLimit/8;
-            } else {
-                aaa = visibleLimit % 8 + 1;
-            }
-            for (int i = (aaa - 1) * 8; i < messageListItems.size(); i++) {
-                MessageListItem listItem = messageListItems.get(i);
-                mMessageList.add(listItem);
-            }
-            this.adapter.setMessages(mMessageList);
-
-        } else {
-            /**
-             * 给Adapter传值
-             */
+        if (title.equals("搜索结果")) {
+            ll_bar.setVisibility(View.GONE);
             this.adapter.setMessages(messageListItems);
-        }
-        //TODO   显示页数
-        if (visibleLimit % 8 == 0) {
-            count_limit = visibleLimit/8;
-            System.out.println("n可以被m整除");
         } else {
-            System.out.println("n不能被m整除");
-            count_limit = visibleLimit % 8 + 1;
-        }
-        if (count_limit > 0) {
-            limit_count.setText("第" + count_limit + "页");
+            mMessageList.clear();
+            if (visibleLimit / 8 > 1 || (visibleLimit / 8 > 1 && visibleLimit % 8 != 0)) {
+                if (visibleLimit % 8 == 0) {
+                    aaa = visibleLimit / 8;
+                } else {
+                    aaa = visibleLimit % 8 + 1;
+                }
+                for (int i = (aaa - 1) * 8; i < messageListItems.size(); i++) {
+                    MessageListItem listItem = messageListItems.get(i);
+                    mMessageList.add(listItem);
+                }
+                this.adapter.setMessages(mMessageList);
+            } else {
+                /**
+                 * 给Adapter传值
+                 */
+                this.adapter.setMessages(messageListItems);
+            }
+            //TODO   显示页数
+            if (visibleLimit % 8 == 0) {
+                count_limit = visibleLimit / 8;
+                System.out.println("n可以被m整除");
+            } else {
+                System.out.println("n不能被m整除");
+                count_limit = visibleLimit % 8 + 1;
+            }
+            if (count_limit > 0) {
+                limit_count.setText("第" + count_limit + "页");
+            }
         }
         resetActionMode();
         computeBatchDirection();
