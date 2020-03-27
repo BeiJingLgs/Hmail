@@ -320,19 +320,15 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
          * 左侧RecyclerView的folder
          */
         initializeRecyclerView();
-
         /**
          * 加载数据
          */
         loadData();
-
-
         initializeDisplayMode(savedInstanceState);
         initializeLayout();
         initializeFragments();
         displayViews();
         channelUtils.updateChannels();
-
 //        ChangeLog cl = new ChangeLog(this);
 //        if (cl.isFirstRun()) {
 //            cl.getLogDialog().show();

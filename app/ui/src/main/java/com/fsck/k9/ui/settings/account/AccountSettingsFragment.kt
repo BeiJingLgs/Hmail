@@ -327,6 +327,8 @@ class AccountSettingsFragment : PreferenceFragmentCompat(), ConfirmationDialogFr
         dialogFragment.show(requireFragmentManager(), TAG_DELETE_ACCOUNT_CONFIRMATION)
     }
 
+
+
     override fun doPositiveClick(dialogId: Int) {
         accountRemover.removeAccountAsync(accountUuid)
         closeAccountSettings()

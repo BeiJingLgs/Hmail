@@ -80,6 +80,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
+                android:visibility="gone"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
                 android:paddingTop="8dp"
@@ -204,11 +205,13 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:padding="16dp"
+                android:visibility="gone"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
+                android:visibility="gone"
                 android:background="?android:attr/listDivider" />
 
             <TextView

@@ -32,4 +32,5 @@
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceListItem"
         tools:text="List item with simple text" />
+
 </LinearLayout>

@@ -18,7 +18,8 @@
         android:src="?attr/iconSettingsAccount" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="24dp"
@@ -45,4 +46,13 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             tools:text="test@example.org" />
     </LinearLayout>
+    <Button
+        android:id="@+id/delete_user"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:text="删除用户"
+        android:textSize="22sp"
+        android:textColor="@color/color_black1"
+        android:layout_marginRight="20dp"
+        />
 </LinearLayout>

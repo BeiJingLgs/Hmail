@@ -8,21 +8,26 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fsck.k9.Account
+import com.fsck.k9.account.BackgroundAccountRemover
+import com.fsck.k9.fragment.ConfirmationDialogFragment
 import com.fsck.k9.ui.R
 import com.fsck.k9.ui.observeNotNull
 import com.fsck.k9.ui.settings.account.AccountSettingsActivity
+import com.fsck.k9.ui.settings.account.AccountSettingsFragment
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.Section
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.fragment_settings_list.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsListFragment : Fragment() {
+class SettingsListFragment : Fragment(), ConfirmationDialogFragment.ConfirmationDialogFragmentListener {
     private val viewModel: SettingsViewModel by viewModel()
-
+    private lateinit var accountSetting: AccountSettingsFragment
     private lateinit var settingsAdapter: GroupAdapter<ViewHolder>
-
+    private val accountRemover: BackgroundAccountRemover by inject()
+    private lateinit var accounts1 :Account
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_settings_list, container, false)
     }
@@ -33,6 +38,7 @@ class SettingsListFragment : Fragment() {
     }
 
     private fun initializeSettingsList() {
+        accountSetting= AccountSettingsFragment()
         settingsAdapter = GroupAdapter()
         settingsAdapter.setOnItemClickListener { item, _ ->
             handleItemClick(item)
@@ -66,16 +72,17 @@ class SettingsListFragment : Fragment() {
 //            add(generalSettingsActionItem)
 //        }
 //        settingsAdapter.add(generalSection)
-
         val accountSection = Section().apply {
             for (account in accounts) {
-                add(AccountItem(account))
+                accounts1 = account;
+                add(AccountItem(account,context,accountSetting,this@SettingsListFragment))
             }
 
             val addAccountActionItem = SettingsActionItem(
                     getString(R.string.add_account_action),
                     R.id.action_settingsListScreen_to_addAccountScreen,
-                    R.attr.iconSettingsAccountAdd
+                    R.attr.iconSettingsAccountAdd,
+                    context
             )
             add(addAccountActionItem)
         }
@@ -104,7 +111,8 @@ class SettingsListFragment : Fragment() {
             val accountActionItem = SettingsActionItem(
                 getString(R.string.about_action),
                 R.id.action_settingsListScreen_to_aboutScreen,
-                R.attr.iconSettingsAbout
+                R.attr.iconSettingsAbout,
+                context
             )
             add(accountActionItem)
         }
@@ -118,7 +126,7 @@ class SettingsListFragment : Fragment() {
     //Todo   在这加更新操作
     private fun handleItemClick(item: Item<*>) {
         when (item) {
-            is AccountItem -> launchAccountSettings(item.account)
+//            is AccountItem -> launchAccountSettings(item.account)
             is SettingsActionItem -> findNavController().navigate(item.navigationAction)
         }
     }
@@ -130,5 +138,16 @@ class SettingsListFragment : Fragment() {
     private fun launchOnboarding() {
         findNavController().navigate(R.id.action_settingsListScreen_to_onboardingScreen)
         requireActivity().finish()
+    }
+
+    override fun dialogCancelled(dialogId: Int) {
+    }
+
+    override fun doPositiveClick(dialogId: Int) {
+        accountRemover.removeAccountAsync(accounts1.uuid)
+//        closeAccountSettings()
+    }
+
+    override fun doNegativeClick(dialogId: Int) {
     }
 }

@@ -75,6 +75,7 @@ import com.fsck.k9.ui.messagelist.MessageListFragmentDiContainer;
 import com.fsck.k9.ui.messagelist.MessageListInfo;
 import com.fsck.k9.ui.messagelist.MessageListItem;
 import com.fsck.k9.ui.messagelist.MessageListViewModel;
+import com.fsck.k9.util.NetworkUtils;
 
 import net.jcip.annotations.GuardedBy;
 
@@ -403,6 +404,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
 
         // This needs to be done before loading the message list below
         initializeSortSettings();
+
         /**
          * 加载数据
          */
