@@ -17,9 +17,9 @@ import com.fsck.k9.ui.R;
 
 import java.util.List;
 
-public class HeaderRecyclerView  extends RecyclerView.Adapter<HeaderRecyclerView.MyHolder>{
-    private  MessageList mContent;
-    private  List<Account> mList;
+public class HeaderRecyclerView extends RecyclerView.Adapter<HeaderRecyclerView.MyHolder> {
+    private MessageList mContent;
+    private List<Account> mList;
     private OnItemClickListener mOnItemClickListener;
     private HeaderRecyclerView.CallBack mCallBack;
 
@@ -30,16 +30,20 @@ public class HeaderRecyclerView  extends RecyclerView.Adapter<HeaderRecyclerView
     public interface CallBack {
         <T extends Object> void convert(HeaderRecyclerView.MyHolder holder, T bean, int position);
     }
+
     public HeaderRecyclerView(MessageList messageList, List<Account> accounts) {
-     this.mContent=messageList;
-     this.mList=accounts;
+        this.mContent = messageList;
+        this.mList = accounts;
     }
-    public void  setData(List<Account> accounts){
-        this.mList=accounts;
+
+    public void setData(List<Account> accounts) {
+        this.mList = accounts;
     }
+
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
         this.mOnItemClickListener = mOnItemClickListener;
     }
+
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -55,8 +59,6 @@ public class HeaderRecyclerView  extends RecyclerView.Adapter<HeaderRecyclerView
         holder.header_item_name.setText(email);
         if (mCallBack != null)
             mCallBack.convert(holder, account, position);
-
-
 
 
         //判断是否设置了监听器
@@ -78,7 +80,7 @@ public class HeaderRecyclerView  extends RecyclerView.Adapter<HeaderRecyclerView
         return mList.size();
     }
 
-    public class MyHolder extends  RecyclerView.ViewHolder{
+    public class MyHolder extends RecyclerView.ViewHolder {
 
         public final TextView header_item_name;
         public final LinearLayout header_ll;
@@ -89,6 +91,7 @@ public class HeaderRecyclerView  extends RecyclerView.Adapter<HeaderRecyclerView
             header_item_name = itemView.findViewById(R.id.header_item_name);
         }
     }
+
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }

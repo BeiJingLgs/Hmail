@@ -75,8 +75,8 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
 
         drawer = DrawerBuilder()
                 .withActivity(parent)
-                .withOnDrawerItemClickListener(createItemClickListener())
-                .withOnDrawerListener(parent.createOnDrawerListener())
+//                .withOnDrawerItemClickListener(createItemClickListener())
+//                .withOnDrawerListener(parent.createOnDrawerListener())
                 .withSavedInstance(savedInstanceState)
                 .withAccountHeader(accountHeader)
                 .build()

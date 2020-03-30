@@ -21,6 +21,7 @@ import android.os.Parcelable;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentManager.OnBackStackChangedListener;
 import androidx.fragment.app.FragmentTransaction;
@@ -121,6 +122,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     private List<DisplayFolder> list;
     private static RecyclerView mHeaderRecyclerView;
     private List<Account> accounts;
+    private List<Account> accountss = new ArrayList<>();
     private HeaderRecyclerView headerRecyclerView;
 
     public static void actionDisplaySearch(Context context, SearchSpecification search,
@@ -239,25 +241,61 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
      */
     private boolean messageListWasDisplayed = false;
     private ViewSwitcher viewSwitcher;
+    //申请两个权限，录音和文件读写
+    //1、首先声明一个数组permissions，将需要的权限都放在里面
+    String[] permissions = new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
+            Manifest.permission.INTERNET,
+            Manifest.permission.READ_CONTACTS};
+    //2、创建一个mPermissionList，逐个判断哪些权限未授予，未授予的权限存储到mPerrrmissionList中
+    List<String> mPermissionList = new ArrayList<>();
+    private final int mRequestCode = 100;//权限请求码
+
+
+    //权限判断和申请
+    private void initPermission() {
+
+        mPermissionList.clear();//清空没有通过的权限
+        //逐个判断你要的权限是否已经通过
+        for (int i = 0; i < permissions.length; i++) {
+            if (ContextCompat.checkSelfPermission(this, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
+                mPermissionList.add(permissions[i]);//添加还未授予的权限
+            }
+        }
+        //申请权限
+        if (mPermissionList.size() > 0) {//有权限没有通过，需要申请
+            ActivityCompat.requestPermissions(this, permissions, mRequestCode);
+        } else {
+            //说明权限都已经通过，可以做你想做的事情去
+        }
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             checkAndRequestPermissions();
-            //            // 检查权限
-            if (ContextCompat.checkSelfPermission(MessageList.this,
-                    Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS) != PackageManager.PERMISSION_GRANTED) {
-                // 申请授权
-                ActivityCompat
-                        .requestPermissions(
-                                MessageList.this,
-                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                                        Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
-                                        Manifest.permission.INTERNET, Manifest.permission.READ_CONTACTS},
-                                1);
-            }
+
+
+//            // 检查权限
+//            if (ContextCompat.checkSelfPermission(MessageList.this,
+//                    Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS) != PackageManager.PERMISSION_GRANTED
+//            ) {
+//                // 申请授权
+//                ActivityCompat
+//                        .requestPermissions(
+//                                MessageList.this,
+//                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                                        Manifest.permission.READ_EXTERNAL_STORAGE,
+//                                        Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
+//                                        Manifest.permission.INTERNET,
+//                                        Manifest.permission.READ_CONTACTS},
+//                                1);
+//            }
+            initPermission();
         }
         if (NetworkUtils.isNetWorkAvailable(MessageList.this)) {
             Log.i("TAG", "hhhhhhhhhhhhhhhhh");
@@ -269,6 +307,12 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
          * 获取用户的List
          */
         accounts = preferences.getAccounts();
+        for (int i = 0; i < accounts.size(); i++) {
+            Account account = accounts.get(i);
+            if (account.getDescription() != null) {
+                accountss.add(account);
+            }
+        }
         if (accounts.isEmpty()) {
             OnboardingActivity.launch(this);
             finish();
@@ -356,13 +400,14 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
     private void initializeHeaderRecyclerView() {
         mHeaderRecyclerView = findViewById(R.id.header_RecyclerView);
+        mHeaderRecyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager headerManager = new LinearLayoutManager(MessageList.this);
-        headerRecyclerView = new HeaderRecyclerView(MessageList.this, accounts);
+        headerRecyclerView = new HeaderRecyclerView(MessageList.this, accountss);
         mHeaderRecyclerView.addItemDecoration(new DividerItemDecoration(MessageList.this, DividerItemDecoration.VERTICAL));
         mHeaderRecyclerView.setLayoutManager(headerManager);
         mHeaderRecyclerView.setAdapter(headerRecyclerView);
         headerRecyclerView.setOnItemClickListener((view, position) -> {
-            Account account = accounts.get(position);
+            Account account = accountss.get(position);
             openRealAccount(account);
             drawer.updateUserAccountsAndFolders(account);
             headercurrentPosition = position;
@@ -397,7 +442,12 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         list = new ArrayList<>();
         mRecyclerView = findViewById(R.id.Folder_RecyclerView);
         adapter = new RecyclerViewAdapter(MessageList.this, list);
-        LinearLayoutManager manager = new LinearLayoutManager(MessageList.this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager manager = new LinearLayoutManager(MessageList.this, LinearLayoutManager.VERTICAL, false) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(adapter);
         View footerView = LayoutInflater.from(MessageList.this).inflate(R.layout.layout_footer_view, mRecyclerView, false);
@@ -827,7 +877,8 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 //        }
 
         drawer = new K9Drawer(this, savedInstanceState);
-
+        //禁止手势滑动打开
+        drawer.lock();
 //        DrawerLayout drawerLayout = drawer.getLayout();
 //        drawerToggle = new ActionBarDrawerToggle(
 //                this, drawerLayout, null,
@@ -841,10 +892,10 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         return new OnDrawerListener() {
             @Override
             public void onDrawerClosed(View drawerView) {
-                if (openFolderTransaction != null) {
-                    openFolderTransaction.commit();
-                    openFolderTransaction = null;
-                }
+//                if (openFolderTransaction != null) {
+//                    openFolderTransaction.commit();
+//                    openFolderTransaction = null;
+//                }
             }
 
             @Override

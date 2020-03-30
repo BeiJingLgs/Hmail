@@ -358,7 +358,8 @@ Hmail 是 Android 上一款功能强大的自由 email 客户端。
     <string name="account_setup_options_mail_check_frequency_never">从不</string>
     <string name="account_setup_options_mail_check_frequency_15min">15 分钟一次</string>
     <string name="account_setup_options_mail_check_frequency_30min">30 分钟一次</string>
-    <string name="account_setup_options_mail_check_frequency_1hour">每小时一次</string>
+<!--    <string name="account_setup_options_mail_check_frequency_1hour">每小时一次</string>-->
+    <string name="account_setup_options_mail_check_frequency_1hour">10 分钟一次</string>
     <string name="account_setup_options_mail_check_frequency_2hour">2 小时一次</string>
     <string name="account_setup_options_mail_check_frequency_3hour">3 小时一次</string>
     <string name="account_setup_options_mail_check_frequency_6hour">6 小时一次</string>

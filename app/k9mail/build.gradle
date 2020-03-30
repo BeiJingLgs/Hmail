@@ -9,7 +9,6 @@ if (rootProject.testCoverage) {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
-
     implementation project(":app:ui")
     implementation project(":app:core")
     implementation project(":app:storage")
@@ -17,10 +16,8 @@ dependencies {
     implementation project(":backend:imap")
     implementation project(":backend:pop3")
     implementation project(":backend:webdav")
-
     implementation "androidx.appcompat:appcompat:${versions.androidxAppCompat}"
     implementation "com.jakewharton.timber:timber:${versions.timber}"
-
     testImplementation "org.robolectric:robolectric:${versions.robolectric}"
     testImplementation "junit:junit:${versions.junit}"
     testImplementation "com.google.truth:truth:${versions.truth}"

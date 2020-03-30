@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -14,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.IntentSender.SendIntentException;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +25,8 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.os.SystemClock;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -381,6 +385,10 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
 
     //TODO 创建文件夹
     public String filePath() {
+
+
+
+
         File file1 = new File(Fujian_path);
         if (!file1.exists()) {
             //创建文件夹

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include layout="@layout/toolbar" />
 
@@ -29,52 +29,49 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/header_RecyclerView"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content">
             </androidx.recyclerview.widget.RecyclerView>
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:id="@+id/Folder_RecyclerView"-->
-<!--                android:layout_width="200dp"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_weight="1"-->
-<!--                />-->
+            <!--            <androidx.recyclerview.widget.RecyclerView-->
+            <!--                android:id="@+id/Folder_RecyclerView"-->
+            <!--                android:layout_width="200dp"-->
+            <!--                android:layout_height="0dp"-->
+            <!--                android:layout_weight="1"-->
+            <!--                />-->
             <com.fsck.k9.util.WrapRecyclerView
                 android:id="@+id/Folder_RecyclerView"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                />
+                 />
         </LinearLayout>
+
         <View
             android:layout_width="3dp"
             android:layout_height="match_parent"
-            android:background="@color/color_black"
-            />
+            android:background="@color/color_black" />
+
         <com.fsck.k9.view.ViewSwitcher
             android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/message_list_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/message_view_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
         </com.fsck.k9.view.ViewSwitcher>
 
 
-
-
     </LinearLayout>
-
-
 
 
 </LinearLayout>

@@ -74,8 +74,10 @@ class SettingsListFragment : Fragment(), ConfirmationDialogFragment.Confirmation
 //        settingsAdapter.add(generalSection)
         val accountSection = Section().apply {
             for (account in accounts) {
-                accounts1 = account;
-                add(AccountItem(account,context,accountSetting,this@SettingsListFragment))
+                accounts1 = account
+                if (account.description!=null){
+                    add(AccountItem(account,context,accountSetting,this@SettingsListFragment))
+                }
             }
 
             val addAccountActionItem = SettingsActionItem(

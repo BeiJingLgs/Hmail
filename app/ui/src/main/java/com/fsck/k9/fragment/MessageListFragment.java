@@ -1138,20 +1138,25 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     //TODO 点击事件
     @Override
     public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.left_message) {
-            if (count_limit > 1) {
+        if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+            int id = v.getId();
+            if (id == R.id.left_message) {
+                if (count_limit > 1) {
+                    ll_bar.setVisibility(View.GONE);
+                    tv_loading.setVisibility(View.VISIBLE);
+                    tv_loading.setText(context.getString(R.string.status_loading_more));
+                    messagingController.loadMoreMessages_left(account, folderServerId, null, (count_limit - 1) * 8);
+                }
+            } else if (id == R.id.right_message) {
                 ll_bar.setVisibility(View.GONE);
                 tv_loading.setVisibility(View.VISIBLE);
                 tv_loading.setText(context.getString(R.string.status_loading_more));
-                messagingController.loadMoreMessages_left(account, folderServerId, null, (count_limit - 1) * 8);
+                messagingController.loadMoreMessages(account, folderServerId, null);
             }
-        } else if (id == R.id.right_message) {
-            ll_bar.setVisibility(View.GONE);
-            tv_loading.setVisibility(View.VISIBLE);
-            tv_loading.setText(context.getString(R.string.status_loading_more));
-            messagingController.loadMoreMessages(account, folderServerId, null);
+        } else {
+            Toast.makeText(getActivity(),"请连接网络",Toast.LENGTH_SHORT).show();
         }
+
     }
 
     class MessageListActivityListener extends SimpleMessagingListener {
