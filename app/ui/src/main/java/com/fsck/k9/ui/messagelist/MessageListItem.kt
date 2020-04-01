@@ -2,8 +2,9 @@ package com.fsck.k9.ui.messagelist
 
 import com.fsck.k9.Account
 import com.fsck.k9.mail.Address
+import java.io.Serializable
 
-data class MessageListItem(
+object data  class MessageListItem(
     val position: Int,
     val account: Account,
     val subject: String?,
@@ -27,4 +28,4 @@ data class MessageListItem(
     val databaseId: Long,
     val senderAddress: String?,
     val threadRoot: Long
-)
+):Serializable

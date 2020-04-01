@@ -5,6 +5,20 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 
 
+android {
+
+    //使用Kotlin实验特性
+    androidExtensions {
+        experimental = true
+    }
+}
+
+
+
+
+
+
+
 
 
 dependencies {

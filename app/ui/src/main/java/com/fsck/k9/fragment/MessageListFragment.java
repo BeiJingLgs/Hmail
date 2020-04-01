@@ -1,10 +1,11 @@
 package com.fsck.k9.fragment;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,8 +17,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -50,9 +51,7 @@ import com.fsck.k9.Account.SortType;
 import com.fsck.k9.DI;
 import com.fsck.k9.K9;
 import com.fsck.k9.Preferences;
-import com.fsck.k9.activity.MessageList;
 import com.fsck.k9.controller.SimpleMessagingListener;
-import com.fsck.k9.mail.internet.Viewable;
 import com.fsck.k9.ui.choosefolder.ChooseFolderActivity;
 import com.fsck.k9.activity.FolderInfoHolder;
 import com.fsck.k9.activity.misc.ContactPicture;
@@ -75,11 +74,17 @@ import com.fsck.k9.ui.messagelist.MessageListFragmentDiContainer;
 import com.fsck.k9.ui.messagelist.MessageListInfo;
 import com.fsck.k9.ui.messagelist.MessageListItem;
 import com.fsck.k9.ui.messagelist.MessageListViewModel;
+import com.fsck.k9.util.InterfaceAdapter;
 import com.fsck.k9.util.NetworkUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 
 import net.jcip.annotations.GuardedBy;
 
-import org.w3c.dom.Text;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import timber.log.Timber;
 
@@ -95,11 +100,10 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     private TextView left_message_list;
     private TextView right_message_list;
     private TextView limit_count;
-    private int count_limit;
-    private int aaa = 0;
 
     private LinearLayout ll_bar;
     private TextView tv_loading;
+    private SharedPreferences sp_list;
 
 
     public static MessageListFragment newInstance(
@@ -140,7 +144,6 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     private FolderInfoHolder currentFolder;
     private LayoutInflater layoutInflater;
     private MessagingController messagingController;
-
     private Account account;
     private String[] accountUuids;
 
@@ -148,7 +151,6 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
      * Stores the server ID of the folder that we want to open as soon as possible after load.
      */
     private String folderServerId;
-
     private boolean remoteSearchPerformed = false;
     private Future<?> remoteSearchFuture = null;
     private List<String> extraSearchResults;
@@ -164,7 +166,6 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     private SortType sortType = SortType.SORT_DATE;
     private boolean sortAscending = true;
     private boolean sortDateAscending = false;
-    private List<MessageListItem> mMessageList = new ArrayList<>();
     private int selectedCount = 0;
     private Set<Long> selected = new HashSet<>();
     private ActionMode actionMode;
@@ -182,6 +183,8 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     private final MessageListActivityListener activityListener = new MessageListActivityListener();
     private Preferences preferences;
     private MessageReference activeMessage;
+    //默认第一页为1
+    private int limitCount = 1;
     /**
      * {@code true} after {@link #onCreate(Bundle)} was executed. Used in {@link #updateTitle()} to
      * make sure we don't access member variables before initialization is complete.
@@ -190,6 +193,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     private LocalBroadcastManager localBroadcastManager;
     private BroadcastReceiver cacheBroadcastReceiver;
     private IntentFilter cacheIntentFilter;
+
     /**
      * Stores the unique ID of the message the context menu was opened for.
      * <p>
@@ -353,7 +357,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
 
         folderNameFormatter = folderNameFormatterFactory.create(requireActivity());
         Context appContext = getActivity().getApplicationContext();
-
+        sp_list = appContext.getSharedPreferences("aa", Context.MODE_PRIVATE);
         preferences = Preferences.getPreferences(appContext);
         messagingController = MessagingController.getInstance(getActivity().getApplication());
 
@@ -392,6 +396,8 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     @Override
     public void onDestroyView() {
         savedListState = listView.onSaveInstanceState();
+        SharedPreferences sp = context.getSharedPreferences("state", Context.MODE_PRIVATE);
+        sp.edit().putInt("count", limitCount).commit();
         super.onDestroyView();
     }
 
@@ -434,12 +440,12 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
      */
     //TODO   恢复数据
     private void restoreInstanceState(Bundle savedInstanceState) {
+        SharedPreferences sp = context.getSharedPreferences("state", Context.MODE_PRIVATE);
+        limitCount = sp.getInt("count", 1);
         if (savedInstanceState == null) {
             return;
         }
-
         restoreSelectedMessages(savedInstanceState);
-
         remoteSearchPerformed = savedInstanceState.getBoolean(STATE_REMOTE_SEARCH_PERFORMED);
         savedListState = savedInstanceState.getParcelable(STATE_MESSAGE_LIST);
         String messageReferenceString = savedInstanceState.getString(STATE_ACTIVE_MESSAGE);
@@ -496,7 +502,6 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
 
     private void decodeArguments() {
         Bundle args = getArguments();
-
         showingThreadedList = args.getBoolean(ARG_THREADED_LIST, false);
         isThreadDisplay = args.getBoolean(ARG_IS_THREAD_DISPLAY, false);
         search = args.getParcelable(ARG_SEARCH);
@@ -642,6 +647,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         left_message_list = layout.findViewById(R.id.left_message);
         right_message_list = layout.findViewById(R.id.right_message);
         limit_count = layout.findViewById(R.id.limit_count);
+        limit_count.setText("第" + limitCount + "页");
         swipeRefreshLayout = layout.findViewById(R.id.swiperefresh);
         listView = layout.findViewById(R.id.message_list);
         Log.i("tag", "vvvvvvvvvvvvvv444444");
@@ -1141,20 +1147,27 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         if (NetworkUtils.isNetWorkAvailable(getActivity())) {
             int id = v.getId();
             if (id == R.id.left_message) {
-                if (count_limit > 1) {
-                    ll_bar.setVisibility(View.GONE);
-                    tv_loading.setVisibility(View.VISIBLE);
-                    tv_loading.setText(context.getString(R.string.status_loading_more));
-                    messagingController.loadMoreMessages_left(account, folderServerId, null, (count_limit - 1) * 8);
+                if (limitCount > 1) {
+                    limitCount--;
+                    messagingController.loadMoreMessages_left(account, folderServerId, null, limitCount * 8);
+                    limit_count.setText("第" + limitCount + "页");
                 }
+//                if (count_limit > 1) {
+//                    ll_bar.setVisibility(View.GONE);
+//                    tv_loading.setVisibility(View.VISIBLE);
+//                    tv_loading.setText(context.getString(R.string.status_loading_more));
+//                    messagingController.loadMoreMessages_left(account, folderServerId, null, (count_limit - 1) * 8);
+//                }
             } else if (id == R.id.right_message) {
+                limitCount++;
                 ll_bar.setVisibility(View.GONE);
                 tv_loading.setVisibility(View.VISIBLE);
                 tv_loading.setText(context.getString(R.string.status_loading_more));
                 messagingController.loadMoreMessages(account, folderServerId, null);
+                limit_count.setText("第" + limitCount + "页");
             }
         } else {
-            Toast.makeText(getActivity(),"请连接网络",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -2425,13 +2438,25 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         return fragmentListener.startSearch(account, folderServerId);
     }
 
+    public List<MessageListItem> removeRepeatFactor(List<MessageListItem> list1, List<MessageListItem> list2) throws Exception {
+        if (list1 != null && list2 != null) {
+            if (list1.size() != 0 && list2.size() != 0) {
+                List<MessageListItem> A = new ArrayList(list1);
+                List<MessageListItem> B = new ArrayList(list2);
+                A.retainAll(B);
+                if (A.size() != 0) {
+                    B.removeAll(A);
+                }
+                return (List<MessageListItem>) B;
+            }
+        }
+        return list2;
+    }
+
     public void setMessageList(MessageListInfo messageListInfo) {
-
-
         ll_bar.setVisibility(View.VISIBLE);
         tv_loading.setVisibility(View.GONE);
         List<MessageListItem> messageListItems = messageListInfo.getMessageListItems();
-        int visibleLimit = messagingController.getVisibleLimit(account, folderServerId);
         if (isThreadDisplay && messageListItems.isEmpty()) {
             handler.goBack();
             return;
@@ -2459,38 +2484,80 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         this.adapter.setSelected(selected);
         updateContextMenu(messageListItems);
         Log.i("tag", "vvvvvvvvvvvvvv11111111....." + messageListItems.size());
-        if (title.equals("搜索结果")) {
-            ll_bar.setVisibility(View.GONE);
-            this.adapter.setMessages(messageListItems);
-        } else {
-            mMessageList.clear();
-            if (visibleLimit / 8 > 1 || (visibleLimit / 8 > 1 && visibleLimit % 8 != 0)) {
-                if (visibleLimit % 8 == 0) {
-                    aaa = visibleLimit / 8;
-                } else {
-                    aaa = visibleLimit % 8 + 1;
-                }
-                for (int i = (aaa - 1) * 8; i < messageListItems.size(); i++) {
-                    MessageListItem listItem = messageListItems.get(i);
-                    mMessageList.add(listItem);
-                }
-                this.adapter.setMessages(mMessageList);
-            } else {
-                /**
-                 * 给Adapter传值
-                 */
-                this.adapter.setMessages(messageListItems);
-            }
-            //TODO   显示页数
+//        int visibleLimit = messagingController.getVisibleLimit(account, folderServerId);
+        if (folderServerId!=null){
+            int visibleLimit = messagingController.getVisibleLimit(account, folderServerId);
             if (visibleLimit % 8 == 0) {
-                count_limit = visibleLimit / 8;
+                limitCount = visibleLimit / 8;
                 System.out.println("n可以被m整除");
             } else {
                 System.out.println("n不能被m整除");
-                count_limit = visibleLimit % 8 + 1;
+                limitCount = visibleLimit % 8 + 1;
             }
-            if (count_limit > 0) {
-                limit_count.setText("第" + count_limit + "页");
+            if (limitCount > 0) {
+                limit_count.setText("第" + limitCount + "页");
+            }
+        }
+//        if (title.equals("搜索结果")) {
+//            ll_bar.setVisibility(View.GONE);
+//            this.adapter.setMessages(messageListItems);
+//        } else {
+//            mMessageList.clear();
+//            if (visibleLimit / 8 > 1 || (visibleLimit / 8 > 1 && visibleLimit % 8 != 0)) {
+//                if (visibleLimit % 8 == 0) {
+//                    aaa = visibleLimit / 8;
+//                } else {
+//                    aaa = visibleLimit % 8 + 1;
+//                }
+//                for (int i = (aaa - 1) * 8; i < messageListItems.size(); i++) {
+//                    MessageListItem listItem = messageListItems.get(i);
+//                    mMessageList.add(listItem);
+//                }
+//                this.adapter.setMessages(mMessageList);
+//            } else {
+//                /**
+//                 * 给Adapter传值
+//                 */
+//                this.adapter.setMessages(messageListItems);
+//            }
+//            //TODO   显示页数
+//            if (visibleLimit % 8 == 0) {
+//                count_limit = visibleLimit / 8;
+//                System.out.println("n可以被m整除");
+//            } else {
+//                System.out.println("n不能被m整除");
+//                count_limit = visibleLimit % 8 + 1;
+//            }
+//            if (count_limit > 0) {
+//                limit_count.setText("第" + count_limit + "页");
+//            }
+//        }
+        if (title.equals("搜索结果")) {
+            ll_bar.setVisibility(View.GONE);
+            this.adapter.setMessages(messageListItems);
+        } else if (limitCount == 1) {
+            this.adapter.setMessages(messageListItems);
+            SaveMessageList(messageListItems);
+        } else {
+            try {
+                //TODO   sp保存MessageList
+                SaveMessageList(messageListItems);
+                String saveMessageList = getSaveMessageList();
+                if (saveMessageList != null) {
+                    GsonBuilder builder = new GsonBuilder();
+                    builder.registerTypeAdapter(MessageListItem.class, new InterfaceAdapter());
+                    Gson gson = builder.create();
+                    List<MessageListItem> saveList = gson.fromJson(saveMessageList, new TypeToken<List<MessageListItem>>() {
+                    }.getType());
+                    List<MessageListItem> saveList1 = new ArrayList<>();
+                    for (int i = saveList.size(); i < messageListItems.size(); i++) {
+                        MessageListItem listItem = messageListItems.get(i);
+                        saveList1.add(listItem);
+                    }
+                    this.adapter.setMessages(saveList1);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         resetActionMode();
@@ -2508,6 +2575,58 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
             currentFolder.moreMessages = messageListInfo.getHasMoreMessages();
             updateFooterView();
         }
+    }
+
+
+    /**
+     * @param firstArrayList  第一个ArrayList
+     * @param secondArrayList 第二个ArrayList
+     * @return resultList 差集ArrayList
+     * @方法描述：获取两个ArrayList的差集
+     */
+
+    public static List<MessageListItem> receiveDefectList(List<MessageListItem> firstArrayList, List<MessageListItem> secondArrayList) {
+
+        List<MessageListItem> resultList = new ArrayList<MessageListItem>();
+
+        LinkedList<MessageListItem> result = new LinkedList<MessageListItem>(firstArrayList);// 大集合用linkedlist
+
+        HashSet<MessageListItem> othHash = new HashSet<MessageListItem>(secondArrayList);// 小集合用hashset
+
+        Iterator<MessageListItem> iter = result.iterator();// 采用Iterator迭代器进行数据的操作
+
+        while (iter.hasNext()) {
+
+            if (othHash.contains(iter.next())) {
+
+                iter.remove();
+
+            }
+
+        }
+
+        resultList = new ArrayList<MessageListItem>(result);
+
+        return resultList;
+
+    }
+
+    private void SaveMessageList(List<MessageListItem> messageListItems) {
+        SharedPreferences sp = context.getSharedPreferences(String.valueOf(limitCount), Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        String s = new Gson().toJson(messageListItems);
+        edit.putString("key", s);
+        edit.commit();
+    }
+
+    private String getSaveMessageList() {
+        SharedPreferences sp = context.getSharedPreferences(String.valueOf(limitCount - 1), Context.MODE_PRIVATE);
+        return sp.getString("key", null);
+    }
+
+    private String getSaveMessageList1(int limitCount) {
+        SharedPreferences sp = context.getSharedPreferences(String.valueOf(limitCount), Context.MODE_PRIVATE);
+        return sp.getString("key", null);
     }
 
     public boolean isLoadFinished() {
