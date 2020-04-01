@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -62,7 +63,9 @@ public class AccountSetupIncoming extends K9Activity implements OnClickListener 
     private static final String EXTRA_MAKE_DEFAULT = "makeDefault";
     private static final String STATE_SECURITY_TYPE_POSITION = "stateSecurityTypePosition";
     private static final String STATE_AUTH_TYPE_POSITION = "authTypePosition";
-
+    //APP退出操作按钮
+    private long mWaitTime = 2000;
+    private long mTochTime = 0;
     private final MessagingController messagingController = DI.get(MessagingController.class);
     private final BackendManager backendManager = DI.get(BackendManager.class);
     private final K9JobManager jobManager = DI.get(K9JobManager.class);
@@ -388,7 +391,40 @@ public class AccountSetupIncoming extends K9Activity implements OnClickListener 
         mServerView.addTextChangedListener(validationTextWatcher);
         mPortView.addTextChangedListener(validationTextWatcher);
     }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (event.getAction() == KeyEvent.ACTION_DOWN
+//                && KeyEvent.KEYCODE_BACK == keyCode) {
+//            /**
+//             * 删除用户
+//             */
+////            Preferences.getPreferences(this).deleteAccount(mAccount);
+//            return true;
+//        }
+//        return false;
+//    }
+    /**
+     * 再按一次退出系统
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN
+                && KeyEvent.KEYCODE_BACK == keyCode) {
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime - mTochTime) >= mWaitTime) {
+                //"再按返回键退出应用！"
 
+                mTochTime = currentTime;
+            } else {
+                if (mAccount!=null){
+                    Preferences.getPreferences(this).deleteAccount(mAccount);
+                }
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

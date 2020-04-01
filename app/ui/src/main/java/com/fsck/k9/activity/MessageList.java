@@ -314,6 +314,9 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             }
         }
         if (accounts.isEmpty()) {
+            /**
+             * 欢迎页面
+             */
             OnboardingActivity.launch(this);
             finish();
             return;
@@ -878,7 +881,6 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
         drawer = new K9Drawer(this, savedInstanceState);
         //禁止手势滑动打开
-        drawer.lock();
 //        DrawerLayout drawerLayout = drawer.getLayout();
 //        drawerToggle = new ActionBarDrawerToggle(
 //                this, drawerLayout, null,
@@ -1920,12 +1922,12 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     }
 
     private void lockDrawer() {
-        drawer.lock();
+//        drawer.lock();
 //        drawerToggle.setDrawerIndicatorEnabled(false);
     }
 
     private void unlockDrawer() {
-        drawer.unlock();
+//        drawer.unlock();
 //        drawerToggle.setDrawerIndicatorEnabled(true);
     }
 

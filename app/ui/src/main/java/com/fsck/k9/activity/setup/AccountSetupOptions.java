@@ -5,6 +5,7 @@ package com.fsck.k9.activity.setup;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -127,7 +128,33 @@ public class AccountSetupOptions extends K9Activity implements OnClickListener {
         AccountSetupNames.actionSetNames(this, mAccount);
         finish();
     }
-
+    /**
+     * 物理返回键
+     */
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (event.getAction() == KeyEvent.ACTION_DOWN
+//                && KeyEvent.KEYCODE_BACK == keyCode) {
+//            /**
+//             * 删除用户
+//             */
+////            Preferences.getPreferences(this).deleteAccount(mAccount);
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN
+                && KeyEvent.KEYCODE_BACK == keyCode) {
+            /**
+             * 删除用户
+             */
+//            Preferences.getPreferences(this).deleteAccount(mAccount);
+            return true;
+        }
+        return false;
+    }
     public void onClick(View v) {
         if (v.getId() == R.id.next) {
 

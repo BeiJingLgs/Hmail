@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -51,7 +52,9 @@ import timber.log.Timber;
 public class AccountSetupOutgoing extends K9Activity implements OnClickListener,
     OnCheckedChangeListener {
     private static final String EXTRA_ACCOUNT = "account";
-
+    //APP退出操作按钮
+    private long mWaitTime = 2000;
+    private long mTochTime = 0;
     private static final String EXTRA_MAKE_DEFAULT = "makeDefault";
     private static final String STATE_SECURITY_TYPE_POSITION = "stateSecurityTypePosition";
     private static final String STATE_AUTH_TYPE_POSITION = "authTypePosition";
@@ -527,7 +530,28 @@ public class AccountSetupOutgoing extends K9Activity implements OnClickListener,
         Toast toast = Toast.makeText(getApplication(), toastText, Toast.LENGTH_LONG);
         toast.show();
     }
+    /**
+     * 再按一次退出系统
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN
+                && KeyEvent.KEYCODE_BACK == keyCode) {
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime - mTochTime) >= mWaitTime) {
+                //"再按返回键退出应用！"
 
+                mTochTime = currentTime;
+            } else {
+                if (mAccount!=null){
+                    Preferences.getPreferences(this).deleteAccount(mAccount);
+                }
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
     /*
      * Calls validateFields() which enables or disables the Next button
      * based on the fields' validity.

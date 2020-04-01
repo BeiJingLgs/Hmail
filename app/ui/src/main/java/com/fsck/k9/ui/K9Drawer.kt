@@ -80,7 +80,7 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
                 .withSavedInstance(savedInstanceState)
                 .withAccountHeader(accountHeader)
                 .build()
-
+        drawer.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         addFooterItems()
         /**
          * 网络请求获取到的Folders
