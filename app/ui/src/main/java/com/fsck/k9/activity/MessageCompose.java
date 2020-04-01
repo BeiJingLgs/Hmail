@@ -24,9 +24,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
+
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -109,6 +111,7 @@ import com.fsck.k9.util.NetworkUtils;
 
 import org.openintents.openpgp.OpenPgpApiManager;
 import org.openintents.openpgp.util.OpenPgpApi;
+
 import timber.log.Timber;
 
 
@@ -165,7 +168,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
 
     /**
      * Regular expression to remove the first localized "Re:" prefix in subjects.
-     *
+     * <p>
      * Currently:
      * - "Aw:" (german: abbreviation for "Antwort")
      */
@@ -229,7 +232,10 @@ public class MessageCompose extends K9Activity implements OnClickListener,
     private boolean isInSubActivity = false;
 
     private boolean navigateUp;
+    private String title111;
+    private String content111;
 
+    @SuppressLint("WrongConstant")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -241,6 +247,8 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         setLayout(R.layout.message_compose);
+
+
         ViewStub contentContainer = findViewById(R.id.message_compose_content);
 
         ThemeManager themeManager = getThemeManager();
@@ -265,7 +273,14 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         setProgressBarIndeterminateVisibility(false);
 
         final Intent intent = getIntent();
-
+        if (intent.getFlags() == 101) {
+            Bundle bundle = intent.getExtras();
+            title111 = bundle.getString("title");
+            content111 = bundle.getString("content");
+            if (title111 !=null && content111!=null){
+                Toast.makeText(MessageCompose.this, "title:" + title111 + "...content:" + content111, Toast.LENGTH_LONG).show();
+            }
+        }
         String messageReferenceString = intent.getStringExtra(EXTRA_MESSAGE_REFERENCE);
         relatedMessageReference = MessageReference.parse(messageReferenceString);
 
@@ -308,6 +323,9 @@ public class MessageCompose extends K9Activity implements OnClickListener,
 
 
         subjectView = findViewById(R.id.subject);
+        if (title111!=null) {
+            subjectView.setText(title111);
+        }
         subjectView.getInputExtras(true).putBoolean("allowEmoji", true);
 
         EolConvertingEditText upperSignature = findViewById(R.id.upper_signature);
@@ -319,6 +337,9 @@ public class MessageCompose extends K9Activity implements OnClickListener,
                 getSupportLoaderManager(), this);
 
         messageContentView = findViewById(R.id.message_content);
+        if (content111!=null) {
+            messageContentView.setText(content111);
+        }
         messageContentView.getInputExtras(true).putBoolean("allowEmoji", true);
 
         attachmentsView = findViewById(R.id.attachments);
@@ -486,18 +507,16 @@ public class MessageCompose extends K9Activity implements OnClickListener,
      * <p>
      * Supported external intents:
      * <ul>
-     *   <li>{@link Intent#ACTION_VIEW}</li>
-     *   <li>{@link Intent#ACTION_SENDTO}</li>
-     *   <li>{@link Intent#ACTION_SEND}</li>
-     *   <li>{@link Intent#ACTION_SEND_MULTIPLE}</li>
+     * <li>{@link Intent#ACTION_VIEW}</li>
+     * <li>{@link Intent#ACTION_SENDTO}</li>
+     * <li>{@link Intent#ACTION_SEND}</li>
+     * <li>{@link Intent#ACTION_SEND_MULTIPLE}</li>
      * </ul>
      * </p>
      *
-     * @param intent
-     *         The (external) intent that started the activity.
-     *
+     * @param intent The (external) intent that started the activity.
      * @return {@code true}, if this activity was started by an external intent. {@code false},
-     *         otherwise.
+     * otherwise.
      */
     private boolean initFromIntent(final Intent intent) {
         boolean startedByExternalIntent = false;
@@ -747,11 +766,11 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         if (attachmentPresenter.checkOkForSendingOrDraftSaving()) {
             return;
         }
-        if (NetworkUtils.isNetWorkAvailable(MessageCompose.this)){
+        if (NetworkUtils.isNetWorkAvailable(MessageCompose.this)) {
 
             performSendAfterChecks();
-        }else{
-            Toast.makeText(MessageCompose.this,"请连接网络",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(MessageCompose.this, "请连接网络", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -997,7 +1016,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             prepareToFinish(true);
         } else if (id == R.id.send) {
             //TODO 发送邮件
-                checkToSendMessage();
+            checkToSendMessage();
         } else if (id == R.id.save) {
             checkToSaveDraftAndSave();
         } else if (id == R.id.discard) {
@@ -1211,8 +1230,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
      * Pull out the parts of the now loaded source message and apply them to the new message
      * depending on the type of message being composed.
      *
-     * @param messageViewInfo
-     *         The source message used to populate the various text fields.
+     * @param messageViewInfo The source message used to populate the various text fields.
      */
     private void processSourceMessage(MessageViewInfo messageViewInfo) {
         try {
@@ -1427,7 +1445,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         final MessageReference messageReference;
 
         SendMessageTask(Context context, Account account, Contacts contacts, Message message,
-                Long draftId, String plaintextSubject, MessageReference messageReference) {
+                        Long draftId, String plaintextSubject, MessageReference messageReference) {
             this.context = context;
             this.account = account;
             this.contacts = contacts;
@@ -1481,8 +1499,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
      * When we are launched with an intent that includes a mailto: URI, we can actually
      * gather quite a few of our message fields from it.
      *
-     * @param mailTo
-     *         The MailTo object we use to initialize message field
+     * @param mailTo The MailTo object we use to initialize message field
      */
     private void initializeFromMailto(MailTo mailTo) {
         recipientPresenter.initFromMailto(mailTo);
@@ -1651,7 +1668,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
 
         @Override
         public void startIntentSenderForMessageLoaderHelper(IntentSender si, int requestCode, Intent fillIntent,
-                int flagsMask, int flagValues, int extraFlags) {
+                                                            int flagsMask, int flagValues, int extraFlags) {
             try {
                 requestCode |= REQUEST_MASK_LOADER_HELPER;
                 startIntentSenderForResult(si, requestCode, fillIntent, flagsMask, flagValues, extraFlags);

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -87,8 +88,11 @@ import com.fsck.k9.util.WrapRecyclerView;
 import com.fsck.k9.view.ViewSwitcher;
 import com.fsck.k9.view.ViewSwitcher.OnSwitchCompleteListener;
 import com.mikepenz.materialdrawer.Drawer.OnDrawerListener;
+import com.tbruyelle.rxpermissions2.Permission;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import de.cketti.library.changelog.ChangeLog;
+import io.reactivex.functions.Consumer;
 import kotlin.jvm.functions.Function1;
 import timber.log.Timber;
 
@@ -273,29 +277,24 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     }
 
 
+    @SuppressLint("CheckResult")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            checkAndRequestPermissions();
-
-
-//            // 检查权限
-//            if (ContextCompat.checkSelfPermission(MessageList.this,
-//                    Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS) != PackageManager.PERMISSION_GRANTED
-//            ) {
-//                // 申请授权
-//                ActivityCompat
-//                        .requestPermissions(
-//                                MessageList.this,
-//                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                                        Manifest.permission.READ_EXTERNAL_STORAGE,
-//                                        Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
-//                                        Manifest.permission.INTERNET,
-//                                        Manifest.permission.READ_CONTACTS},
-//                                1);
-//            }
-            initPermission();
+//            checkAndRequestPermissions();
+//            initPermission();
+            new RxPermissions(MessageList.this).requestEach(permissions).subscribe(permission -> {
+                if (permission.granted) { //用户已经同意权限
+//                Toast.makeText(MessageList.this,"用户已经同意权限",Toast.LENGTH_LONG).show();
+                } else if (permission.shouldShowRequestPermissionRationale) {
+                    // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
+                    Toast.makeText(MessageList.this,"您不能访问设备所有本地文件",Toast.LENGTH_LONG).show();
+                } else {
+                    // 用户拒绝了该权限，并且选中『不再询问』，提醒用户手动打开权限
+//                    Toast.makeText(MessageList.this,"用户拒绝了该权限，并且选中『不再询问』，提醒用户手动打开权限",Toast.LENGTH_LONG).show();
+                }
+            });
         }
         if (NetworkUtils.isNetWorkAvailable(MessageList.this)) {
             Log.i("TAG", "hhhhhhhhhhhhhhhhh");

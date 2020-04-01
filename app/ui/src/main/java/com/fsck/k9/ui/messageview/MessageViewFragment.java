@@ -76,7 +76,9 @@ import com.fsck.k9.ui.messageview.MessageCryptoPresenter.MessageCryptoMvpView;
 import com.fsck.k9.ui.settings.account.AccountSettingsActivity;
 import com.fsck.k9.util.NetworkUtils;
 import com.fsck.k9.util.OpenFile;
+import com.fsck.k9.util.PermissionPageUtils;
 import com.fsck.k9.view.MessageCryptoDisplayStatus;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import timber.log.Timber;
 
@@ -385,8 +387,6 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
 
     //TODO 创建文件夹
     public String filePath() {
-
-
 
 
         File file1 = new File(Fujian_path);
@@ -969,6 +969,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     };
 
     //TODO 打开附件
+    @SuppressLint("CheckResult")
     @Override
     public void onViewAttachment(AttachmentViewInfo attachment) {
         currentAttachmentViewInfo = attachment;
@@ -978,35 +979,39 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
          * 查看数据库中时候有该文件，有的话说明保存过
          * 没有的话，调用下载然后保存，最后打开
          */
-        String save_name_path = filePath() + File.separator + attachment.displayName;
-        Cursor cursor = MyApplication.getInstance().getDb().query(FujianBeanDB.BIAO_NAME, null, FujianBeanDB.RETURNURI + "=?", new String[]{save_name_path}, null, null, null, null);
-        int count = cursor.getCount();
-        if (count > 0) {
-            new OpenFile(mContext).openFile(new File(save_name_path));
-        } else {
-            if (attachment.displayName.endsWith(".apk")) {
-                if (NetworkUtils.isNetWorkAvailable(getActivity())) {
-                    /**
-                     *   下载完整邮件
-                     */
-                    DownloadEmail();
-                    Log.i("tag", "sssssssssssssssssss44444444444444444444444");
-                } else {
-                    Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
-                }
-            } else
+
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            new RxPermissions(getActivity()).requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(permission -> {
+                if (permission.granted) { //用户已经同意权限
+                    String save_name_path = filePath() + File.separator + attachment.displayName;
+                    Cursor cursor = MyApplication.getInstance().getDb().query(FujianBeanDB.BIAO_NAME, null, FujianBeanDB.RETURNURI + "=?", new String[]{save_name_path}, null, null, null, null);
+                    int count = cursor.getCount();
+                    if (count > 0) {
+                        new OpenFile(mContext).openFile(new File(save_name_path));
+                    } else {
+                        if (attachment.displayName.endsWith(".apk")) {
+                            if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+                                /**
+                                 *   下载完整邮件
+                                 */
+                                DownloadEmail();
+                                Log.i("tag", "sssssssssssssssssss44444444444444444444444");
+                            } else {
+                                Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
+                            }
+                        } else
 //                if (attachment.size > FileSize)
-                {
-                if (NetworkUtils.isNetWorkAvailable(getActivity())) {
-                    /**
-                     *   下载完整邮件
-                     */
-                    DownloadEmail();
-                    Log.i("tag", "sssssssssssssssssss55555555555555555555555");
-                } else {
-                    Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
-                }
-            }
+                        {
+                            if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+                                /**
+                                 *   下载完整邮件
+                                 */
+                                DownloadEmail();
+                                Log.i("tag", "sssssssssssssssssss55555555555555555555555");
+                            } else {
+                                Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
+                            }
+                        }
 
 //            else {
 //                if (NetworkUtils.isNetWorkAvailable(getActivity())) {
@@ -1021,7 +1026,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
 //                    Toast.makeText(getActivity(), "网络不可用", Toast.LENGTH_SHORT).show();
 //                }
 //            }
-            is_Open_Save = 2;
+                        is_Open_Save = 2;
 //            if (NetworkUtils.isNetWorkAvailable(getActivity())) {
 //                /**
 //                 *   下载完整邮件
@@ -1037,10 +1042,97 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
 //            } else {
 //                Toast.makeText(mContext, "网络不可用", Toast.LENGTH_SHORT).show();
 //            }
+                    }
+                } else if (permission.shouldShowRequestPermissionRationale) {
+                    // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
+                    Toast.makeText(getActivity(), "请问是否确定到本地设备中打开存储空间的权限", Toast.LENGTH_LONG).show();
+                } else {
+                    final CommonDialog dialog = new CommonDialog(getActivity());
+                    dialog.setDialog_title("权限设置");
+                    dialog.setSave_path1("");
+                    dialog.setFile_size("请到设置中打开访问权限");
+                    dialog.setFujian_names("");
+                    dialog.setSingle(false).setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {
+                        @Override
+                        public void onPositiveClick() {
+                            PermissionPageUtils permissionPageUtils = new PermissionPageUtils(getActivity());
+                            permissionPageUtils.OpenPermissionPage();
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onNegtiveClick() {
+                            dialog.dismiss();
+                        }
+                    }).show();
+                }
+            });
+        } else {
+            String save_name_path = filePath() + File.separator + attachment.displayName;
+            Cursor cursor = MyApplication.getInstance().getDb().query(FujianBeanDB.BIAO_NAME, null, FujianBeanDB.RETURNURI + "=?", new String[]{save_name_path}, null, null, null, null);
+            int count = cursor.getCount();
+            if (count > 0) {
+                new OpenFile(mContext).openFile(new File(save_name_path));
+            } else {
+                if (attachment.displayName.endsWith(".apk")) {
+                    if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+                        /**
+                         *   下载完整邮件
+                         */
+                        DownloadEmail();
+                        Log.i("tag", "sssssssssssssssssss44444444444444444444444");
+                    } else {
+                        Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
+                    }
+                } else
+//                if (attachment.size > FileSize)
+                {
+                    if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+                        /**
+                         *   下载完整邮件
+                         */
+                        DownloadEmail();
+                        Log.i("tag", "sssssssssssssssssss55555555555555555555555");
+                    } else {
+                        Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+//            else {
+//                if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+//                    ShowDialog();
+//                    SaveDateBase(attachment.displayName, save_name_path);
+//                    if (dialog1 != null) {
+//                        dialog1.dismiss();
+//                    }
+//                    Log.i("tag", "sssssssssssssssssss6666666666666666666666");
+//                    new OpenFile(mContext).openFile(new File(save_name_path));
+//                } else {
+//                    Toast.makeText(getActivity(), "网络不可用", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+                is_Open_Save = 2;
+//            if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+//                /**
+//                 *   下载完整邮件
+//                 */
+//                DownloadEmail();
+//
+//            } else {
+//                Toast.makeText(getActivity(), "网络不可用", Toast.LENGTH_SHORT).show();
+//            }
+//            if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+//                SaveDateBase(attachment.displayName, save_name_path);
+//                new OpenFile(mContext).openFile(new File(save_name_path));
+//            } else {
+//                Toast.makeText(mContext, "网络不可用", Toast.LENGTH_SHORT).show();
+//            }
+            }
         }
     }
 
     //TODO 保存附件
+    @SuppressLint("CheckResult")
     @Override
     public void onSaveAttachment(final AttachmentViewInfo attachment) {
 
@@ -1051,13 +1143,50 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
 //        intent.putExtra(Intent.EXTRA_TITLE, attachment.displayName);
 //        intent.addCategory(Intent.CATEGORY_OPENABLE);
 //        startActivityForResult(intent, REQUEST_CODE_CREATE_DOCUMENT);
-        filePath();
-        String displayName = setFileReleaseNames(Fujian_path, attachment.displayName, attachment.displayName);
-        String save_name_path = filePath() + File.separator + displayName;
-        if (NetworkUtils.isNetWorkAvailable(mContext)) {
-            initDialog(attachment, displayName, save_name_path);
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            new RxPermissions(getActivity()).requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(permission -> {
+                if (permission.granted) { //用户已经同意权限
+                    filePath();
+                    String displayName = setFileReleaseNames(Fujian_path, attachment.displayName, attachment.displayName);
+                    String save_name_path = filePath() + File.separator + displayName;
+                    if (NetworkUtils.isNetWorkAvailable(mContext)) {
+                        initDialog(attachment, displayName, save_name_path);
+                    } else {
+                        Toast.makeText(mContext, "请连接网络", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (permission.shouldShowRequestPermissionRationale) {
+                    // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
+                    Toast.makeText(getActivity(), "请问是否确定到本地设备中打开存储空间的权限", Toast.LENGTH_LONG).show();
+                } else {
+                    final CommonDialog dialog = new CommonDialog(getActivity());
+                    dialog.setDialog_title("权限设置");
+                    dialog.setSave_path1("");
+                    dialog.setFile_size("请到设置中打开访问权限");
+                    dialog.setFujian_names("");
+                    dialog.setSingle(false).setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {
+                        @Override
+                        public void onPositiveClick() {
+                            PermissionPageUtils permissionPageUtils = new PermissionPageUtils(getActivity());
+                            permissionPageUtils.OpenPermissionPage();
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onNegtiveClick() {
+                            dialog.dismiss();
+                        }
+                    }).show();
+                }
+            });
         } else {
-            Toast.makeText(mContext, "请连接网络", Toast.LENGTH_SHORT).show();
+            filePath();
+            String displayName = setFileReleaseNames(Fujian_path, attachment.displayName, attachment.displayName);
+            String save_name_path = filePath() + File.separator + displayName;
+            if (NetworkUtils.isNetWorkAvailable(mContext)) {
+                initDialog(attachment, displayName, save_name_path);
+            } else {
+                Toast.makeText(mContext, "请连接网络", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -1116,7 +1245,8 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     }
 
 
-    private void initDialog(AttachmentViewInfo attachment, String displayName, String save_name_path) {
+    private void initDialog(AttachmentViewInfo attachment, String displayName, String
+            save_name_path) {
         final CommonDialog dialog = new CommonDialog(getActivity());
         dialog.setFujian_names(displayName);
         dialog.setDialog_title("保存文件");
@@ -1141,7 +1271,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
                      */
                 } else
 //                    if (attachment.size > FileSize)
-                    {
+                {
                     if (NetworkUtils.isNetWorkAvailable(getActivity())) {
                         /**
                          *   下载完整邮件
