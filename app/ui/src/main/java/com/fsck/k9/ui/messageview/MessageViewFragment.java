@@ -893,6 +893,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         @Override
         public void onMessageViewInfoLoadFinished(MessageViewInfo messageViewInfo) {
             if (dialog1 != null) {
+                currentAttachmentViewInfo=messageViewInfo.attachments.get(0);
                 dialog1.dismiss();
                 Log.i("tag", "sssssssssssssssssss9999999999999999999999999");
                 Message message = new Message();
@@ -1239,6 +1240,8 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
             values.clear();
         }
     }
+
+
 
     private AttachmentController getAttachmentController(AttachmentViewInfo attachment) {
         return new AttachmentController(mController, this, attachment);

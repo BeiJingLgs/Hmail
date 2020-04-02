@@ -380,7 +380,7 @@ Hmail 是 Android 上一款功能强大的自由 email 客户端。
     <string name="idle_refresh_period_60min">60 分钟一次</string>
     <string name="account_setup_options_notify_label">有新邮件时通知我</string>
     <string name="account_setup_options_notify_sync_label">检查新邮件时通知我</string>
-    <string name="account_setup_options_mail_display_count_label">邮件显示数量</string>
+    <string name="account_setup_options_mail_display_count_label">单页邮件显示数量</string>
     <string name="account_setup_options_mail_display_count_10">10 封</string>
     <string name="account_setup_options_mail_display_count_25">8 封</string>
     <string name="account_setup_options_mail_display_count_50">50 封</string>

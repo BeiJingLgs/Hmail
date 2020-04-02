@@ -3,6 +3,7 @@ package com.fsck.k9.activity.setup
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import com.fsck.k9.Account
 import com.fsck.k9.Preferences
@@ -11,8 +12,8 @@ import com.fsck.k9.helper.EmailHelper.getDomainFromEmailAddress
 import com.fsck.k9.preferences.Protocols
 import com.fsck.k9.setup.ServerNameSuggester
 import com.fsck.k9.ui.R
-import java.net.URI
 import org.koin.android.ext.android.inject
+import java.net.URI
 
 /**
  * Prompts the user to select an account type. The account type, along with the
@@ -102,7 +103,10 @@ class AccountSetupAccountType : K9Activity() {
         AccountSetupIncoming.actionIncomingSettings(this, account, makeDefault)
         finish()
     }
-
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        return (event.action == KeyEvent.ACTION_DOWN
+            && KeyEvent.KEYCODE_BACK == keyCode)
+    }
     companion object {
         private const val EXTRA_ACCOUNT = "account"
         private const val EXTRA_MAKE_DEFAULT = "makeDefault"

@@ -2536,8 +2536,10 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
             ll_bar.setVisibility(View.GONE);
             this.adapter.setMessages(messageListItems);
         } else if (limitCount == 1) {
-            this.adapter.setMessages(messageListItems);
-            SaveMessageList(messageListItems);
+            if (messageListItems.size()<=8){
+                this.adapter.setMessages(messageListItems);
+                SaveMessageList(messageListItems);
+            }
         } else {
             try {
                 //TODO   sp保存MessageList

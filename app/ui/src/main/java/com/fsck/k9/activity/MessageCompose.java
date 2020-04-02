@@ -852,6 +852,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         startActivityForResult(contacts.contactPickerIntent(), requestCode);
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         isInSubActivity = false;

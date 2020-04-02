@@ -19,10 +19,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentManager.OnBackStackChangedListener;
 import androidx.fragment.app.FragmentTransaction;
@@ -88,11 +86,7 @@ import com.fsck.k9.util.WrapRecyclerView;
 import com.fsck.k9.view.ViewSwitcher;
 import com.fsck.k9.view.ViewSwitcher.OnSwitchCompleteListener;
 import com.mikepenz.materialdrawer.Drawer.OnDrawerListener;
-import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-
-import de.cketti.library.changelog.ChangeLog;
-import io.reactivex.functions.Consumer;
 import kotlin.jvm.functions.Function1;
 import timber.log.Timber;
 
@@ -283,6 +277,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
 //            checkAndRequestPermissions();
+
 //            initPermission();
             new RxPermissions(MessageList.this).requestEach(permissions).subscribe(permission -> {
                 if (permission.granted) { //用户已经同意权限

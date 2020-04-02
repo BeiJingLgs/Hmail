@@ -48,12 +48,19 @@
                 android:id="@+id/account_display_count"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:contentDescription="@string/account_setup_options_mail_display_count_label" />
-
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="8封"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?android:attr/textColorPrimary" />
             <CheckBox
                 android:id="@+id/account_notify"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:text="@string/account_setup_options_notify_label"
                 android:textColor="?android:attr/textColorPrimary" />
 
