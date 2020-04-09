@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+
 import androidx.fragment.app.DialogFragment;
 
 import timber.log.Timber;
@@ -20,10 +21,11 @@ public class ConfirmationDialogFragment extends DialogFragment implements OnClic
     private static final String ARG_MESSAGE = "message";
     private static final String ARG_CONFIRM_TEXT = "confirm";
     private static final String ARG_CANCEL_TEXT = "cancel";
+    private String title;
 
 
     public static ConfirmationDialogFragment newInstance(int dialogId, String title, String message,
-            String confirmText, String cancelText) {
+                                                         String confirmText, String cancelText) {
         ConfirmationDialogFragment fragment = new ConfirmationDialogFragment();
 
         Bundle args = new Bundle();
@@ -38,14 +40,16 @@ public class ConfirmationDialogFragment extends DialogFragment implements OnClic
     }
 
     public static ConfirmationDialogFragment newInstance(int dialogId, String title, String message,
-            String cancelText) {
+                                                         String cancelText) {
         return newInstance(dialogId, title, message, null, cancelText);
     }
 
 
     public interface ConfirmationDialogFragmentListener {
         void doPositiveClick(int dialogId);
+
         void doNegativeClick(int dialogId);
+
         void dialogCancelled(int dialogId);
     }
 
@@ -53,7 +57,7 @@ public class ConfirmationDialogFragment extends DialogFragment implements OnClic
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle args = getArguments();
-        String title = args.getString(ARG_TITLE);
+        title = args.getString(ARG_TITLE);
         String message = args.getString(ARG_MESSAGE);
         String confirmText = args.getString(ARG_CONFIRM_TEXT);
         String cancelText = args.getString(ARG_CANCEL_TEXT);
@@ -63,8 +67,11 @@ public class ConfirmationDialogFragment extends DialogFragment implements OnClic
         builder.setMessage(message);
         if (confirmText != null && cancelText != null) {
             builder.setPositiveButton(confirmText, this);
+            if (title.equals("删除账户")) {
+                builder.setNegativeButton(cancelText, this);
+            }
             //TODO 取消继续
-            builder.setNegativeButton(cancelText, this);
+//            builder.setNegativeButton(cancelText, this);
         } else if (cancelText != null) {
             builder.setNeutralButton(cancelText, this);
         } else {
@@ -112,7 +119,7 @@ public class ConfirmationDialogFragment extends DialogFragment implements OnClic
         }
     }
 
-    private ConfirmationDialogFragmentListener getListener() {
+    public ConfirmationDialogFragmentListener getListener() {
         if (mListener != null) {
             return mListener;
         }

@@ -4,13 +4,13 @@ import com.fsck.k9.Account
 import com.fsck.k9.mail.Address
 import java.io.Serializable
 
-object data  class MessageListItem(
+object data class MessageListItem constructor(
     val position: Int,
     val account: Account,
     val subject: String?,
     val threadCount: Int,
     val messageDate: Long,
-    val displayName: CharSequence,
+    val displayName: String,
     val counterPartyAddress: Address?,
     val fromMe: Boolean,
     val toMe: Boolean,
@@ -28,4 +28,4 @@ object data  class MessageListItem(
     val databaseId: Long,
     val senderAddress: String?,
     val threadRoot: Long
-):Serializable
+)

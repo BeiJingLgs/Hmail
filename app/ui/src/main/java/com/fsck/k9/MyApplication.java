@@ -20,9 +20,9 @@ public class MyApplication extends Application {
         super.onCreate();
         //初始化一下就行了，别忘记了
 
-        AppCrashHandler.getInstance().init(this);
+//        AppCrashHandler.getInstance().init(this);
         instance=this;
-        setDatabase()  ;
+        setDatabase();
     }
     public  static  MyApplication getInstance(){
         return  instance ;

@@ -232,8 +232,6 @@ public class MessageCompose extends K9Activity implements OnClickListener,
     private boolean isInSubActivity = false;
 
     private boolean navigateUp;
-    private String title111;
-    private String content111;
 
     @SuppressLint("WrongConstant")
     @Override
@@ -273,14 +271,6 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         setProgressBarIndeterminateVisibility(false);
 
         final Intent intent = getIntent();
-        if (intent.getFlags() == 101) {
-            Bundle bundle = intent.getExtras();
-            title111 = bundle.getString("title");
-            content111 = bundle.getString("content");
-            if (title111 !=null && content111!=null){
-                Toast.makeText(MessageCompose.this, "title:" + title111 + "...content:" + content111, Toast.LENGTH_LONG).show();
-            }
-        }
         String messageReferenceString = intent.getStringExtra(EXTRA_MESSAGE_REFERENCE);
         relatedMessageReference = MessageReference.parse(messageReferenceString);
 
@@ -323,9 +313,6 @@ public class MessageCompose extends K9Activity implements OnClickListener,
 
 
         subjectView = findViewById(R.id.subject);
-        if (title111!=null) {
-            subjectView.setText(title111);
-        }
         subjectView.getInputExtras(true).putBoolean("allowEmoji", true);
 
         EolConvertingEditText upperSignature = findViewById(R.id.upper_signature);
@@ -337,9 +324,6 @@ public class MessageCompose extends K9Activity implements OnClickListener,
                 getSupportLoaderManager(), this);
 
         messageContentView = findViewById(R.id.message_content);
-        if (content111!=null) {
-            messageContentView.setText(content111);
-        }
         messageContentView.getInputExtras(true).putBoolean("allowEmoji", true);
 
         attachmentsView = findViewById(R.id.attachments);
@@ -825,11 +809,12 @@ public class MessageCompose extends K9Activity implements OnClickListener,
         }
         internalMessageHandler.sendEmptyMessage(MSG_DISCARDED_DRAFT);
         changesMadeSinceLastSave = false;
-        if (navigateUp) {
-            openDefaultFolder();
-        } else {
-            finish();
-        }
+//        if (navigateUp) {
+//            openDefaultFolder();
+//        } else {
+//            finish();
+//        }
+        finish();
     }
 
     private void onReadReceipt() {

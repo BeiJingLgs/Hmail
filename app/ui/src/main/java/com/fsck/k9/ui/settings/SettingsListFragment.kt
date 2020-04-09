@@ -14,6 +14,7 @@ import com.fsck.k9.ui.R
 import com.fsck.k9.ui.observeNotNull
 import com.fsck.k9.ui.settings.account.AccountSettingsActivity
 import com.fsck.k9.ui.settings.account.AccountSettingsFragment
+import com.fsck.k9.util.UpdateUtil
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.Section
@@ -27,18 +28,22 @@ class SettingsListFragment : Fragment(), ConfirmationDialogFragment.Confirmation
     private lateinit var accountSetting: AccountSettingsFragment
     private lateinit var settingsAdapter: GroupAdapter<ViewHolder>
     private val accountRemover: BackgroundAccountRemover by inject()
-    private lateinit var accounts1 :Account
+    private lateinit var accounts1: Account
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_settings_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val context = view.context
+        var updateUtil = UpdateUtil(context)
+        var task = updateUtil.CheckApkTask1()
+        task.execute()
         initializeSettingsList()
         populateSettingsList()
     }
 
     private fun initializeSettingsList() {
-        accountSetting= AccountSettingsFragment()
+        accountSetting = AccountSettingsFragment()
         settingsAdapter = GroupAdapter()
         settingsAdapter.setOnItemClickListener { item, _ ->
             handleItemClick(item)
@@ -75,16 +80,16 @@ class SettingsListFragment : Fragment(), ConfirmationDialogFragment.Confirmation
         val accountSection = Section().apply {
             for (account in accounts) {
                 accounts1 = account
-                if (account.description!=null){
-                    add(AccountItem(account,context,accountSetting,this@SettingsListFragment))
+                if (account.description != null) {
+                    add(AccountItem(account, context, accountSetting, this@SettingsListFragment))
                 }
             }
 
             val addAccountActionItem = SettingsActionItem(
-                    getString(R.string.add_account_action),
-                    R.id.action_settingsListScreen_to_addAccountScreen,
-                    R.attr.iconSettingsAccountAdd,
-                    context
+                getString(R.string.add_account_action),
+                R.id.action_settingsListScreen_to_addAccountScreen,
+                R.attr.iconSettingsAccountAdd,
+                context
             )
             add(addAccountActionItem)
         }

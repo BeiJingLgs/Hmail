@@ -73,6 +73,63 @@
                 </LinearLayout>
             </LinearLayout>
 
+
+            <LinearLayout
+                android:id="@+id/ll_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="?attr/iconSettingsAbout" />
+
+                <LinearLayout
+
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="30dp">
+
+                    <TextView
+                        android:id="@+id/update_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:text="有新版本待更新"
+                        android:textColor="?android:attr/textColorPrimary" />
+
+                    <Button
+                        android:id="@+id/update_btn"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="22sp"
+                        android:text="更新" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
             <LinearLayout
                 android:id="@+id/authorsLayout"
                 android:layout_width="match_parent"

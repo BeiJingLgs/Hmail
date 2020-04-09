@@ -33,7 +33,7 @@ class MessageListExtractor(
         val toMe = messageHelper.toMe(account, toAddresses)
         val ccMe = messageHelper.toMe(account, ccAddresses)
         val counterPartyAddress = getCounterPartyAddress(fromMe, toAddresses, ccAddresses, fromAddresses)
-        val displayName = messageHelper.getDisplayName(account, fromAddresses, toAddresses)
+        val displayName = messageHelper.getDisplayName(account, fromAddresses, toAddresses).toString()
         val messageDate = cursor.getLong(MLFProjectionInfo.DATE_COLUMN)
         val threadCount = if (threadCountIncluded) cursor.getInt(MLFProjectionInfo.THREAD_COUNT_COLUMN) else 0
         val subject = cursor.getString(MLFProjectionInfo.SUBJECT_COLUMN)
@@ -59,7 +59,7 @@ class MessageListExtractor(
                 subject,
                 threadCount,
                 messageDate,
-                displayName,
+            displayName as String,
                 counterPartyAddress,
                 fromMe,
                 toMe,

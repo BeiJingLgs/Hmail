@@ -8,10 +8,13 @@ import java.util.List;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.IntentSender.SendIntentException;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -292,10 +295,14 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             });
         }
         if (NetworkUtils.isNetWorkAvailable(MessageList.this)) {
-            Log.i("TAG", "hhhhhhhhhhhhhhhhh");
-            UpdateUtil updateUtil = new UpdateUtil(MessageList.this);
-            UpdateUtil.CheckApkTask task = updateUtil.new CheckApkTask();
-            task.execute();
+            SharedPreferences is_update = getSharedPreferences("is_update", MODE_PRIVATE);
+            boolean key = is_update.getBoolean("key", true);
+            if (key==true){
+                Log.i("TAG", "hhhhhhhhhhhhhhhhh");
+                UpdateUtil updateUtil = new UpdateUtil(MessageList.this);
+                UpdateUtil.CheckApkTask task = updateUtil.new CheckApkTask();
+                task.execute();
+            }
         }
         /**
          * 获取用户的List
@@ -404,6 +411,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         mHeaderRecyclerView.setLayoutManager(headerManager);
         mHeaderRecyclerView.setAdapter(headerRecyclerView);
         headerRecyclerView.setOnItemClickListener((view, position) -> {
+            messageListFragment.setLimitCount();
             Account account = accountss.get(position);
             openRealAccount(account);
             drawer.updateUserAccountsAndFolders(account);
@@ -510,6 +518,8 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         search.addAccountUuid(account.getUuid());
         search.addAllowedFolder(folderName);
         initializeFromLocalSearch(search);
+        SharedPreferences sp = getSharedPreferences("state", Context.MODE_PRIVATE);
+        sp.edit().putInt("count",1).commit();
         FragmentManager fragmentManager = getSupportFragmentManager();
         openFolderTransaction = fragmentManager.beginTransaction();
         messageListFragment = MessageListFragment.newInstance(search, false, K9.isThreadedViewEnabled());
@@ -559,6 +569,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
              *
              */
             drawer.updateUserAccountsAndFolders(account);
+
         }
 
         initializeDisplayMode(null);
@@ -568,6 +579,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         initializeFragments();
         displayViews();
     }
+
 
     /**
      * Get references to existing fragments if the activity was restarted.

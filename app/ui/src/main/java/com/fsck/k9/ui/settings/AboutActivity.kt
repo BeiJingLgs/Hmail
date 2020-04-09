@@ -1,39 +1,51 @@
 package com.fsck.k9.ui.settings
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.icu.text.RelativeDateTimeFormatter
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fsck.k9.ui.R
 import com.fsck.k9.util.UpdateUtil
 import de.cketti.library.changelog.ChangeLog
-import java.util.Calendar
 import kotlinx.android.synthetic.main.about_library.view.*
 import kotlinx.android.synthetic.main.fragment_about.*
 import timber.log.Timber
+import java.util.Calendar
 
 private data class Library(val name: String, val URL: String, val license: String)
 
 class AboutFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_about, container, false)
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val context = view.context
+        if ( context.getSharedPreferences("update", Context.MODE_PRIVATE).getBoolean("key",false)){
+            ll_update.visibility=View.VISIBLE
+            update_tv.text="有新版本待更新"
+            update_btn.setOnClickListener {
+                var  updateUtil = UpdateUtil(context)
+                var task = updateUtil.CheckApkTask()
+                task.execute()
+            }
+        }else{
+            ll_update.visibility=View.GONE
+        }
         version.text = getVersionNumber()
-        versionLayout.setOnClickListener { displayChangeLog() }
+
+//        versionLayout.setOnClickListener {
+////            displayChangeLog()
+//        }
 
         val year = Integer.toString(Calendar.getInstance().get(Calendar.YEAR))
         copyright.text = getString(R.string.app_copyright_fmt, year, year)
@@ -97,6 +109,7 @@ class AboutFragment : Fragment() {
             Library("ShowcaseView", "https://github.com/amlcurran/ShowcaseView", "Apache License, Version 2.0"),
             Library("Timber", "https://github.com/JakeWharton/timber", "Apache License, Version 2.0"),
             Library("TokenAutoComplete", "https://github.com/splitwise/TokenAutoComplete/", "Apache License, Version 2.0")
+
         )
     }
 }
