@@ -1,5 +1,6 @@
 package com.fsck.k9.ui.settings
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -151,7 +152,11 @@ class SettingsListFragment : Fragment(), ConfirmationDialogFragment.Confirmation
     }
 
     override fun doPositiveClick(dialogId: Int) {
+        val sp =
+            activity!!.getSharedPreferences("state", Context.MODE_PRIVATE)
+        sp.edit().putInt("count", 1).commit()
         accountRemover.removeAccountAsync(accounts1.uuid)
+
 //        closeAccountSettings()
     }
 

@@ -108,6 +108,7 @@
 
             <com.fsck.k9.view.MessageWebView
                 android:id="@+id/quoted_html"
+                android:layout_marginTop="50dp"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent" />
 

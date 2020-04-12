@@ -9,6 +9,7 @@ import android.text.TextPaint;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -41,6 +42,7 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
     private List<FujianBean> qtList;
     private FujianAdapter adapter;
     private int num = 0;
+    private List<String> StringList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +81,13 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
     private void OpenApk(List<FujianBean> mList, int position) {
         FujianBean fujianBean = mList.get(position);
         String returnUri = fujianBean.getReturnUri();
-        new OpenFile(EnclosureActivity.this).openFile(new File(returnUri));
+        if (StringList.contains(returnUri)){
+            Toast.makeText(EnclosureActivity.this, "不支持打开本文件", Toast.LENGTH_SHORT).show();
+        }else{
+            new OpenFile(EnclosureActivity.this).openFile(new File(returnUri));
+        }
+
+
     }
 
     private void initRecyclerView() {
@@ -111,6 +119,7 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
         imgList = new ArrayList<>();
         applicationList = new ArrayList<>();
         qtList = new ArrayList<>();
+        StringList = new ArrayList<>();
         while (cursor.moveToNext()) {
             String returnuri = cursor.getString(cursor.getColumnIndex(FujianBeanDB.RETURNURI));
             File installFile = new File(returnuri);
@@ -121,6 +130,8 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
                 String internaluri = cursor.getString(cursor.getColumnIndex(FujianBeanDB.INTERNALURI));
                 String displayname = returnuri.substring(FILEPATH.length(), returnuri.length());
                 FujianBean fujianBean = new FujianBean(returnuri, mimetype, displayname, size, internaluri, date, returnuri);
+
+
                 if (displayname.endsWith(".png") || displayname.endsWith(".gif") || displayname.endsWith(".jpg") || displayname.endsWith(".jpeg") || displayname.endsWith(".bmp")) {
                     imgList.add(fujianBean);
                 } else if (displayname.endsWith(".doc") || displayname.endsWith(".docx") || displayname.endsWith(".ppt")
@@ -135,6 +146,7 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
                     applicationList.add(fujianBean);
                 } else {
                     qtList.add(fujianBean);
+                    StringList.add(fujianBean.getReturnUri());
                 }
                 mList.add(fujianBean);
             } else {
@@ -151,7 +163,7 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
             finish();
             return true;
         }
-        return  false;
+        return false;
     }
 
     @Override

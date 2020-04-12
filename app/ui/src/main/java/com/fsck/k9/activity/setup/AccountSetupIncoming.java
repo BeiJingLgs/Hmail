@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -406,25 +407,25 @@ public class AccountSetupIncoming extends K9Activity implements OnClickListener 
     /**
      * 再按一次退出系统
      */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN
-                && KeyEvent.KEYCODE_BACK == keyCode) {
-            long currentTime = System.currentTimeMillis();
-            if ((currentTime - mTochTime) >= mWaitTime) {
-                //"再按返回键退出应用！"
-
-                mTochTime = currentTime;
-            } else {
-                if (mAccount!=null){
-                    Preferences.getPreferences(this).deleteAccount(mAccount);
-                }
-                finish();
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//    @Override
+////    public boolean onKeyDown(int keyCode, KeyEvent event) {
+////        if (event.getAction() == KeyEvent.ACTION_DOWN
+////                && KeyEvent.KEYCODE_BACK == keyCode) {
+////            long currentTime = System.currentTimeMillis();
+////            if ((currentTime - mTochTime) >= mWaitTime) {
+////                //"再按返回键退出应用！"
+////
+////                mTochTime = currentTime;
+////            } else {
+////                if (mAccount!=null){
+////                    Preferences.getPreferences(this).deleteAccount(mAccount);
+////                }
+////                finish();
+////            }
+////            return true;
+////        }
+////        return super.onKeyDown(keyCode, event);
+////    }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -663,6 +664,7 @@ public class AccountSetupIncoming extends K9Activity implements OnClickListener 
                 }
             }else if (v.getId()==R.id.back){
                 startActivity(new Intent(AccountSetupIncoming.this,AccountSetupBasics.class));
+                finish();
             }
         } catch (Exception e) {
             failure(e);
@@ -711,5 +713,11 @@ public class AccountSetupIncoming extends K9Activity implements OnClickListener 
     private ConnectionSecurity getSelectedSecurity() {
         ConnectionSecurityHolder holder = (ConnectionSecurityHolder) mSecurityTypeView.getSelectedItem();
         return holder.connectionSecurity;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("tag","bbbbbbbbbbbbbbbb");
     }
 }

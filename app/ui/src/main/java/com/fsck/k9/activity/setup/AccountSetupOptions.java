@@ -86,7 +86,7 @@ public class AccountSetupOptions extends K9Activity implements OnClickListener {
 
         SpinnerOption displayCounts[] = {
 //            new SpinnerOption(10, getString(R.string.account_setup_options_mail_display_count_10)),
-                new SpinnerOption(40, getString(R.string.account_setup_options_mail_display_count_25)),
+                new SpinnerOption(24, getString(R.string.account_setup_options_mail_display_count_25)),
 //            new SpinnerOption(50, getString(R.string.account_setup_options_mail_display_count_50)),
 //            new SpinnerOption(100, getString(R.string.account_setup_options_mail_display_count_100)),
 //            new SpinnerOption(250, getString(R.string.account_setup_options_mail_display_count_250)),
@@ -143,18 +143,6 @@ public class AccountSetupOptions extends K9Activity implements OnClickListener {
 //        }
 //        return super.onKeyDown(keyCode, event);
 //    }
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN
-                && KeyEvent.KEYCODE_BACK == keyCode) {
-            /**
-             * 删除用户
-             */
-//            Preferences.getPreferences(this).deleteAccount(mAccount);
-            return true;
-        }
-        return false;
-    }
     public void onClick(View v) {
         if (v.getId() == R.id.next) {
 

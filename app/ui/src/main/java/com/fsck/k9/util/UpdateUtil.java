@@ -374,7 +374,7 @@ public class UpdateUtil {
 		@Override
 		protected Integer doInBackground(Void... voids) {
 			try {
-				apkPath = Environment.getExternalStorageDirectory().getAbsolutePath() +"/我的文档"+ File.separator+ "Hmail.apk";
+				apkPath = Environment.getExternalStorageDirectory().getAbsolutePath() +File.separator+ "Hmail.apk";
 				uri = FileProvider.getUriForFile(context, "com.fsck.k9.ui.fileprovider", new File(apkPath));
 				URL url = new URL(apkUrl);
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();

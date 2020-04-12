@@ -1,9 +1,13 @@
 package com.fsck.k9.activity.setup;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -14,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.fsck.k9.Account;
 import com.fsck.k9.Core;
@@ -33,6 +38,11 @@ import com.fsck.k9.mail.ConnectionSecurity;
 import com.fsck.k9.mail.ServerSettings;
 import com.fsck.k9.preferences.Protocols;
 import com.fsck.k9.ui.R;
+import com.fsck.k9.util.CustomDialog;
+import com.fsck.k9.util.NetworkUtils;
+import com.fsck.k9.util.UpdateUtil;
+import com.fsck.k9.util.WifiOpenHelper;
+import com.fsck.k9.util.WifiUtils;
 import com.fsck.k9.view.ClientCertificateSpinner;
 import com.fsck.k9.view.ClientCertificateSpinner.OnClientCertificateChangedListener;
 import timber.log.Timber;
@@ -76,6 +86,7 @@ public class AccountSetupBasics extends K9Activity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setLayout(R.layout.account_setup_basics);
+
         mEmailView = findViewById(R.id.account_email);
         mPasswordView = findViewById(R.id.account_password);
         mClientCertificateCheckBox = findViewById(R.id.account_client_certificate);
@@ -283,6 +294,7 @@ public class AccountSetupBasics extends K9Activity
         }
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -342,7 +354,11 @@ public class AccountSetupBasics extends K9Activity
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.next) {
-            onNext();
+            if (NetworkUtils.isNetWorkAvailable(AccountSetupBasics.this)) {
+                onNext();
+            }else {
+                Toast.makeText(AccountSetupBasics.this, "请连接网络", Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.manual_setup) {
             onManualSetup();
         }

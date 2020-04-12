@@ -3,9 +3,11 @@ package com.fsck.k9.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -85,6 +87,7 @@ public class ConfirmationDialogFragment extends DialogFragment implements OnClic
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE: {
+
                 getListener().doPositiveClick(getDialogId());
                 break;
             }

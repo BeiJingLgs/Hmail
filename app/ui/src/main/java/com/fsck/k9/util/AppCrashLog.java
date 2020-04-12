@@ -178,7 +178,10 @@ public abstract class AppCrashLog implements UncaughtExceptionHandler {
                     // TODO Auto-generated method stub
                     Looper.prepare();
                     String message = ex.getMessage();
-                    Toast.makeText(context, "程序异常" + message, Toast.LENGTH_SHORT).show();
+                    /**
+                     * 隐藏 不显示Toast
+                     */
+//                    Toast.makeText(context, "程序异常" + message, Toast.LENGTH_SHORT).show();
                     Looper.loop();
                 }
             }).start();
@@ -405,21 +408,24 @@ public abstract class AppCrashLog implements UncaughtExceptionHandler {
 //			String s = file.getAbsolutePath() + File.separator + fileName;
             File fileLog = new File(folder + File.separator + fileName);
 
-            if (!fileLog.exists()) {
-                fileLog.createNewFile();
-                notifySystemToScan(context, fileLog);
-            }
-
-            BufferedWriter writer = new BufferedWriter(new FileWriter(fileLog));
-            writer.append(result);
-            //
-//			fileWriter.flush();
-//			fileWriter.close();
-            writer.flush();
-            writer.close();
-
-
-            sendCrashLogToServer(fileLog);
+            /**
+             * 隐藏 log日志不显示了
+             */
+//            if (!fileLog.exists()) {
+//                fileLog.createNewFile();
+//                notifySystemToScan(context, fileLog);
+//            }
+//
+//            BufferedWriter writer = new BufferedWriter(new FileWriter(fileLog));
+//            writer.append(result);
+//            //
+////			fileWriter.flush();
+////			fileWriter.close();
+//            writer.flush();
+//            writer.close();
+//
+//
+//            sendCrashLogToServer(fileLog);
 
         } catch (Exception e) {
             // TODO: handle exception

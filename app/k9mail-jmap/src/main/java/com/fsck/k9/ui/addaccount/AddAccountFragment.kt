@@ -1,6 +1,8 @@
 package com.fsck.k9.ui.addaccount
 
 import android.os.Bundle
+import android.os.Process
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +15,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddAccountFragment : Fragment() {
     private val viewModel: AddAccountViewModel by viewModel()
-
+    //APP退出操作按钮
+    private val mWaitTime: Long = 2000
+    private var mTochTime: Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getActionEvents().observeNotNull(this) { handleActionEvents(it) }
@@ -36,4 +40,22 @@ class AddAccountFragment : Fragment() {
     private fun goToMessageList() {
         findNavController().navigate(R.id.action_addJmapAccountScreen_to_messageListScreen)
     }
+    /**
+     * 再按一次退出系统
+     */
+//    fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+//        if (event.action == KeyEvent.ACTION_DOWN
+//            && KeyEvent.KEYCODE_BACK == keyCode) {
+//            val currentTime = System.currentTimeMillis()
+//            if (currentTime - mTochTime >= mWaitTime) { //"再按返回键退出应用！"
+//                mTochTime = currentTime
+//            } else {
+//                Process.killProcess(Process.myPid())
+//            }
+//            return true
+//        }
+//        return false
+//    }
 }
+
+

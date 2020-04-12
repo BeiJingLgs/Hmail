@@ -515,6 +515,7 @@ public class AccountSetupOutgoing extends K9Activity implements OnClickListener,
             }
         }else if (v.getId() == R.id.back) {
             startActivity(new Intent(AccountSetupOutgoing.this,AccountSetupBasics.class));
+            finish();
         }
     }
 
@@ -533,25 +534,25 @@ public class AccountSetupOutgoing extends K9Activity implements OnClickListener,
     /**
      * 再按一次退出系统
      */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN
-                && KeyEvent.KEYCODE_BACK == keyCode) {
-            long currentTime = System.currentTimeMillis();
-            if ((currentTime - mTochTime) >= mWaitTime) {
-                //"再按返回键退出应用！"
-
-                mTochTime = currentTime;
-            } else {
-                if (mAccount!=null){
-                    Preferences.getPreferences(this).deleteAccount(mAccount);
-                }
-                finish();
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (event.getAction() == KeyEvent.ACTION_DOWN
+//                && KeyEvent.KEYCODE_BACK == keyCode) {
+//            long currentTime = System.currentTimeMillis();
+//            if ((currentTime - mTochTime) >= mWaitTime) {
+//                //"再按返回键退出应用！"
+//
+//                mTochTime = currentTime;
+//            } else {
+//                if (mAccount!=null){
+//                    Preferences.getPreferences(this).deleteAccount(mAccount);
+//                }
+//                finish();
+//            }
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
     /*
      * Calls validateFields() which enables or disables the Next button
      * based on the fields' validity.

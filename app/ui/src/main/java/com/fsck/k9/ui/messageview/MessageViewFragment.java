@@ -1,8 +1,10 @@
 package com.fsck.k9.ui.messageview;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 
 import android.Manifest;
@@ -15,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.IntentSender.SendIntentException;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -51,6 +54,7 @@ import com.fsck.k9.DI;
 import com.fsck.k9.K9;
 import com.fsck.k9.MyApplication;
 import com.fsck.k9.Preferences;
+import com.fsck.k9.activity.EnclosureActivity;
 import com.fsck.k9.activity.MessageList;
 import com.fsck.k9.db.FujianBeanDB;
 import com.fsck.k9.ui.choosefolder.ChooseFolderActivity;
@@ -143,10 +147,22 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
                         if (is_Open_Save == 1) { //保存
                             SaveDateBase(displayName, save_name_path);
                             Log.i("tag", "sssssssssssssssssss7777777777777777777777777");
-                        } else {//打开
-                            SaveDateBase(currentAttachmentViewInfo.displayName, save_name_path);
+                        } else if (is_Open_Save == 2) {//打开
                             Log.i("tag", "sssssssssssssssssss8888888888888888888888888");
-                            new OpenFile(mContext).openFile(new File(save_name_path));
+                            SaveDateBase(currentAttachmentViewInfo.displayName, save_name_path);
+                            if (save_name_path.endsWith(".doc") || save_name_path.endsWith(".docx") || save_name_path.endsWith(".ppt")
+                                    || save_name_path.endsWith(".pptx") || save_name_path.endsWith(".xls") || save_name_path.endsWith(".xlsx")
+                                    || save_name_path.endsWith(".txt") || save_name_path.endsWith(".htxt") || save_name_path.endsWith(".pdf")
+                                    || save_name_path.endsWith(".epub") || save_name_path.endsWith(".chm") || save_name_path.endsWith(".hveb")
+                                    || save_name_path.endsWith(".heb") || save_name_path.endsWith(".mobi") || save_name_path.endsWith(".fb2")
+                                    || save_name_path.endsWith(".htm") || save_name_path.endsWith(".html") || save_name_path.endsWith(".php")
+                                    || save_name_path.endsWith(".apk") || save_name_path.endsWith(".ofdx") || save_name_path.endsWith(".cebx")
+                                    || save_name_path.endsWith(".ofd") || save_name_path.endsWith(".png") || save_name_path.endsWith(".gif") || save_name_path.endsWith(".jpg") || save_name_path.endsWith(".jpeg") || save_name_path.endsWith(".bmp")) {
+                                new OpenFile(mContext).openFile(new File(save_name_path));
+
+                            } else {
+                                Toast.makeText(getActivity(), "不支持打开本文件", Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
                     break;
@@ -893,12 +909,14 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         @Override
         public void onMessageViewInfoLoadFinished(MessageViewInfo messageViewInfo) {
             if (dialog1 != null) {
-                currentAttachmentViewInfo=messageViewInfo.attachments.get(0);
+//                currentAttachmentViewInfo=messageViewInfo.attachments.get(0);
                 dialog1.dismiss();
                 Log.i("tag", "sssssssssssssssssss9999999999999999999999999");
                 Message message = new Message();
                 message.what = 1;
                 handler1.sendMessage(message);
+
+
             }
             showMessage(messageViewInfo);
             showProgressThreshold = null;
@@ -987,8 +1005,21 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
                     String save_name_path = filePath() + File.separator + attachment.displayName;
                     Cursor cursor = MyApplication.getInstance().getDb().query(FujianBeanDB.BIAO_NAME, null, FujianBeanDB.RETURNURI + "=?", new String[]{save_name_path}, null, null, null, null);
                     int count = cursor.getCount();
+                    cursor.close();
+                    currentAttachmentViewInfo = attachment;
                     if (count > 0) {
-                        new OpenFile(mContext).openFile(new File(save_name_path));
+                        if (save_name_path.endsWith(".doc") || save_name_path.endsWith(".docx") || save_name_path.endsWith(".ppt")
+                                || save_name_path.endsWith(".pptx") || save_name_path.endsWith(".xls") || save_name_path.endsWith(".xlsx")
+                                || save_name_path.endsWith(".txt") || save_name_path.endsWith(".htxt") || save_name_path.endsWith(".pdf")
+                                || save_name_path.endsWith(".epub") || save_name_path.endsWith(".chm") || save_name_path.endsWith(".hveb")
+                                || save_name_path.endsWith(".heb") || save_name_path.endsWith(".mobi") || save_name_path.endsWith(".fb2")
+                                || save_name_path.endsWith(".htm") || save_name_path.endsWith(".html") || save_name_path.endsWith(".php")
+                                || save_name_path.endsWith(".apk") || save_name_path.endsWith(".ofdx") || save_name_path.endsWith(".cebx")
+                                || save_name_path.endsWith(".ofd") || save_name_path.endsWith(".png") || save_name_path.endsWith(".gif") || save_name_path.endsWith(".jpg") || save_name_path.endsWith(".jpeg") || save_name_path.endsWith(".bmp")) {
+                            new OpenFile(mContext).openFile(new File(save_name_path));
+                        } else {
+                            Toast.makeText(getActivity(), "不支持打开本文件", Toast.LENGTH_LONG).show();
+                        }
                     } else {
                         if (attachment.displayName.endsWith(".apk")) {
                             if (NetworkUtils.isNetWorkAvailable(getActivity())) {
@@ -1072,8 +1103,20 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
             String save_name_path = filePath() + File.separator + attachment.displayName;
             Cursor cursor = MyApplication.getInstance().getDb().query(FujianBeanDB.BIAO_NAME, null, FujianBeanDB.RETURNURI + "=?", new String[]{save_name_path}, null, null, null, null);
             int count = cursor.getCount();
+            cursor.close();
             if (count > 0) {
-                new OpenFile(mContext).openFile(new File(save_name_path));
+                if (save_name_path.endsWith(".doc") || save_name_path.endsWith(".docx") || save_name_path.endsWith(".ppt")
+                        || save_name_path.endsWith(".pptx") || save_name_path.endsWith(".xls") || save_name_path.endsWith(".xlsx")
+                        || save_name_path.endsWith(".txt") || save_name_path.endsWith(".htxt") || save_name_path.endsWith(".pdf")
+                        || save_name_path.endsWith(".epub") || save_name_path.endsWith(".chm") || save_name_path.endsWith(".hveb")
+                        || save_name_path.endsWith(".heb") || save_name_path.endsWith(".mobi") || save_name_path.endsWith(".fb2")
+                        || save_name_path.endsWith(".htm") || save_name_path.endsWith(".html") || save_name_path.endsWith(".php")
+                        || save_name_path.endsWith(".apk") || save_name_path.endsWith(".ofdx") || save_name_path.endsWith(".cebx")
+                        || save_name_path.endsWith(".ofd") || save_name_path.endsWith(".png") || save_name_path.endsWith(".gif") || save_name_path.endsWith(".jpg") || save_name_path.endsWith(".jpeg") || save_name_path.endsWith(".bmp")) {
+                    new OpenFile(mContext).openFile(new File(save_name_path));
+                } else {
+                    Toast.makeText(getActivity(), "不支持打开本文件", Toast.LENGTH_LONG).show();
+                }
             } else {
                 if (attachment.displayName.endsWith(".apk")) {
                     if (NetworkUtils.isNetWorkAvailable(getActivity())) {
@@ -1242,7 +1285,6 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     }
 
 
-
     private AttachmentController getAttachmentController(AttachmentViewInfo attachment) {
         return new AttachmentController(mController, this, attachment);
     }
@@ -1259,12 +1301,15 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         dialog.setSingle(false).setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {
             @Override
             public void onPositiveClick() {
+                currentAttachmentViewInfo = attachment;
                 if (attachment.displayName.endsWith(".apk")) {
                     if (NetworkUtils.isNetWorkAvailable(getActivity())) {
                         /**
                          *   下载完整邮件
                          */
                         DownloadEmail();
+//                        SharedPreferences sp = getActivity().getSharedPreferences("fj", Context.MODE_PRIVATE);
+//                        sp.edit().
                         Log.i("tag", "sssssssssssssssssss1111111111111111111");
                     } else {
                         Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();

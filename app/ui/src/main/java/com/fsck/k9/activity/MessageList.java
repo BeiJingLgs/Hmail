@@ -19,9 +19,12 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -76,6 +79,7 @@ import com.fsck.k9.ui.R;
 import com.fsck.k9.ui.Theme;
 import com.fsck.k9.ui.dialog.CommonDialog;
 import com.fsck.k9.ui.folders.FoldersViewModel;
+import com.fsck.k9.ui.helper.SizeFormatter;
 import com.fsck.k9.ui.managefolders.ManageFoldersActivity;
 import com.fsck.k9.ui.messagelist.DefaultFolderProvider;
 import com.fsck.k9.ui.messageview.MessageViewFragment;
@@ -83,15 +87,21 @@ import com.fsck.k9.ui.messageview.MessageViewFragment.MessageViewFragmentListene
 import com.fsck.k9.ui.messageview.PlaceholderFragment;
 import com.fsck.k9.ui.onboarding.OnboardingActivity;
 import com.fsck.k9.ui.settings.SettingsActivity;
+import com.fsck.k9.util.CustomDialog;
 import com.fsck.k9.util.NetworkUtils;
 import com.fsck.k9.util.UpdateUtil;
+import com.fsck.k9.util.WifiOpenHelper;
+import com.fsck.k9.util.WifiUtils;
 import com.fsck.k9.util.WrapRecyclerView;
 import com.fsck.k9.view.ViewSwitcher;
 import com.fsck.k9.view.ViewSwitcher.OnSwitchCompleteListener;
 import com.mikepenz.materialdrawer.Drawer.OnDrawerListener;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
 import kotlin.jvm.functions.Function1;
 import timber.log.Timber;
+
+import static com.mikepenz.iconics.Iconics.getApplicationContext;
 
 
 /**
@@ -125,6 +135,9 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     private List<Account> accounts;
     private List<Account> accountss = new ArrayList<>();
     private HeaderRecyclerView headerRecyclerView;
+    //APP退出操作按钮
+    private long mWaitTime = 2000;
+    private long mTochTime = 0;
 
     public static void actionDisplaySearch(Context context, SearchSpecification search,
                                            boolean noThreading, boolean newTask) {
@@ -287,17 +300,45 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 //                Toast.makeText(MessageList.this,"用户已经同意权限",Toast.LENGTH_LONG).show();
                 } else if (permission.shouldShowRequestPermissionRationale) {
                     // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
-                    Toast.makeText(MessageList.this,"您不能访问设备所有本地文件",Toast.LENGTH_LONG).show();
+                    Toast.makeText(MessageList.this, "您不能访问设备所有本地文件", Toast.LENGTH_LONG).show();
                 } else {
                     // 用户拒绝了该权限，并且选中『不再询问』，提醒用户手动打开权限
 //                    Toast.makeText(MessageList.this,"用户拒绝了该权限，并且选中『不再询问』，提醒用户手动打开权限",Toast.LENGTH_LONG).show();
                 }
             });
+            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (!wifiManager.isWifiEnabled()) {
+                new Handler(MessageList.this.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {//wifi未打开
+                        CommonDialog dialog = new CommonDialog(MessageList.this);
+                        dialog.setDialog_title("温馨提示");
+                        dialog.setSave_path1("");
+                        dialog.setFile_size("                 当前网络不可用，是否连接网络？");
+                        dialog.setFujian_names("");
+                        dialog.setSingle(false).setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {
+                            @Override
+                            public void onPositiveClick() {
+                                WifiOpenHelper wifi = new WifiOpenHelper(MessageList.this);
+                                wifi.openWifi();
+                                MessageList.this.startActivity(new Intent(
+                                        android.provider.Settings.ACTION_WIFI_SETTINGS));
+                                dialog.dismiss();
+                            }
+
+                            @Override
+                            public void onNegtiveClick() {
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
+                });
+            }
         }
         if (NetworkUtils.isNetWorkAvailable(MessageList.this)) {
             SharedPreferences is_update = getSharedPreferences("is_update", MODE_PRIVATE);
             boolean key = is_update.getBoolean("key", true);
-            if (key==true){
+            if (key == true) {
                 Log.i("TAG", "hhhhhhhhhhhhhhhhh");
                 UpdateUtil updateUtil = new UpdateUtil(MessageList.this);
                 UpdateUtil.CheckApkTask task = updateUtil.new CheckApkTask();
@@ -310,11 +351,15 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         accounts = preferences.getAccounts();
         for (int i = 0; i < accounts.size(); i++) {
             Account account = accounts.get(i);
+            Log.i("tag", "cccccccccc" + account.toString());
+//            if (account.toString()==null){
+//
+//            }else
             if (account.getDescription() != null) {
                 accountss.add(account);
             }
         }
-        if (accounts.isEmpty()) {
+        if (accountss.isEmpty()) {
             /**
              * 欢迎页面
              */
@@ -519,7 +564,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         search.addAllowedFolder(folderName);
         initializeFromLocalSearch(search);
         SharedPreferences sp = getSharedPreferences("state", Context.MODE_PRIVATE);
-        sp.edit().putInt("count",1).commit();
+        sp.edit().putInt("count", 1).commit();
         FragmentManager fragmentManager = getSupportFragmentManager();
         openFolderTransaction = fragmentManager.beginTransaction();
         messageListFragment = MessageListFragment.newInstance(search, false, K9.isThreadedViewEnabled());
@@ -1973,5 +2018,22 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             drawer.deselect();
         }
     }
-
+    /**
+     * 再按一次退出系统
+     */
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (event.getAction() == KeyEvent.ACTION_DOWN
+//                && KeyEvent.KEYCODE_BACK == keyCode) {
+//            long currentTime = System.currentTimeMillis();
+//            if ((currentTime - mTochTime) >= mWaitTime) {
+//                //"再按返回键退出应用！"
+//                mTochTime = currentTime;
+//            } else {
+//                android.os.Process.killProcess(android.os.Process.myPid());
+//            }
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 }

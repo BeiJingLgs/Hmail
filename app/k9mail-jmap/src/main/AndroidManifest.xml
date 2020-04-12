@@ -134,7 +134,7 @@
         <activity
             android:name="com.fsck.k9.activity.NotificationDeleteConfirmation"
             android:excludeFromRecents="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:taskAffinity=""
             android:theme="@style/Theme.K9.Dialog.Translucent.DayNight"/>
 
@@ -243,7 +243,9 @@
 
         <activity
             android:name="com.fsck.k9.ui.addaccount.AddAccountActivity"
-            android:label="@string/add_account_action" />
+            android:label="@string/add_account_action"
+            android:launchMode="singleTask"
+            />
 
         <receiver
             android:name="com.fsck.k9.service.BootReceiver"

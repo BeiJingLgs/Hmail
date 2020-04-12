@@ -46,7 +46,6 @@ class MessageListAdapter internal constructor(
     private val selectedItemBackgroundColor: Int
     private val readItemBackgroundColor: Int
     private val unreadItemBackgroundColor: Int
-
     init {
 
         val attributes = intArrayOf(
@@ -113,7 +112,6 @@ class MessageListAdapter internal constructor(
     override fun getItemId(position: Int): Long = messages[position].uniqueId
 
     override fun getItem(position: Int): MessageListItem = messages[position]
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val message = getItem(position)
         val view: View = convertView ?: newView(parent)
@@ -124,8 +122,7 @@ class MessageListAdapter internal constructor(
 
     private fun newView(parent: ViewGroup?): View {
         val view = layoutInflater.inflate(R.layout.message_list_item, parent, false)
-
-        val holder = MessageViewHolder(view, listItemListener)
+        val holder = MessageViewHolder(view, listItemListener,context)
 
         holder.contactBadge.isVisible = appearance.showContactPicture
         holder.chip.isVisible = appearance.showAccountChip
@@ -150,7 +147,6 @@ class MessageListAdapter internal constructor(
     private fun bindView(view: View, context: Context, message: MessageListItem) {
         val isSelected = selected.contains(message.uniqueId)
         val isActive = isActiveMessage(message)
-
         val holder = view.tag as MessageViewHolder
 
         with(message) {
@@ -172,6 +168,8 @@ class MessageListAdapter internal constructor(
             if (appearance.stars) {
                 holder.flagged.isChecked = isStarred
             }
+
+
             holder.position = position
             if (holder.contactBadge.isVisible) {
                 updateContactBadge(holder.contactBadge, counterPartyAddress)

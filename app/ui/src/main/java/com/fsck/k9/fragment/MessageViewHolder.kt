@@ -1,6 +1,9 @@
 package com.fsck.k9.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
+import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.ImageView
@@ -11,10 +14,10 @@ import com.fsck.k9.ui.R
 @SuppressLint("ResourceType")
 class MessageViewHolder(
     view: View,
-    private val itemActionListener: MessageListItemActionListener
+    private val itemActionListener: MessageListItemActionListener,
+    private val context: Context
 ) : View.OnClickListener {
     var position = -1
-
     val contactBadge: ContactBadge = view.findViewById(R.id.contact_badge)
     /**
      * 主题
@@ -31,7 +34,16 @@ class MessageViewHolder(
     override fun onClick(view: View) {
         if (position != -1) {
             if (view.id == R.id.star) {
-                itemActionListener.toggleMessageFlagWithAdapterPosition(position)
+                val limit: SharedPreferences =
+                    context.getSharedPreferences("save_limit", Context.MODE_PRIVATE)
+                val key2 = limit.getInt("key", 0)
+                limit.edit().remove("key").commit()
+                Log.i("tag", "vvvvvvvvvvv" + key2)
+                if (key2==1){
+                    itemActionListener.toggleMessageFlagWithAdapterPosition(position)
+                }else{
+                    itemActionListener.toggleMessageFlagWithAdapterPosition(   position-(key2-1)*8)
+                }
             }
         }
     }

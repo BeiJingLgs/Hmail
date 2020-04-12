@@ -102,7 +102,9 @@ public class AccountSetupNames extends K9Activity implements OnClickListener {
     }
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            return true;
+            Preferences.getPreferences(this).deleteAccount(mAccount);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            return false;
         }
         return false;
     }

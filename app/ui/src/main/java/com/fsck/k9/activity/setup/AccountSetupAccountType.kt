@@ -53,8 +53,9 @@ class AccountSetupAccountType : K9Activity() {
             findViewById<View>(R.id.pop).visibility = View.VISIBLE
         } else {
             findViewById<View>(R.id.pop).visibility = View.VISIBLE
-            findViewById<View>(R.id.imap).visibility = View.VISIBLE
+            findViewById<View>(R.id.imap).visibility = View.GONE
         }
+
     }
 
     private fun setupPop3Account() {
@@ -103,10 +104,10 @@ class AccountSetupAccountType : K9Activity() {
         AccountSetupIncoming.actionIncomingSettings(this, account, makeDefault)
         finish()
     }
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        return (event.action == KeyEvent.ACTION_DOWN
-            && KeyEvent.KEYCODE_BACK == keyCode)
-    }
+//    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+//        return (event.action == KeyEvent.ACTION_DOWN
+//            && KeyEvent.KEYCODE_BACK == keyCode)
+//    }
     companion object {
         private const val EXTRA_ACCOUNT = "account"
         private const val EXTRA_MAKE_DEFAULT = "makeDefault"

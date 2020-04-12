@@ -96,6 +96,7 @@
         <activity
             android:name=".activity.setup.AccountSetupBasics"
             android:configChanges="locale"
+            android:launchMode="singleTask"
             android:label="@string/account_setup_basics_title"/>
 
         <activity
@@ -116,6 +117,7 @@
         <activity
             android:name=".activity.setup.AccountSetupOutgoing"
             android:configChanges="locale"
+            android:launchMode="singleTask"
             android:label="@string/account_setup_outgoing_title"/>
 
         <activity
@@ -158,7 +160,7 @@
         <activity
             android:name=".activity.NotificationDeleteConfirmation"
             android:excludeFromRecents="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:taskAffinity=""
             android:theme="@style/Theme.K9.Dialog.Translucent.DayNight"/>
 
