@@ -335,9 +335,10 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                 // If threading is enabled and this item represents a thread, display the thread contents.
                 long rootId = messageListItem.getThreadRoot();
                 fragmentListener.showThread(account, folderServerId, rootId);
+
             } else {
                 // This item represents a message; just display the message.
-                isClickItem=true;
+                isClickItem = true;
                 openMessageAtPosition(adapterPosition);
             }
         }
@@ -455,7 +456,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                 }
             }
             SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-            limit.edit().putInt("key",limitCount).commit();
+            limit.edit().putInt("key", limitCount).commit();
         } else if (limitCount > 1) {
             try {
                 //说明加载到了更多的值
@@ -467,7 +468,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                     }
                     this.adapter.setMessages(mList);
                     SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                    limit.edit().putInt("key",limitCount).commit();
+                    limit.edit().putInt("key", limitCount).commit();
                     limit_count.setText("第" + limitCount + "页");
                 } else {//说明邮箱没有新的邮件发来了  加载最后一页  页数要减1   判断是否能整除
                     if (anInt == 1) {
@@ -478,7 +479,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                         }
                         this.adapter.setMessages(mList);
                         SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                        limit.edit().putInt("key",limitCount).commit();
+                        limit.edit().putInt("key", limitCount).commit();
                         limit_count.setText("第" + (limitCount - 1) + "页");
                     } else if (anInt == 2) {
                         List<MessageListItem> mList = new ArrayList<>();
@@ -488,11 +489,11 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                         }
                         this.adapter.setMessages(mList);
                         SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                        limit.edit().putInt("key",limitCount).commit();
+                        limit.edit().putInt("key", limitCount).commit();
                         limit_count.setText("第" + (limitCount - 1) + "页");
                     } else if (anInt == 3) {
-                        if (isClickItem){
-                        }else{
+                        if (isClickItem) {
+                        } else {
                             List<MessageListItem> mList = new ArrayList<>();
                             for (int i = (limitCount - 1) * 8; i < oList.size(); i++) {
                                 MessageListItem messageListItem = oList.get(i);
@@ -500,10 +501,10 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                             }
                             this.adapter.setMessages(mList);
                             SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                            limit.edit().putInt("key",limitCount).commit();
+                            limit.edit().putInt("key", limitCount).commit();
                             right_message_list.setVisibility(View.GONE);
                             limit_count.setText("没有更多数据了");
-                            isClickItem=false;
+                            isClickItem = false;
                         }
 
                     }
@@ -581,12 +582,12 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
 
         // This needs to be done before loading the message list below
         initializeSortSettings();
-
         /**
          * 加载数据
          */
         //TODO  加载数据
         loadMessageList();
+
     }
 
 
@@ -1318,7 +1319,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                         this.adapter.setMessages(mList);
                         right_message_list.setVisibility(View.VISIBLE);
                         SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                        limit.edit().putInt("key",limitCount).commit();
+                        limit.edit().putInt("key", limitCount).commit();
                         limit_count.setText("第" + limitCount + "页");
                     }
                 } catch (Exception e) {
@@ -1330,7 +1331,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                     limitCount = 1;
                     limit_count.setText("第" + limitCount + "页");
                     SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                    limit.edit().putInt("key",limitCount).commit();
+                    limit.edit().putInt("key", limitCount).commit();
                 } else {
                     limitCount++;
 //                    //这里有问题呢还    因为第一页默认加载25条  可以判断当第一页时返回的数据严重少于25条时 即使在加载也没有数据了 因为没有那么多
@@ -1367,7 +1368,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                             }
                             this.adapter.setMessages(mList);
                             SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                            limit.edit().putInt("key",limitCount).commit();
+                            limit.edit().putInt("key", limitCount).commit();
                             limit_count.setText("第" + limitCount + "页");
                         } else if (limitCount == yeCount) {
                             //没有更多数据了
@@ -1380,7 +1381,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                                 this.adapter.setMessages(mList);
                                 right_message_list.setVisibility(View.GONE);
                                 SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                                limit.edit().putInt("key",limitCount).commit();
+                                limit.edit().putInt("key", limitCount).commit();
                                 limit_count.setText("没有更多数据了");
                             }
                         } else {
@@ -1405,7 +1406,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                             }
                             this.adapter.setMessages(mList);
                             SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                            limit.edit().putInt("key",limitCount).commit();
+                            limit.edit().putInt("key", limitCount).commit();
                             limit_count.setText("第" + limitCount + "页");
                         } else {
                             //没有更多数据了
@@ -1418,7 +1419,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                                 this.adapter.setMessages(mList);
                                 right_message_list.setVisibility(View.GONE);
                                 SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                                limit.edit().putInt("key",limitCount).commit();
+                                limit.edit().putInt("key", limitCount).commit();
                                 limit_count.setText("没有更多数据了");
                             } else {
                                 setSp(2);
@@ -3076,11 +3077,14 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         return search;
     }
 
+    //TODO  加载数据
     private void loadMessageList() {
+
         Log.i("tag", "vvvvvvvvvvvvvv22222222");
         MessageListConfig config = new MessageListConfig(search, showingThreadedList, sortType, sortAscending,
                 sortDateAscending, activeMessage);
 
         getViewModel().loadMessageList(config);
+
     }
 }

@@ -143,27 +143,30 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
                     Log.i("tag", "sssssssssssssssssss1212121212121212121212121212");
                     if (currentAttachmentViewInfo != null) {
                         String displayName = setFileReleaseNames(Fujian_path, currentAttachmentViewInfo.displayName, currentAttachmentViewInfo.displayName);
-                        String save_name_path = filePath() + File.separator + displayName;
-                        if (is_Open_Save == 1) { //保存
-                            SaveDateBase(displayName, save_name_path);
-                            Log.i("tag", "sssssssssssssssssss7777777777777777777777777");
-                        } else if (is_Open_Save == 2) {//打开
-                            Log.i("tag", "sssssssssssssssssss8888888888888888888888888");
-                            SaveDateBase(currentAttachmentViewInfo.displayName, save_name_path);
-                            if (save_name_path.endsWith(".doc") || save_name_path.endsWith(".docx") || save_name_path.endsWith(".ppt")
-                                    || save_name_path.endsWith(".pptx") || save_name_path.endsWith(".xls") || save_name_path.endsWith(".xlsx")
-                                    || save_name_path.endsWith(".txt") || save_name_path.endsWith(".htxt") || save_name_path.endsWith(".pdf")
-                                    || save_name_path.endsWith(".epub") || save_name_path.endsWith(".chm") || save_name_path.endsWith(".hveb")
-                                    || save_name_path.endsWith(".heb") || save_name_path.endsWith(".mobi") || save_name_path.endsWith(".fb2")
-                                    || save_name_path.endsWith(".htm") || save_name_path.endsWith(".html") || save_name_path.endsWith(".php")
-                                    || save_name_path.endsWith(".apk") || save_name_path.endsWith(".ofdx") || save_name_path.endsWith(".cebx")
-                                    || save_name_path.endsWith(".ofd") || save_name_path.endsWith(".png") || save_name_path.endsWith(".gif") || save_name_path.endsWith(".jpg") || save_name_path.endsWith(".jpeg") || save_name_path.endsWith(".bmp")) {
-                                new OpenFile(mContext).openFile(new File(save_name_path));
+                        if (!displayName.equals("")) {
+                            String save_name_path = filePath() + File.separator + displayName;
+                            if (is_Open_Save == 1) { //保存
+                                SaveDateBase(displayName, save_name_path);
+                                Log.i("tag", "sssssssssssssssssss7777777777777777777777777");
+                            } else if (is_Open_Save == 2) {   //打开
+                                Log.i("tag", "sssssssssssssssssss8888888888888888888888888");
+                                SaveDateBase(currentAttachmentViewInfo.displayName, save_name_path);
+                                if (save_name_path.endsWith(".doc") || save_name_path.endsWith(".docx") || save_name_path.endsWith(".ppt")
+                                        || save_name_path.endsWith(".pptx") || save_name_path.endsWith(".xls") || save_name_path.endsWith(".xlsx")
+                                        || save_name_path.endsWith(".txt") || save_name_path.endsWith(".htxt") || save_name_path.endsWith(".pdf")
+                                        || save_name_path.endsWith(".epub") || save_name_path.endsWith(".chm") || save_name_path.endsWith(".hveb")
+                                        || save_name_path.endsWith(".heb") || save_name_path.endsWith(".mobi") || save_name_path.endsWith(".fb2")
+                                        || save_name_path.endsWith(".htm") || save_name_path.endsWith(".html") || save_name_path.endsWith(".php")
+                                        || save_name_path.endsWith(".apk") || save_name_path.endsWith(".ofdx") || save_name_path.endsWith(".cebx")
+                                        || save_name_path.endsWith(".ofd") || save_name_path.endsWith(".png") || save_name_path.endsWith(".gif") || save_name_path.endsWith(".jpg") || save_name_path.endsWith(".jpeg") || save_name_path.endsWith(".bmp")) {
+                                    new OpenFile(mContext).openFile(new File(save_name_path));
 
-                            } else {
-                                Toast.makeText(getActivity(), "不支持打开本文件", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getActivity(), "不支持打开本文件", Toast.LENGTH_LONG).show();
+                                }
                             }
                         }
+
                     }
                     break;
                 case 2:
@@ -1132,10 +1135,14 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
 //                if (attachment.size > FileSize)
                 {
                     if (NetworkUtils.isNetWorkAvailable(getActivity())) {
-                        /**
-                         *   下载完整邮件
-                         */
-                        DownloadEmail();
+                        String displayName = setFileReleaseNames(Fujian_path, attachment.displayName, attachment.displayName);
+                        if (!displayName.equals("")) {
+                            /**
+                             *   下载完整邮件
+                             */
+                            DownloadEmail();
+                        }
+
                         Log.i("tag", "sssssssssssssssssss55555555555555555555555");
                     } else {
                         Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
@@ -1192,12 +1199,15 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
                 if (permission.granted) { //用户已经同意权限
                     filePath();
                     String displayName = setFileReleaseNames(Fujian_path, attachment.displayName, attachment.displayName);
-                    String save_name_path = filePath() + File.separator + displayName;
-                    if (NetworkUtils.isNetWorkAvailable(mContext)) {
-                        initDialog(attachment, displayName, save_name_path);
-                    } else {
-                        Toast.makeText(mContext, "请连接网络", Toast.LENGTH_SHORT).show();
+                    if (!displayName.equals("")) {
+                        String save_name_path = filePath() + File.separator + displayName;
+                        if (NetworkUtils.isNetWorkAvailable(mContext)) {
+                            initDialog(attachment, displayName, save_name_path);
+                        } else {
+                            Toast.makeText(mContext, "请连接网络", Toast.LENGTH_SHORT).show();
+                        }
                     }
+
                 } else if (permission.shouldShowRequestPermissionRationale) {
                     // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
                     Toast.makeText(getActivity(), "请问是否确定到本地设备中打开存储空间的权限", Toast.LENGTH_LONG).show();
@@ -1225,12 +1235,15 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         } else {
             filePath();
             String displayName = setFileReleaseNames(Fujian_path, attachment.displayName, attachment.displayName);
-            String save_name_path = filePath() + File.separator + displayName;
-            if (NetworkUtils.isNetWorkAvailable(mContext)) {
-                initDialog(attachment, displayName, save_name_path);
-            } else {
-                Toast.makeText(mContext, "请连接网络", Toast.LENGTH_SHORT).show();
+            if (!displayName.equals("")) {
+                String save_name_path = filePath() + File.separator + displayName;
+                if (NetworkUtils.isNetWorkAvailable(mContext)) {
+                    initDialog(attachment, displayName, save_name_path);
+                } else {
+                    Toast.makeText(mContext, "请连接网络", Toast.LENGTH_SHORT).show();
+                }
             }
+
         }
     }
 
@@ -1379,7 +1392,13 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
                 while (true) {
                     if (a != 1) {
                         String[] split = mFileName1.split("\\.");
-                        mFileName = split[0] + "(" + a + ")." + split[1];
+                        try {
+                            mFileName = split[0] + "(" + a + ")." + split[1];
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), "不是文件无法打开或保存", Toast.LENGTH_LONG).show();
+                            fileReleaseName = "";
+                            break;
+                        }
                     }
                     if (!hashSet.contains(mFileName)) {
                         fileReleaseName = mFileName;
