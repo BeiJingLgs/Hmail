@@ -321,7 +321,8 @@ class AccountSettingsFragment : PreferenceFragmentCompat(), ConfirmationDialogFr
                 getString(R.string.account_delete_dlg_title),
                 getString(R.string.account_delete_dlg_instructions_fmt, getAccount().description),
                 getString(R.string.okay_action),
-                getString(R.string.cancel_action)
+                getString(R.string.cancel_action),
+             null
         )
         dialogFragment.setTargetFragment(this, REQUEST_DELETE_ACCOUNT)
         dialogFragment.show(requireFragmentManager(), TAG_DELETE_ACCOUNT_CONFIRMATION)
@@ -329,14 +330,14 @@ class AccountSettingsFragment : PreferenceFragmentCompat(), ConfirmationDialogFr
 
 
 
-    override fun doPositiveClick(dialogId: Int) {
+    override fun doPositiveClick(dialogId: Int,account: Account) {
         accountRemover.removeAccountAsync(accountUuid)
         closeAccountSettings()
     }
 
-    override fun doNegativeClick(dialogId: Int) = Unit
+    override fun doNegativeClick(dialogId: Int,account: Account) = Unit
 
-    override fun dialogCancelled(dialogId: Int) = Unit
+    override fun dialogCancelled(dialogId: Int,account: Account) = Unit
 
     private fun closeAccountSettings() {
         requireActivity().finish()

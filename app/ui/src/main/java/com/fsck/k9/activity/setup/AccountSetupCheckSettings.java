@@ -350,7 +350,7 @@ public class AccountSetupCheckSettings extends K9Activity implements OnClickList
                     getString(R.string.account_setup_failed_dlg_title),
                     customMessage,
                     getString(R.string.account_setup_failed_dlg_edit_details_action),
-                    getString(R.string.account_setup_failed_dlg_continue_action)
+                    getString(R.string.account_setup_failed_dlg_continue_action),null
             );
         } else {
             throw new RuntimeException("Called showDialog(int) with unknown dialog id.");
@@ -370,14 +370,14 @@ public class AccountSetupCheckSettings extends K9Activity implements OnClickList
     }
 
     @Override
-    public void doPositiveClick(int dialogId) {
+    public void doPositiveClick(int dialogId,Account account) {
         if (dialogId == R.id.dialog_account_setup_error) {
             finish();
         }
     }
 
     @Override
-    public void doNegativeClick(int dialogId) {
+    public void doNegativeClick(int dialogId,Account account) {
         if (dialogId == R.id.dialog_account_setup_error) {
             mCanceled = false;
             setResult(RESULT_OK);
@@ -386,7 +386,7 @@ public class AccountSetupCheckSettings extends K9Activity implements OnClickList
     }
 
     @Override
-    public void dialogCancelled(int dialogId) {
+    public void dialogCancelled(int dialogId,Account account) {
         // nothing to do here...
     }
 

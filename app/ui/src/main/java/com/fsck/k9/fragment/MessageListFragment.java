@@ -108,6 +108,8 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     private List<MessageListItem> oList;
     private int oListCount;
     private Boolean isClickItem = false;
+    private List<MessageListItem> messageListItems;
+    private int limit_num;
 
     public static MessageListFragment newInstance(
             LocalSearch search, boolean isThreadDisplay, boolean threadedList) {
@@ -381,169 +383,172 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         initialized = true;
     }
 
-    public void setMessageList(MessageListInfo messageListInfo) {
-        ll_bar.setVisibility(View.VISIBLE);
-        tv_loading.setVisibility(View.GONE);
-        SharedPreferences dblistsp = context.getSharedPreferences("dblist", Context.MODE_PRIVATE);
-        //这是保存的数据库中条目的直
-        int key1 = dblistsp.getInt("key", 0);
-        //这是判断能否被整除 1可以 2不能整除
-        int anInt = dblistsp.getInt("int", 0);
-        List<MessageListItem> messageListItems = messageListInfo.getMessageListItems();
-        MyApplication.getInstance().getMessageitemdb().delete(FujianBeanDB.BIAO_NAME_MESSAGE, null, null);
-        String json = new Gson().toJson(messageListItems);
-        ContentValues values = new ContentValues();
-        values.put(FujianBeanDB.MESSAGELISTTOSTRING, json);
-        MyApplication.getInstance().getMessageitemdb().insert(FujianBeanDB.BIAO_NAME_MESSAGE, null, values);
-        values.clear();
-        Cursor cursor = MyApplication.getInstance().getMessageitemdb().query(FujianBeanDB.BIAO_NAME_MESSAGE, null, null, null, null, null, null, null);
-        while (cursor.moveToNext()) {
-            messageJson = cursor.getString(1);
-            Log.i("TAG", "SSSSSSSS.." + messageJson);
-        }
-        cursor.close();
-        oList = new Gson().fromJson(messageJson, new TypeToken<List<MessageListItem>>() {
-        }.getType());
-        Log.i("TAG", "bbbbbbbbboSize.." + oList.size());
-        if (isThreadDisplay && messageListItems.isEmpty()) {
-            handler.goBack();
-            return;
-        }
 
-        swipeRefreshLayout.setRefreshing(false);
-        swipeRefreshLayout.setEnabled(isPullToRefreshAllowed());
+//    public void setMessageList1(MessageListInfo messageListInfo) {
+//        ll_bar.setVisibility(View.VISIBLE);
+//        tv_loading.setVisibility(View.GONE);
+//        SharedPreferences dblistsp = context.getSharedPreferences("dblist", Context.MODE_PRIVATE);
+//        //这是保存的数据库中条目的直
+//        int key1 = dblistsp.getInt("key", 0);
+//        //这是判断能否被整除 1可以 2不能整除
+//        int anInt = dblistsp.getInt("int", 0);
+//        List<MessageListItem> messageListItems = messageListInfo.getMessageListItems();
+//        MyApplication.getInstance().getMessageitemdb().delete(FujianBeanDB.BIAO_NAME_MESSAGE, null, null);
+//        String json = new Gson().toJson(messageListItems);
+//        ContentValues values = new ContentValues();
+//        values.put(FujianBeanDB.MESSAGELISTTOSTRING, json);
+//        MyApplication.getInstance().getMessageitemdb().insert(FujianBeanDB.BIAO_NAME_MESSAGE, null, values);
+//        values.clear();
+//        Cursor cursor = MyApplication.getInstance().getMessageitemdb().query(FujianBeanDB.BIAO_NAME_MESSAGE, null, null, null, null, null, null, null);
+//        while (cursor.moveToNext()) {
+//            messageJson = cursor.getString(1);
+//            Log.i("TAG", "SSSSSSSS.." + messageJson);
+//        }
+//        cursor.close();
+          //TODO MessageListItem 中的    val displayName: CharSequence 改为 val displayName: String,
 
-        if (isThreadDisplay) {
-            if (!messageListItems.isEmpty()) {
-                MessageListItem messageListItem = messageListItems.get(0);
-                title = messageListItem.getSubject();
-                if (!TextUtils.isEmpty(title)) {
-                    title = Utility.stripSubject(title);
-                }
-                if (TextUtils.isEmpty(title)) {
-                    title = getString(R.string.general_no_subject);
-                }
-                updateTitle();
-            } else {
-                //TODO: empty thread view -> return to full message list
-            }
-        }
-
-        cleanupSelected(messageListItems);
-        adapter.setSelected(selected);
-
-        updateContextMenu(messageListItems);
-        SharedPreferences sp = context.getSharedPreferences("ThreadCount", Context.MODE_PRIVATE);
-        boolean key = sp.getBoolean("key", false);
-        if (title.equals("搜索结果")) {
-            ll_bar.setVisibility(View.GONE);
-            this.adapter.setMessages(messageListItems);
-        } else if (key == true) {
-            ll_bar.setVisibility(View.GONE);
-            this.adapter.setMessages(messageListItems);
-            sp.edit().putBoolean("key", false).commit();
-        } else if (limitCount == 1) {
-            List<MessageListItem> mList = new ArrayList<>();
-            if (oList.size() > 0) {
-                if (oList.size() > 8) {
-                    for (int i = 0; i < 8; i++) {
-                        MessageListItem messageListItem = oList.get(i);
-                        mList.add(messageListItem);
-                    }
-                    this.adapter.setMessages(mList);
-                } else {
-                    this.adapter.setMessages(messageListItems);
-                }
-            }
-            SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-            limit.edit().putInt("key", limitCount).commit();
-        } else if (limitCount > 1) {
-            try {
-                //说明加载到了更多的值
-                if (key1 != 0 && key1 < oList.size()) {
-                    List<MessageListItem> mList = new ArrayList<>();
-                    for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
-                        MessageListItem messageListItem = oList.get(i);
-                        mList.add(messageListItem);
-                    }
-                    this.adapter.setMessages(mList);
-                    SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                    limit.edit().putInt("key", limitCount).commit();
-                    limit_count.setText("第" + limitCount + "页");
-                } else {//说明邮箱没有新的邮件发来了  加载最后一页  页数要减1   判断是否能整除
-                    if (anInt == 1) {
-                        List<MessageListItem> mList = new ArrayList<>();
-                        for (int i = (limitCount - 2) * 8; i < 8 * (limitCount - 1); i++) {
-                            MessageListItem messageListItem = oList.get(i);
-                            mList.add(messageListItem);
-                        }
-                        this.adapter.setMessages(mList);
-                        SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                        limit.edit().putInt("key", limitCount).commit();
-                        limit_count.setText("第" + (limitCount - 1) + "页");
-                    } else if (anInt == 2) {
-                        List<MessageListItem> mList = new ArrayList<>();
-                        for (int i = (limitCount - 2) * 8; i < oList.size(); i++) {
-                            MessageListItem messageListItem = oList.get(i);
-                            mList.add(messageListItem);
-                        }
-                        this.adapter.setMessages(mList);
-                        SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                        limit.edit().putInt("key", limitCount).commit();
-                        limit_count.setText("第" + (limitCount - 1) + "页");
-                    } else if (anInt == 3) {
-                        if (isClickItem) {
-                        } else {
-                            List<MessageListItem> mList = new ArrayList<>();
-                            for (int i = (limitCount - 1) * 8; i < oList.size(); i++) {
-                                MessageListItem messageListItem = oList.get(i);
-                                mList.add(messageListItem);
-                            }
-                            this.adapter.setMessages(mList);
-                            SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                            limit.edit().putInt("key", limitCount).commit();
-                            right_message_list.setVisibility(View.GONE);
-                            limit_count.setText("没有更多数据了");
-                            isClickItem = false;
-                        }
-
-                    }
-                }
-            } catch (Exception e) {
-
-            }
+//        oList = new Gson().fromJson(messageJson, new TypeToken<List<MessageListItem>>() {
+//        }.getType());
+//        Log.i("TAG", "bbbbbbbbboSize.." + oList.size());
+//        if (isThreadDisplay && messageListItems.isEmpty()) {
+//            handler.goBack();
+//            return;
+//        }
+//
+//        swipeRefreshLayout.setRefreshing(false);
+//        swipeRefreshLayout.setEnabled(isPullToRefreshAllowed());
+//
+//        if (isThreadDisplay) {
+//            if (!messageListItems.isEmpty()) {
+//                MessageListItem messageListItem = messageListItems.get(0);
+//                title = messageListItem.getSubject();
+//                if (!TextUtils.isEmpty(title)) {
+//                    title = Utility.stripSubject(title);
+//                }
+//                if (TextUtils.isEmpty(title)) {
+//                    title = getString(R.string.general_no_subject);
+//                }
+//                updateTitle();
+//            } else {
+//                //TODO: empty thread view -> return to full message list
+//            }
+//        }
+//
+//        cleanupSelected(messageListItems);
+//        adapter.setSelected(selected);
+//
+//        updateContextMenu(messageListItems);
+//        SharedPreferences sp = context.getSharedPreferences("ThreadCount", Context.MODE_PRIVATE);
+//        boolean key = sp.getBoolean("key", false);
+//        if (title.equals("搜索结果")) {
+//            ll_bar.setVisibility(View.GONE);
+//            this.adapter.setMessages(messageListItems);
+//        } else if (key == true) {
+//            ll_bar.setVisibility(View.GONE);
+//            this.adapter.setMessages(messageListItems);
+//            sp.edit().putBoolean("key", false).commit();
+//        } else if (limitCount == 1) {
+//            List<MessageListItem> mList = new ArrayList<>();
+//            if (oList.size() > 0) {
+//                if (oList.size() > 8) {
+//                    for (int i = 0; i < 8; i++) {
+//                        MessageListItem messageListItem = oList.get(i);
+//                        mList.add(messageListItem);
+//                    }
+//                    this.adapter.setMessages(mList);
+//                } else {
+//                    this.adapter.setMessages(messageListItems);
+//                }
+//            }
+//            SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
+//            limit.edit().putInt("key", limitCount).commit();
+//        } else if (limitCount > 1) {
 //            try {
-//                if (oList.size() >(limitCount - 1) * 8) {
+//                //说明加载到了更多的值
+//                if (key1 != 0 && key1 < oList.size()) {
 //                    List<MessageListItem> mList = new ArrayList<>();
 //                    for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
 //                        MessageListItem messageListItem = oList.get(i);
 //                        mList.add(messageListItem);
 //                    }
 //                    this.adapter.setMessages(mList);
+//                    SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
+//                    limit.edit().putInt("key", limitCount).commit();
+//                    limit_count.setText("第" + limitCount + "页");
+//                } else {//说明邮箱没有新的邮件发来了  加载最后一页  页数要减1   判断是否能整除
+//                    if (anInt == 1) {
+//                        List<MessageListItem> mList = new ArrayList<>();
+//                        for (int i = (limitCount - 2) * 8; i < 8 * (limitCount - 1); i++) {
+//                            MessageListItem messageListItem = oList.get(i);
+//                            mList.add(messageListItem);
+//                        }
+//                        this.adapter.setMessages(mList);
+//                        SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
+//                        limit.edit().putInt("key", limitCount).commit();
+//                        limit_count.setText("第" + (limitCount - 1) + "页");
+//                    } else if (anInt == 2) {
+//                        List<MessageListItem> mList = new ArrayList<>();
+//                        for (int i = (limitCount - 2) * 8; i < oList.size(); i++) {
+//                            MessageListItem messageListItem = oList.get(i);
+//                            mList.add(messageListItem);
+//                        }
+//                        this.adapter.setMessages(mList);
+//                        SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
+//                        limit.edit().putInt("key", limitCount).commit();
+//                        limit_count.setText("第" + (limitCount - 1) + "页");
+//                    } else if (anInt == 3) {
+//                        if (isClickItem) {
+//                        } else {
+//                            List<MessageListItem> mList = new ArrayList<>();
+//                            for (int i = (limitCount - 1) * 8; i < oList.size(); i++) {
+//                                MessageListItem messageListItem = oList.get(i);
+//                                mList.add(messageListItem);
+//                            }
+//                            this.adapter.setMessages(mList);
+//                            SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
+//                            limit.edit().putInt("key", limitCount).commit();
+//                            right_message_list.setVisibility(View.GONE);
+//                            limit_count.setText("没有更多数据了");
+//                            isClickItem = false;
+//                        }
+//
+//                    }
 //                }
-//                Log.i("tag", "bbbbbbbbb11111111");
 //            } catch (Exception e) {
-//                e.getMessage();
-//                Log.i("tag", "bbbbbbbbb222222222");
+//
 //            }
-
-        }
-        resetActionMode();
-        computeBatchDirection();
-
-        messageListLoaded = true;
-
-        if (savedListState != null) {
-            handler.restoreListPosition();
-        }
-
-        fragmentListener.updateMenu();
-
-        if (folderServerId != null) {
-            currentFolder.moreMessages = messageListInfo.getHasMoreMessages();
-//            updateFooterView();
-        }
-    }
+////            try {
+////                if (oList.size() >(limitCount - 1) * 8) {
+////                    List<MessageListItem> mList = new ArrayList<>();
+////                    for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+////                        MessageListItem messageListItem = oList.get(i);
+////                        mList.add(messageListItem);
+////                    }
+////                    this.adapter.setMessages(mList);
+////                }
+////                Log.i("tag", "bbbbbbbbb11111111");
+////            } catch (Exception e) {
+////                e.getMessage();
+////                Log.i("tag", "bbbbbbbbb222222222");
+////            }
+//
+//        }
+//        resetActionMode();
+//        computeBatchDirection();
+//
+//        messageListLoaded = true;
+//
+//        if (savedListState != null) {
+//            handler.restoreListPosition();
+//        }
+//
+//        fragmentListener.updateMenu();
+//
+//        if (folderServerId != null) {
+//            currentFolder.moreMessages = messageListInfo.getHasMoreMessages();
+////            updateFooterView();
+//        }
+//    }
 
     //todo onCreateView
     @Override
@@ -613,8 +618,17 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     //TODO   恢复数据
     private void restoreInstanceState(Bundle savedInstanceState) {
         SharedPreferences sp = context.getSharedPreferences("state", Context.MODE_PRIVATE);
-        limitCount = sp.getInt("count", 1);
+        SharedPreferences splogin = context.getSharedPreferences("login", Context.MODE_PRIVATE);
+        int logNum=splogin.getInt("key",0);
+        if (logNum==1){//等于1说明  刚刚登陆的
+            limitCount=1;
+            splogin.edit().putInt("key",0).commit();
+        }else{
+            limitCount = sp.getInt("count", 1);
+        }
+        Log.i("tag","nnnnnn"+limitCount+"logNum="+logNum);
         if (savedInstanceState == null) {
+            Log.i("tag","nnnnnn");
             return;
         }
         restoreSelectedMessages(savedInstanceState);
@@ -722,6 +736,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         }
 
         if (singleFolderMode) {
+            //还原
 //            listView.addFooterView(getFooterView(listView));
 //            updateFooterView();
         }
@@ -818,7 +833,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         left_message_list = layout.findViewById(R.id.left_message);
         right_message_list = layout.findViewById(R.id.right_message);
         limit_count = layout.findViewById(R.id.limit_count);
-        limit_count.setText("第" + limitCount + "页");
+//        limit_count.setText("第" + limitCount + "页");
         swipeRefreshLayout = layout.findViewById(R.id.swiperefresh);
         listView = layout.findViewById(R.id.message_list);
         Log.i("tag", "vvvvvvvvvvvvvv444444");
@@ -1074,7 +1089,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
             String cancelText = getString(R.string.dialog_confirm_spam_cancel_button);
 
             fragment = ConfirmationDialogFragment.newInstance(dialogId, title, message,
-                    confirmText, cancelText);
+                    confirmText, cancelText,null);
         } else if (dialogId == R.id.dialog_confirm_delete) {
             String title = getString(R.string.dialog_confirm_delete_title);
 
@@ -1087,7 +1102,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
             String cancelText = getString(R.string.dialog_confirm_delete_cancel_button);
 
             fragment = ConfirmationDialogFragment.newInstance(dialogId, title, message,
-                    confirmText, cancelText);
+                    confirmText, cancelText,null);
         } else if (dialogId == R.id.dialog_confirm_mark_all_as_read) {
             String title = getString(R.string.dialog_confirm_mark_all_as_read_title);
             String message = getString(R.string.dialog_confirm_mark_all_as_read_message);
@@ -1095,7 +1110,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
             String confirmText = getString(R.string.dialog_confirm_mark_all_as_read_confirm_button);
             String cancelText = getString(R.string.dialog_confirm_mark_all_as_read_cancel_button);
 
-            fragment = ConfirmationDialogFragment.newInstance(dialogId, title, message, confirmText, cancelText);
+            fragment = ConfirmationDialogFragment.newInstance(dialogId, title, message, confirmText, cancelText,null);
         } else if (dialogId == R.id.dialog_confirm_empty_trash) {
             String title = getString(R.string.dialog_confirm_empty_trash_title);
             String message = getString(R.string.dialog_confirm_empty_trash_message);
@@ -1104,7 +1119,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
             String cancelText = getString(R.string.dialog_confirm_delete_cancel_button);
 
             fragment = ConfirmationDialogFragment.newInstance(dialogId, title, message,
-                    confirmText, cancelText);
+                    confirmText, cancelText,null);
         } else {
             throw new RuntimeException("Called showDialog(int) with unknown dialog id.");
         }
@@ -1303,139 +1318,354 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     }
 
     //TODO 点击事件
+    //TODO 点击事件
     @Override
     public void onClick(View v) {
         if (NetworkUtils.isNetWorkAvailable(getActivity())) {
             int id = v.getId();
-            if (id == R.id.left_message) {
-                try {
-                    if (limitCount > 1) {
-                        limitCount--;
+            if (id == R.id.left_message) {//往前翻页
+                if (limitCount > 1) {
+                    limitCount--;
+                    List<MessageListItem> mList = new ArrayList<>();
+                    for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+                        MessageListItem messageListItem = messageListItems.get(i);
+                        mList.add(messageListItem);
+                    }
+                    this.adapter.setMessages(mList);
+                    right_message_list.setVisibility(View.VISIBLE);
+                    limit_count.setText("第" + limitCount + "页");
+                    Save_Limit(limitCount);
+                }
+            } else if (id == R.id.right_message) { //向后翻页
+                limitCount++;
+                int messageListSize = messageListItems.size();
+                //如果没有更多数据了直接拿到Messagelist的所有数据做分页
+                if (!currentFolder.moreMessages) {
+                    //能整除
+                    if (messageListSize % 8 == 0) {
+                        int limit_num1 = messageListSize / 8;
+                        if (limitCount == limit_num1) { //如果相等说明到了最后一页
+                            List<MessageListItem> mList = new ArrayList<>();
+                            for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+                                MessageListItem messageListItem = messageListItems.get(i);
+                                mList.add(messageListItem);
+                            }
+                            this.adapter.setMessages(mList);
+                            right_message_list.setVisibility(View.GONE);
+                            limit_count.setText("没有更多数据了");
+                            Save_Limit(limitCount);
+                        } else {  //否则不相等说明 没有翻到最后一页呢
+                            List<MessageListItem> mList = new ArrayList<>();
+                            for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+                                MessageListItem messageListItem = messageListItems.get(i);
+                                mList.add(messageListItem);
+                            }
+                            this.adapter.setMessages(mList);
+                            limit_count.setText("第" + limitCount + "页");
+                            Save_Limit(limitCount);
+                        }
+                    } else {
+                        int limit_num1 = messageListSize / 8 + 1;
+                        if (limitCount == limit_num1) { //如果相等说明到了最后一页
+                            List<MessageListItem> mList = new ArrayList<>();
+                            for (int i = (limitCount - 1) * 8; i < messageListItems.size(); i++) {
+                                MessageListItem messageListItem = messageListItems.get(i);
+                                mList.add(messageListItem);
+                            }
+                            this.adapter.setMessages(mList);
+                            right_message_list.setVisibility(View.GONE);
+                            limit_count.setText("没有更多数据了");
+                            Save_Limit(limitCount);
+                        } else {
+                            List<MessageListItem> mList = new ArrayList<>();
+                            for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+                                MessageListItem messageListItem = messageListItems.get(i);
+                                mList.add(messageListItem);
+                            }
+                            this.adapter.setMessages(mList);
+                            limit_count.setText("第" + limitCount + "页");
+                            Save_Limit(limitCount);
+                        }
+                    }
+                } else {//如果还有更多数据  翻到倒数第二页 就直接加载数据
+                    //能整除
+                    if (messageListItems.size() / 8 == 0) {
+                        limit_num = messageListItems.size() / 8;
+                    } else {
+                        limit_num = messageListItems.size() / 8 + 1;
+                    }
+                    Log.i("tag", "vvvvvvvvvvvvvvvv." + messageListItems.size());
+                    //TODO  这具体提前几页进行加载是可控的    这待改动看端点
+                    if (limitCount == (limit_num - 5)) { //就是翻到倒数第二页 提前加载数据
+                        Log.i("tag", "vvvvvvvvvvvvvvvv." + limitCount + "11vvv.." + limit_num);
+                        messagingController.loadMoreMessages(account, folderServerId, null);
                         List<MessageListItem> mList = new ArrayList<>();
                         for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
-                            MessageListItem messageListItem = oList.get(i);
+                            MessageListItem messageListItem = messageListItems.get(i);
                             mList.add(messageListItem);
                         }
                         this.adapter.setMessages(mList);
-                        right_message_list.setVisibility(View.VISIBLE);
-                        SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                        limit.edit().putInt("key", limitCount).commit();
                         limit_count.setText("第" + limitCount + "页");
-                    }
-                } catch (Exception e) {
-                }
-            } else if (id == R.id.right_message) {
-                //如果第一页不满的时候点击下一页不管用
-                //这里一次请求25条的
-                if (oList.size() <= 8) {
-                    limitCount = 1;
-                    limit_count.setText("第" + limitCount + "页");
-                    SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                    limit.edit().putInt("key", limitCount).commit();
-                } else {
-                    limitCount++;
-//                    //这里有问题呢还    因为第一页默认加载25条  可以判断当第一页时返回的数据严重少于25条时 即使在加载也没有数据了 因为没有那么多
-//                    if (limitCount * 8 < oList.size()) {
-//                        List<MessageListItem> mList = new ArrayList<>();
-//                        if (oList.size() - 8 * limitCount < 8) {
-//                            for (int i = (limitCount - 1) * 8; i < oList.size(); i++) {
-//                                MessageListItem messageListItem = oList.get(i);
-//                                mList.add(messageListItem);
-//                            }
-//                        } else {
-//                            for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
-//                                MessageListItem messageListItem = oList.get(i);
-//                                mList.add(messageListItem);
-//                            }
-//                        }
-//                        this.adapter.setMessages(mList);
-//                    } else {
-//                        ll_bar.setVisibility(View.GONE);
-//                        tv_loading.setVisibility(View.VISIBLE);
-//                        tv_loading.setText(context.getString(R.string.status_loading_more));
-//                        messagingController.loadMoreMessages(account, folderServerId, null);
-//                    }
-//                    limit_count.setText("第" + limitCount + "页");
-                    if (oList.size() % 8 == 0) {
-                        List<MessageListItem> mList = new ArrayList<>();
-                        //能整除 有10页
-                        int yeCount = oList.size() / 8;
-                        System.out.println("n可以被m整除");
-                        if (limitCount < yeCount) {
+                        Save_Limit(limitCount);
+                    } else {//不是倒数第二页的情况
+                        try {
+                            List<MessageListItem> mList = new ArrayList<>();
                             for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
-                                MessageListItem messageListItem = oList.get(i);
+                                MessageListItem messageListItem = messageListItems.get(i);
                                 mList.add(messageListItem);
                             }
                             this.adapter.setMessages(mList);
-                            SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                            limit.edit().putInt("key", limitCount).commit();
                             limit_count.setText("第" + limitCount + "页");
-                        } else if (limitCount == yeCount) {
-                            //没有更多数据了
-                            if (!currentFolder.moreMessages) {
-                                for (int i = (limitCount - 1) * 8; i < oList.size(); i++) {
-                                    MessageListItem messageListItem = oList.get(i);
-                                    mList.add(messageListItem);
-                                }
-                                setSp(3);
-                                this.adapter.setMessages(mList);
-                                right_message_list.setVisibility(View.GONE);
-                                SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                                limit.edit().putInt("key", limitCount).commit();
-                                limit_count.setText("没有更多数据了");
-                            }
-                        } else {
-                            //没有更多数据了
-                            if (currentFolder.moreMessages) {
-                                setSp(1);
-                                ll_bar.setVisibility(View.GONE);
-                                tv_loading.setVisibility(View.VISIBLE);
-                                tv_loading.setText(context.getString(R.string.status_loading_more));
-                                messagingController.loadMoreMessages(account, folderServerId, null);
-                            }
-                        }
-                    } else {
-                        List<MessageListItem> mList = new ArrayList<>();
-                        System.out.println("n不能被m整除");
-                        //不能整除说明最后一页不能铺满 不能铺满加载铺满
-                        int yeCount = oList.size() / 8 + 1;
-                        if (limitCount <= yeCount - 1) {
-                            for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
-                                MessageListItem messageListItem = oList.get(i);
-                                mList.add(messageListItem);
-                            }
-                            this.adapter.setMessages(mList);
-                            SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                            limit.edit().putInt("key", limitCount).commit();
-                            limit_count.setText("第" + limitCount + "页");
-                        } else {
-                            //没有更多数据了
-                            if (!currentFolder.moreMessages) {
-                                for (int i = (limitCount - 1) * 8; i < oList.size(); i++) {
-                                    MessageListItem messageListItem = oList.get(i);
-                                    mList.add(messageListItem);
-                                }
-                                setSp(3);
-                                this.adapter.setMessages(mList);
-                                right_message_list.setVisibility(View.GONE);
-                                SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
-                                limit.edit().putInt("key", limitCount).commit();
-                                limit_count.setText("没有更多数据了");
-                            } else {
-                                setSp(2);
-                                ll_bar.setVisibility(View.GONE);
-                                tv_loading.setVisibility(View.VISIBLE);
-                                tv_loading.setText(context.getString(R.string.status_loading_more));
-                                messagingController.loadMoreMessages(account, folderServerId, null);
-                            }
+                            Save_Limit(limitCount);
+
+                        }catch (Exception e){
+                            limitCount--;
+                            Log.i("tag", "vvvvvvvvvvvvvvvv.--" + limitCount);
+                            Toast.makeText(getActivity(),"请等待加载进度结束",Toast.LENGTH_LONG).show();
                         }
                     }
                 }
             }
-        } else {
-            Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void Save_Limit(int limitCount) {
+        SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
+        limit.edit().putInt("key", limitCount).commit();
+    }
+
+    public void setMessageList(MessageListInfo messageListInfo) {
+        left_message_list.setVisibility(View.VISIBLE);
+        right_message_list.setVisibility(View.VISIBLE);
+        messageListItems = messageListInfo.getMessageListItems();
+        Log.i("tag", "bbbbbbbb" + messageListItems.size());
+        if (isThreadDisplay && messageListItems.isEmpty()) {
+            handler.goBack();
+            return;
+        }
+
+        swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setEnabled(isPullToRefreshAllowed());
+
+        if (isThreadDisplay) {
+            if (!messageListItems.isEmpty()) {
+                MessageListItem messageListItem = messageListItems.get(0);
+                title = messageListItem.getSubject();
+                if (!TextUtils.isEmpty(title)) {
+                    title = Utility.stripSubject(title);
+                }
+                if (TextUtils.isEmpty(title)) {
+                    title = getString(R.string.general_no_subject);
+                }
+                updateTitle();
+            } else {
+                //TODO: empty thread view -> return to full message list
+            }
+        }
+
+        cleanupSelected(messageListItems);
+        adapter.setSelected(selected);
+
+        updateContextMenu(messageListItems);
+
+        SharedPreferences sp = context.getSharedPreferences("ThreadCount", Context.MODE_PRIVATE);
+        boolean key = sp.getBoolean("key", false);
+        if (key == true) {
+            if (messageListItems.size() < 8) {
+                ll_bar.setVisibility(View.GONE);
+                this.adapter.setMessages(messageListItems);
+                sp.edit().putBoolean("key", false).commit();
+            }
+        } else if (title.equals("搜索结果")) {
+            ll_bar.setVisibility(View.GONE);
+            this.adapter.setMessages(messageListItems);
+        } else if (limitCount == 1) {
+            if (messageListItems.size() > 0) {
+                if (messageListItems.size() > 8) {
+                    List<MessageListItem> mList = new ArrayList<>();
+                    for (int i = 0; i < 8; i++) {
+                        MessageListItem messageListItem = messageListItems.get(i);
+                        mList.add(messageListItem);
+                    }
+                    this.adapter.setMessages(mList);
+                    limit_count.setText("第" + limitCount + "页");
+                } else {
+                    this.adapter.setMessages(messageListItems);
+                    left_message_list.setVisibility(View.GONE);
+                    right_message_list.setVisibility(View.GONE);
+                    limit_count.setText("没有更多数据了");
+                }
+            }
+            Save_Limit(limitCount);
+        } else if (limitCount > 1) {
+            Log.i("tag", "bbbbbbbb" +limitCount+".................."+ messageListItems.size());
+            //待处理如果是最后1页的情况
+            List<MessageListItem> mList = new ArrayList<>();
+            int size = messageListItems.size() > 8 * limitCount ? 8 * limitCount : messageListItems.size();
+            for (int i = (limitCount - 1)*8; i < size; i++) {
+                MessageListItem messageListItem = messageListItems.get(i);
+                mList.add(messageListItem);
+            }
+            this.adapter.setMessages(mList);
+            Save_Limit(limitCount);
+            if (messageListItems.size() > 8 * limitCount ){
+                limit_count.setText("第" + limitCount + "页");
+            }else{
+                right_message_list.setVisibility(View.GONE);
+                limit_count.setText("没有更多数据了");
+            }
+        }
+        resetActionMode();
+        computeBatchDirection();
+
+        messageListLoaded = true;
+
+        if (savedListState != null) {
+            handler.restoreListPosition();
+        }
+
+        fragmentListener.updateMenu();
+
+        if (folderServerId != null) {
+            currentFolder.moreMessages = messageListInfo.getHasMoreMessages();
+            updateFooterView();
+        }
+    }
+
+
+//    @Override
+//    public void onClick(View v) {
+//        if (NetworkUtils.isNetWorkAvailable(getActivity())) {
+//            int id = v.getId();
+//            if (id == R.id.left_message) {
+//                try {
+//                    if (limitCount > 1) {
+//                        limitCount--;
+//                        List<MessageListItem> mList = new ArrayList<>();
+//                        for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+//                            MessageListItem messageListItem = oList.get(i);
+//                            mList.add(messageListItem);
+//                        }
+//                        this.adapter.setMessages(mList);
+//                        right_message_list.setVisibility(View.VISIBLE);
+//                        SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
+//                        limit.edit().putInt("key", limitCount).commit();
+//                        limit_count.setText("第" + limitCount + "页");
+//                    }
+//                } catch (Exception e) {
+//                }
+//            } else if (id == R.id.right_message) {
+//                //如果第一页不满的时候点击下一页不管用
+//                //这里一次请求25条的
+//                if (oList.size() <= 8) {
+//                    limitCount = 1;
+//                    limit_count.setText("第" + limitCount + "页");
+//                    SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
+//                    limit.edit().putInt("key", limitCount).commit();
+//                } else {
+//                    limitCount++;
+////                    //这里有问题呢还    因为第一页默认加载25条  可以判断当第一页时返回的数据严重少于25条时 即使在加载也没有数据了 因为没有那么多
+////                    if (limitCount * 8 < oList.size()) {
+////                        List<MessageListItem> mList = new ArrayList<>();
+////                        if (oList.size() - 8 * limitCount < 8) {
+////                            for (int i = (limitCount - 1) * 8; i < oList.size(); i++) {
+////                                MessageListItem messageListItem = oList.get(i);
+////                                mList.add(messageListItem);
+////                            }
+////                        } else {
+////                            for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+////                                MessageListItem messageListItem = oList.get(i);
+////                                mList.add(messageListItem);
+////                            }
+////                        }
+////                        this.adapter.setMessages(mList);
+////                    } else {
+////                        ll_bar.setVisibility(View.GONE);
+////                        tv_loading.setVisibility(View.VISIBLE);
+////                        tv_loading.setText(context.getString(R.string.status_loading_more));
+////                        messagingController.loadMoreMessages(account, folderServerId, null);
+////                    }
+////                    limit_count.setText("第" + limitCount + "页");
+//                    if (oList.size() % 8 == 0) {
+//                        List<MessageListItem> mList = new ArrayList<>();
+//                        //能整除 有10页
+//                        int yeCount = oList.size() / 8;
+//                        System.out.println("n可以被m整除");
+//                        if (limitCount < yeCount) {
+//                            for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+//                                MessageListItem messageListItem = oList.get(i);
+//                                mList.add(messageListItem);
+//                            }
+//                            this.adapter.setMessages(mList);
+//                            SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
+//                            limit.edit().putInt("key", limitCount).commit();
+//                            limit_count.setText("第" + limitCount + "页");
+//                        } else if (limitCount == yeCount) {
+//                            //没有更多数据了
+//                            if (!currentFolder.moreMessages) {
+//                                for (int i = (limitCount - 1) * 8; i < oList.size(); i++) {
+//                                    MessageListItem messageListItem = oList.get(i);
+//                                    mList.add(messageListItem);
+//                                }
+//                                setSp(3);
+//                                this.adapter.setMessages(mList);
+//                                right_message_list.setVisibility(View.GONE);
+//                                SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
+//                                limit.edit().putInt("key", limitCount).commit();
+//                                limit_count.setText("没有更多数据了");
+//                            }
+//                        } else {
+//                            //没有更多数据了
+//                            if (currentFolder.moreMessages) {
+//                                setSp(1);
+//                                ll_bar.setVisibility(View.GONE);
+//                                tv_loading.setVisibility(View.VISIBLE);
+//                                tv_loading.setText(context.getString(R.string.status_loading_more));
+//                                messagingController.loadMoreMessages(account, folderServerId, null);
+//                            }
+//                        }
+//                    } else {
+//                        List<MessageListItem> mList = new ArrayList<>();
+//                        System.out.println("n不能被m整除");
+//                        //不能整除说明最后一页不能铺满 不能铺满加载铺满
+//                        int yeCount = oList.size() / 8 + 1;
+//                        if (limitCount <= yeCount - 1) {
+//                            for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+//                                MessageListItem messageListItem = oList.get(i);
+//                                mList.add(messageListItem);
+//                            }
+//                            this.adapter.setMessages(mList);
+//                            SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
+//                            limit.edit().putInt("key", limitCount).commit();
+//                            limit_count.setText("第" + limitCount + "页");
+//                        } else {
+//                            //没有更多数据了
+//                            if (!currentFolder.moreMessages) {
+//                                for (int i = (limitCount - 1) * 8; i < oList.size(); i++) {
+//                                    MessageListItem messageListItem = oList.get(i);
+//                                    mList.add(messageListItem);
+//                                }
+//                                setSp(3);
+//                                this.adapter.setMessages(mList);
+//                                right_message_list.setVisibility(View.GONE);
+//                                SharedPreferences limit = getActivity().getSharedPreferences("save_limit", Context.MODE_PRIVATE);
+//                                limit.edit().putInt("key", limitCount).commit();
+//                                limit_count.setText("没有更多数据了");
+//                            } else {
+//                                setSp(2);
+//                                ll_bar.setVisibility(View.GONE);
+//                                tv_loading.setVisibility(View.VISIBLE);
+//                                tv_loading.setText(context.getString(R.string.status_loading_more));
+//                                messagingController.loadMoreMessages(account, folderServerId, null);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        } else {
+//            Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     private void setSp(int i) {
         SharedPreferences sp = context.getSharedPreferences("dblist", Context.MODE_PRIVATE);
@@ -1621,9 +1851,11 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                     message = String.format(context.getString(R.string.load_more_messages_fmt),
                             account.getDisplayCount());
                 }
+                //还原
 //                updateFooter(message);
             }
         } else {
+            //还原
 //            updateFooter(null);
         }
     }
@@ -2321,7 +2553,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     }
 
     @Override
-    public void doPositiveClick(int dialogId) {
+    public void doPositiveClick(int dialogId,Account account) {
         if (dialogId == R.id.dialog_confirm_spam) {
             onSpamConfirmed(activeMessages);
             // No further need for this reference
@@ -2338,7 +2570,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     }
 
     @Override
-    public void doNegativeClick(int dialogId) {
+    public void doNegativeClick(int dialogId,Account account) {
         if (dialogId == R.id.dialog_confirm_spam || dialogId == R.id.dialog_confirm_delete) {
             // No further need for this reference
             activeMessages = null;
@@ -2346,8 +2578,9 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     }
 
     @Override
-    public void dialogCancelled(int dialogId) {
-        doNegativeClick(dialogId);
+    public void dialogCancelled(int dialogId,Account account) {
+
+        doNegativeClick(dialogId,account);
     }
 
     public void checkMail() {
@@ -2534,6 +2767,7 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         void goBack();
 
         void updateMenu();
+
     }
 
     public void onReverseSort() {
@@ -2722,132 +2956,6 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
             }
         }
         return list2;
-    }
-
-    public void setMessageList1(MessageListInfo messageListInfo) {
-        ll_bar.setVisibility(View.VISIBLE);
-        tv_loading.setVisibility(View.GONE);
-        List<MessageListItem> messageListItems = messageListInfo.getMessageListItems();
-        if (isThreadDisplay && messageListItems.isEmpty()) {
-            handler.goBack();
-            return;
-        }
-
-        swipeRefreshLayout.setRefreshing(false);
-        swipeRefreshLayout.setEnabled(isPullToRefreshAllowed());
-
-        if (isThreadDisplay) {
-            if (!messageListItems.isEmpty()) {
-                MessageListItem messageListItem = messageListItems.get(0);
-                title = messageListItem.getSubject();
-                if (!TextUtils.isEmpty(title)) {
-                    title = Utility.stripSubject(title);
-                }
-                if (TextUtils.isEmpty(title)) {
-                    title = getString(R.string.general_no_subject);
-                }
-                updateTitle();
-            } else {
-                //TODO: empty thread view -> return to full message list
-            }
-        }
-        cleanupSelected(messageListItems);
-        this.adapter.setSelected(selected);
-        updateContextMenu(messageListItems);
-        Log.i("tag", "vvvvvvvvvvvvvv11111111....." + messageListItems.size());
-//        int visibleLimit = messagingController.getVisibleLimit(account, folderServerId);
-        if (folderServerId != null) {
-            int visibleLimit = messagingController.getVisibleLimit(account, folderServerId);
-            if (visibleLimit % 8 == 0) {
-                limitCount = visibleLimit / 8;
-                System.out.println("n可以被m整除");
-            } else {
-                System.out.println("n不能被m整除");
-                limitCount = visibleLimit % 8 + 1;
-            }
-            if (limitCount > 0) {
-                limit_count.setText("第" + limitCount + "页");
-            }
-        }
-//        if (title.equals("搜索结果")) {
-//            ll_bar.setVisibility(View.GONE);
-//            this.adapter.setMessages(messageListItems);
-//        } else {
-//            mMessageList.clear();
-//            if (visibleLimit / 8 > 1 || (visibleLimit / 8 > 1 && visibleLimit % 8 != 0)) {
-//                if (visibleLimit % 8 == 0) {
-//                    aaa = visibleLimit / 8;
-//                } else {
-//                    aaa = visibleLimit % 8 + 1;
-//                }
-//                for (int i = (aaa - 1) * 8; i < messageListItems.size(); i++) {
-//                    MessageListItem listItem = messageListItems.get(i);
-//                    mMessageList.add(listItem);
-//                }
-//                this.adapter.setMessages(mMessageList);
-//            } else {
-//                /**
-//                 * 给Adapter传值
-//                 */
-//                this.adapter.setMessages(messageListItems);
-//            }
-//            //TODO   显示页数
-//            if (visibleLimit % 8 == 0) {
-//                count_limit = visibleLimit / 8;
-//                System.out.println("n可以被m整除");
-//            } else {
-//                System.out.println("n不能被m整除");
-//                count_limit = visibleLimit % 8 + 1;
-//            }
-//            if (count_limit > 0) {
-//                limit_count.setText("第" + count_limit + "页");
-//            }
-//        }
-        if (title.equals("搜索结果")) {
-            ll_bar.setVisibility(View.GONE);
-            this.adapter.setMessages(messageListItems);
-        } else if (limitCount == 1) {
-            if (messageListItems.size() <= 8) {
-                this.adapter.setMessages(messageListItems);
-                SaveMessageList(messageListItems);
-            }
-        } else {
-            try {
-                //TODO   sp保存MessageList
-                SaveMessageList(messageListItems);
-                String saveMessageList = getSaveMessageList();
-                if (saveMessageList != null) {
-                    GsonBuilder builder = new GsonBuilder();
-                    builder.registerTypeAdapter(MessageListItem.class, new InterfaceAdapter());
-                    Gson gson = builder.create();
-                    List<MessageListItem> saveList = gson.fromJson(saveMessageList, new TypeToken<List<MessageListItem>>() {
-                    }.getType());
-                    List<MessageListItem> saveList1 = new ArrayList<>();
-                    for (int i = saveList.size(); i < messageListItems.size(); i++) {
-                        MessageListItem listItem = messageListItems.get(i);
-                        saveList1.add(listItem);
-                    }
-                    this.adapter.setMessages(saveList1);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        resetActionMode();
-        computeBatchDirection();
-
-        messageListLoaded = true;
-
-        if (savedListState != null) {
-            handler.restoreListPosition();
-        }
-
-        fragmentListener.updateMenu();
-
-        if (folderServerId != null) {
-            currentFolder.moreMessages = messageListInfo.getHasMoreMessages();
-            updateFooterView();
-        }
     }
 
 

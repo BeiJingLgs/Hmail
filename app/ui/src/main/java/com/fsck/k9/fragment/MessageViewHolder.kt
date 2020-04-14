@@ -39,10 +39,10 @@ class MessageViewHolder(
                 val key2 = limit.getInt("key", 0)
                 limit.edit().remove("key").commit()
                 Log.i("tag", "vvvvvvvvvvv" + key2)
-                if (key2==1){
+                if (key2 == 1) {
                     itemActionListener.toggleMessageFlagWithAdapterPosition(position)
-                }else{
-                    itemActionListener.toggleMessageFlagWithAdapterPosition(   position-(key2-1)*8)
+                } else {
+                    itemActionListener.toggleMessageFlagWithAdapterPosition(position - (key2 - 1) * 8)
                 }
             }
         }

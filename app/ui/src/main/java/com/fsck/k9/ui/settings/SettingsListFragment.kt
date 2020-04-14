@@ -29,7 +29,6 @@ class SettingsListFragment : Fragment(), ConfirmationDialogFragment.Confirmation
     private lateinit var accountSetting: AccountSettingsFragment
     private lateinit var settingsAdapter: GroupAdapter<ViewHolder>
     private val accountRemover: BackgroundAccountRemover by inject()
-    private lateinit var accounts1: Account
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_settings_list, container, false)
     }
@@ -80,7 +79,7 @@ class SettingsListFragment : Fragment(), ConfirmationDialogFragment.Confirmation
 //        settingsAdapter.add(generalSection)
         val accountSection = Section().apply {
             for (account in accounts) {
-                accounts1 = account
+
                 if (account.description != null) {
                     add(AccountItem(account, context, accountSetting, this@SettingsListFragment))
                 }
@@ -148,18 +147,18 @@ class SettingsListFragment : Fragment(), ConfirmationDialogFragment.Confirmation
         requireActivity().finish()
     }
 
-    override fun dialogCancelled(dialogId: Int) {
+    override fun dialogCancelled(dialogId: Int,account: Account) {
     }
 
-    override fun doPositiveClick(dialogId: Int) {
-        val sp =
-            activity!!.getSharedPreferences("state", Context.MODE_PRIVATE)
-        sp.edit().putInt("count", 1).commit()
-        accountRemover.removeAccountAsync(accounts1.uuid)
+    override fun doPositiveClick(dialogId: Int,account: Account) {
+//        val sp =
+//            activity!!.getSharedPreferences("state", Context.MODE_PRIVATE)
+//        sp.edit().putInt("count", 1).commit()
+        accountRemover.removeAccountAsync(account.uuid)
 
 //        closeAccountSettings()
     }
 
-    override fun doNegativeClick(dialogId: Int) {
+    override fun doNegativeClick(dialogId: Int,account: Account) {
     }
 }

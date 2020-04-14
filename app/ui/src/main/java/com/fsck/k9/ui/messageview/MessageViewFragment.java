@@ -680,7 +680,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
             String cancelText = getString(R.string.dialog_confirm_delete_cancel_button);
 
             fragment = ConfirmationDialogFragment.newInstance(dialogId, title, message,
-                    confirmText, cancelText);
+                    confirmText, cancelText,null);
         } else if (dialogId == R.id.dialog_confirm_spam) {
             String title = getString(R.string.dialog_confirm_spam_title);
             String message = getResources().getQuantityString(R.plurals.dialog_confirm_spam_message, 1);
@@ -688,7 +688,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
             String cancelText = getString(R.string.dialog_confirm_spam_cancel_button);
 
             fragment = ConfirmationDialogFragment.newInstance(dialogId, title, message,
-                    confirmText, cancelText);
+                    confirmText, cancelText,null);
         } else if (dialogId == R.id.dialog_attachment_progress) {
             String message = getString(R.string.dialog_attachment_progress_title);
             long size = currentAttachmentViewInfo.size;
@@ -729,7 +729,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     }
 
     @Override
-    public void doPositiveClick(int dialogId) {
+    public void doPositiveClick(int dialogId,Account account) {
         if (dialogId == R.id.dialog_confirm_delete) {
             delete();
         } else if (dialogId == R.id.dialog_confirm_spam) {
@@ -739,12 +739,12 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     }
 
     @Override
-    public void doNegativeClick(int dialogId) {
+    public void doNegativeClick(int dialogId,Account account) {
         /* do nothing */
     }
 
     @Override
-    public void dialogCancelled(int dialogId) {
+    public void dialogCancelled(int dialogId,Account account) {
         /* do nothing */
     }
 

@@ -3,14 +3,16 @@ package com.fsck.k9.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
+
+import com.fsck.k9.Account;
+
+import java.io.Serializable;
 
 import timber.log.Timber;
 
@@ -23,11 +25,12 @@ public class ConfirmationDialogFragment extends DialogFragment implements OnClic
     private static final String ARG_MESSAGE = "message";
     private static final String ARG_CONFIRM_TEXT = "confirm";
     private static final String ARG_CANCEL_TEXT = "cancel";
+    private static final String ARG_ACCOUNT="Account";
     private String title;
 
 
     public static ConfirmationDialogFragment newInstance(int dialogId, String title, String message,
-                                                         String confirmText, String cancelText) {
+                                                         String confirmText, String cancelText, Account account) {
         ConfirmationDialogFragment fragment = new ConfirmationDialogFragment();
 
         Bundle args = new Bundle();
@@ -36,23 +39,24 @@ public class ConfirmationDialogFragment extends DialogFragment implements OnClic
         args.putString(ARG_MESSAGE, message);
         args.putString(ARG_CONFIRM_TEXT, confirmText);
         args.putString(ARG_CANCEL_TEXT, cancelText);
+        args.putSerializable(ARG_ACCOUNT,account);
         fragment.setArguments(args);
 
         return fragment;
     }
 
     public static ConfirmationDialogFragment newInstance(int dialogId, String title, String message,
-                                                         String cancelText) {
-        return newInstance(dialogId, title, message, null, cancelText);
+                                                         String cancelText, Account account) {
+        return newInstance(dialogId, title, message, null, cancelText,account);
     }
 
 
     public interface ConfirmationDialogFragmentListener {
-        void doPositiveClick(int dialogId);
+        void doPositiveClick(int dialogId,Account account);
 
-        void doNegativeClick(int dialogId);
+        void doNegativeClick(int dialogId,Account account);
 
-        void dialogCancelled(int dialogId);
+        void dialogCancelled(int dialogId,Account account);
     }
 
 
@@ -88,15 +92,15 @@ public class ConfirmationDialogFragment extends DialogFragment implements OnClic
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE: {
 
-                getListener().doPositiveClick(getDialogId());
+                getListener().doPositiveClick(getDialogId(),getAccount());
                 break;
             }
             case DialogInterface.BUTTON_NEGATIVE: {
-                getListener().doNegativeClick(getDialogId());
+                getListener().doNegativeClick(getDialogId(),getAccount());
                 break;
             }
             case DialogInterface.BUTTON_NEUTRAL: {
-                getListener().doNegativeClick(getDialogId());
+                getListener().doNegativeClick(getDialogId(),getAccount());
                 break;
             }
         }
@@ -105,13 +109,15 @@ public class ConfirmationDialogFragment extends DialogFragment implements OnClic
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
-        getListener().dialogCancelled(getDialogId());
+        getListener().dialogCancelled(getDialogId(),getAccount());
     }
 
     private int getDialogId() {
         return getArguments().getInt(ARG_DIALOG_ID);
     }
-
+    private Account getAccount(){
+        return (Account) getArguments().getSerializable(ARG_ACCOUNT);
+    }
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

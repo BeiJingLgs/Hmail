@@ -355,6 +355,8 @@ public class AccountSetupBasics extends K9Activity
         int id = v.getId();
         if (id == R.id.next) {
             if (NetworkUtils.isNetWorkAvailable(AccountSetupBasics.this)) {
+                SharedPreferences sp = getSharedPreferences("login", Context.MODE_PRIVATE);
+                sp.edit().putInt("key",1).commit();
                 onNext();
             }else {
                 Toast.makeText(AccountSetupBasics.this, "请连接网络", Toast.LENGTH_SHORT).show();

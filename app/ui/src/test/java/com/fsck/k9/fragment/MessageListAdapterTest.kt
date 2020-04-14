@@ -495,7 +495,7 @@ class MessageListAdapterTest : RobolectricTest() {
                 subject,
                 threadCount,
                 messageDate,
-                displayName,
+                displayName ,
                 counterPartyAddress,
                 fromMe,
                 toMe,

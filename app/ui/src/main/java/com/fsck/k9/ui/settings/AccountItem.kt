@@ -21,25 +21,13 @@ internal class AccountItem(val account: Account, val context: Context?, val acco
         viewHolder.email.text = account.email
         viewHolder.delete_user.setOnClickListener {
 
-//            val customDialog = CustomDialog(context!!)
-//            customDialog.setYcorShow_Btn(View.VISIBLE)
-//            customDialog.setYcorShow_bar(View.GONE)
-//            customDialog.setTitle("删除账户")
-//            customDialog.setMessage("您是否确定删除账户?")
-//            customDialog.setCancel("取消") { }
-//            customDialog.setConfirm("确定") {
-//                val dialogFragment = ConfirmationDialogFragment()
-//                dialogFragment.listener.doPositiveClick(1)
-//            }
-//            customDialog.show()
-
-
             val dialogFragment = ConfirmationDialogFragment.newInstance(
                 1,
                 context!!.getString(R.string.account_delete_dlg_title),
                 context!!.getString(R.string.account_delete_dlg_instructions_fmt,account.description),
                 context!!.getString(R.string.okay_action),
-                context!!.getString(R.string.cancel_action)
+                context!!.getString(R.string.cancel_action),
+                account
             )
             dialogFragment.setTargetFragment(settingsListFragment, 1)
             dialogFragment.show(settingsListFragment.requireFragmentManager(), "delete_account_confirmation")

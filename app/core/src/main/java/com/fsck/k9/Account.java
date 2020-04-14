@@ -2,6 +2,7 @@
 package com.fsck.k9;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Account stores all of the settings for a single account defined by the user. Each account is defined by a UUID.
  */
-public class Account implements BaseAccount, StoreConfig {
+public class Account implements BaseAccount, StoreConfig, Serializable {
     /**
      * This local folder is used to store messages to be sent.
      */
