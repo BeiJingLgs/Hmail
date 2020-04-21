@@ -8,12 +8,12 @@
         <TextView
             android:id="@+id/header_item_name"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="@dimen/left_drawer_top_text_height"
             android:text="收件箱"
             android:maxLines="1"
             android:gravity="center"
             android:textColor="@color/color_black1"
-            android:textSize="20sp"/>
+            android:textSize="@dimen/left_drawer_top_textSize"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"

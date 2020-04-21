@@ -15,7 +15,7 @@
         android:orientation="horizontal"
         android:layout_marginLeft="12dip"
         android:layout_marginStart="12dip"
-        android:minHeight="50dp"
+        android:minHeight="@dimen/minWidth1"
         android:animateLayoutChanges="true">
 
         <TextView
@@ -26,7 +26,7 @@
             android:paddingTop="8dp"
             android:paddingRight="8dp"
             android:paddingBottom="8dp"
-            android:minWidth="50dp"
+            android:minWidth="@dimen/minWidth1"
             android:text="@string/recipient_from"
             style="@style/ComposeTextLabel"
             />
@@ -190,7 +190,7 @@
         android:layout_width="match_parent"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:minHeight="50dp">
+        android:minHeight="@dimen/minWidth1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -201,7 +201,7 @@
             android:paddingBottom="8dp"
             android:id="@+id/to_label"
             android:labelFor="@+id/to"
-            android:minWidth="50dp"
+            android:minWidth="@dimen/minWidth1"
             android:text="@string/recipient_to"
             style="@style/ComposeTextLabel" />
 
@@ -268,7 +268,7 @@
         android:layout_marginRight="12dip"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:minHeight="50dp">
+        android:minHeight="@dimen/minWidth1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -276,7 +276,7 @@
             android:paddingTop="8dp"
             android:paddingRight="8dp"
             android:paddingBottom="8dp"
-            android:minWidth="50dp"
+            android:minWidth="@dimen/minWidth1"
             android:id="@+id/cc_label"
             android:labelFor="@+id/cc"
             android:text="@string/recipient_cc"
@@ -314,7 +314,7 @@
         android:layout_marginRight="12dip"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:minHeight="50dp">
+        android:minHeight="@dimen/minWidth1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -322,7 +322,7 @@
             android:paddingTop="8dp"
             android:paddingRight="8dp"
             android:paddingBottom="8dp"
-            android:minWidth="50dp"
+            android:minWidth="@dimen/minWidth1"
             android:id="@+id/bcc_label"
             android:labelFor="@+id/bcc"
             android:text="@string/recipient_bcc"

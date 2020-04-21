@@ -6,13 +6,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/left_drawer_footer_text_height"
         android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/footer_text_left_right"
+            android:layout_height="@dimen/footer_text_left_right"
             android:layout_gravity="center"
             android:src="@drawable/fujian1"
             android:visibility="gone" />
@@ -20,11 +20,11 @@
         <TextView
             android:id="@+id/fujian_guanli"
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="@dimen/left_drawer_footer_text_height"
             android:gravity="center"
             android:text="附件管理"
             android:textColor="@color/color_black1"
-            android:textSize="26sp" />
+            android:textSize="@dimen/left_drawer_footer_textSize" />
     </LinearLayout>
 
     <View
@@ -41,19 +41,19 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/left_drawer_footer_text_height"
         android:paddingLeft="20dp"
         android:visibility="gone"
         android:orientation="horizontal">
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/footer_text_left_right"
+            android:layout_height="@dimen/footer_text_left_right"
             android:layout_gravity="center"
             android:src="@drawable/wenjianjia"/>
         <TextView
             android:id="@+id/folder_guanli"
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="@dimen/left_drawer_footer_text_height"
             android:gravity="center"
             android:layout_marginLeft="20dp"
             android:text="@string/folders_action"
@@ -69,23 +69,23 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/left_drawer_footer_text_height"
         android:gravity="center"
         android:orientation="horizontal">
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/footer_text_left_right"
+            android:layout_height="@dimen/footer_text_left_right"
             android:layout_gravity="center"
             android:visibility="gone"
             android:src="@drawable/shezhi"/>
         <TextView
             android:id="@+id/folder_settings"
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="@dimen/left_drawer_footer_text_height"
             android:gravity="center"
             android:text="@string/preferences_action"
             android:textColor="@color/color_black1"
-            android:textSize="26sp" />
+            android:textSize="@dimen/left_drawer_footer_textSize" />
     </LinearLayout>
 
     <View

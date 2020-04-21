@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="button_minWidth">58.8sp</dimen>
+    <dimen name="widget_padding">4.7dp</dimen>
+    <dimen name="left_drawer_width">117.6dp</dimen>
+    <dimen name="left_drawer_top_text_height">41.2dp</dimen>
+    <dimen name="left_drawer_top_textSize">11.8sp</dimen>
+    <dimen name="left_drawer_footer_text_height">47.1dp</dimen>
+    <dimen name="left_drawer_footer_textSize">15.3sp</dimen>
+    <dimen name="footer_text_height">55.3dp</dimen>
+    <dimen name="footer_textSize">11.8sp</dimen>
+    <dimen name="footer_text_left_right">17.6dp</dimen>
+    <dimen name="user_icon">35.3dp</dimen>
+    <dimen name="fujian_icon">36.5dp</dimen>
+    <dimen name="email_a">9.4dp</dimen>
+    <dimen name="email_b">5.9dp</dimen>
+    <dimen name="messageListSender_a">18.2sp</dimen>
+    <dimen name="messageListSender_b">14.7sp</dimen>
+    <dimen name="mail_item_date">12.4sp</dimen>
+    <dimen name="mail_item_preview">13.5sp</dimen>
+    <dimen name="mail_item_threadCount">11.2sp</dimen>
+    <dimen name="mail_item_height">87.1dp</dimen>
+    <dimen name="mail_item_padding">11.8dp</dimen>
+    <dimen name="send_person_textSize">17.6sp</dimen>
+    <dimen name="text_subject">20sp</dimen>
+    <dimen name="shou_mail_date">14.1sp</dimen>
+    <dimen name="displayName_textSize">10.6sp</dimen>
+    <dimen name="webView_textSize">117.6dp</dimen>
+    <dimen name="minWidth1">29.4dp</dimen>
+</resources>

@@ -176,9 +176,9 @@ public class RecipientMvpView implements OnFocusChangeListener, OnClickListener 
     }
 
     public void setFontSizes(FontSizes fontSizes, int fontSize) {
-        fontSizes.setViewTextSize(toView, fontSize);
-        fontSizes.setViewTextSize(ccView, fontSize);
-        fontSizes.setViewTextSize(bccView, fontSize);
+//        fontSizes.setViewTextSize(toView, fontSize);
+//        fontSizes.setViewTextSize(ccView, fontSize);
+//        fontSizes.setViewTextSize(bccView, fontSize);
     }
 
     public void addRecipients(RecipientType recipientType, Recipient... recipients) {

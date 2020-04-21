@@ -25,6 +25,6 @@
     <dimen name="text_subject">34sp</dimen>
     <dimen name="shou_mail_date">24sp</dimen>
     <dimen name="displayName_textSize">18sp</dimen>
-    <dimen name="webView_textSize">200dp</dimen>
+    <dimen name="webView_textSize">170dp</dimen>
     <dimen name="minWidth1">50dp</dimen>
 </resources>

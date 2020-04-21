@@ -89,10 +89,12 @@ class MessageListAdapter internal constructor(
     private inline val subjectViewFontSize: Int
         get() = if (appearance.senderAboveSubject) {
 //            appearance.fontSizes.messageListSender
-            36
+//            36
+            context.resources.getDimension(R.dimen.messageListSender_a).toInt()
         } else {
 //            appearance.fontSizes.messageListSubject
-            30
+//            30
+            context.resources.getDimension(R.dimen.messageListSender_b).toInt()
         }
 
     private fun recipientSigil(toMe: Boolean, ccMe: Boolean): String {
@@ -130,13 +132,13 @@ class MessageListAdapter internal constructor(
         appearance.fontSizes.setViewTextSize(holder.subject, subjectViewFontSize)//22
 
 //        appearance.fontSizes.setViewTextSize(holder.date, appearance.fontSizes.messageListDate)//22
-        appearance.fontSizes.setViewTextSize(holder.date, 26)//22
+        appearance.fontSizes.setViewTextSize(holder.date,  context.resources.getDimension(R.dimen.mail_item_date).toInt())//22
         // 1 preview line is needed even if it is set to 0, because subject is part of the same text view
         holder.preview.setLines(max(appearance.previewLines, 1))
 //        appearance.fontSizes.setViewTextSize(holder.preview, appearance.fontSizes.messageListPreview)//22
 //        appearance.fontSizes.setViewTextSize(holder.threadCount, appearance.fontSizes.messageListSubject) // thread count is next to subject 22
-        appearance.fontSizes.setViewTextSize(holder.preview, 28)//主题
-        appearance.fontSizes.setViewTextSize(holder.threadCount, 24) // 内容
+        appearance.fontSizes.setViewTextSize(holder.preview, context.resources.getDimension(R.dimen.mail_item_preview).toInt())//主题
+        appearance.fontSizes.setViewTextSize(holder.threadCount, context.resources.getDimension(R.dimen.mail_item_threadCount).toInt()) // 内容
         holder.flagged.isVisible = appearance.stars
         holder.flagged.setOnClickListener(holder)
         view.tag = holder

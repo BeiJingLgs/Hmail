@@ -25,39 +25,39 @@
     <TextView
         android:id="@+id/tv_loading"
         android:layout_width="match_parent"
-        android:layout_height="94dp"
+        android:layout_height="@dimen/footer_text_height"
         android:text="正在加载中。。。"
         android:visibility="gone"
         android:textColor="@color/color_black1"
         android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="@dimen/footer_textSize"
         />
     <LinearLayout
         android:id="@+id/LL"
         android:layout_width="match_parent"
-        android:layout_height="94dp"
+        android:layout_height="@dimen/footer_text_height"
         android:gravity="center"
         android:orientation="horizontal">
         <TextView
             android:id="@+id/left_message"
             android:background="@drawable/shangyiye"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/footer_text_left_right"
+            android:layout_height="@dimen/footer_text_left_right"
             />
         <TextView
             android:id="@+id/limit_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="第 1 页"
-            android:textSize="26sp"
+            android:textSize="@dimen/left_drawer_footer_textSize"
             android:layout_margin="5dp"
             android:textColor="@color/color_black1"
             />
         <TextView
             android:id="@+id/right_message"
             android:background="@drawable/xiayiye"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/footer_text_left_right"
+            android:layout_height="@dimen/footer_text_left_right"
             />
     </LinearLayout>
 </LinearLayout>

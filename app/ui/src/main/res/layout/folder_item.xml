@@ -11,11 +11,11 @@
             android:id="@+id/tv_folder"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="80dp"
+            android:layout_height="@dimen/left_drawer_footer_text_height"
             android:text="收件箱"
             android:gravity="center"
             android:textColor="@color/color_black1"
-            android:textSize="26sp"/>
+            android:textSize="@dimen/left_drawer_footer_textSize"/>
         <View
             android:id="@+id/checked_folder_item_cu"
             android:layout_width="5dp"

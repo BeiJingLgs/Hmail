@@ -39,7 +39,7 @@
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:textColor="@color/color_black1"
-                    android:textSize="34sp"
+                    android:textSize="@dimen/text_subject"
                     tools:text="(no subject)" />
 
                 <ImageView
@@ -77,8 +77,8 @@
 
                     <com.fsck.k9.ui.ContactBadge
                         android:id="@+id/contact_badge"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="@dimen/user_icon"
+                        android:layout_height="@dimen/user_icon"
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="8dp" />
 
@@ -134,7 +134,7 @@
                         android:singleLine="true"
                         android:text="@string/general_no_sender"
                         android:textColor="@color/color_black1"
-                        android:textSize="30sp"
+                        android:textSize="@dimen/send_person_textSize"
                         android:textStyle="bold" />
                     <!--                    android:textColor="?android:attr/textColorPrimary"-->
                     <!--                    android:textAppearance="?android:attr/textAppearanceSmall"-->
@@ -150,7 +150,7 @@
                         android:gravity="center_vertical"
                         android:paddingTop="0dp"
                         android:textColor="@color/color_black1"
-                        android:textSize="30sp"
+                        android:textSize="@dimen/send_person_textSize"
                         android:textStyle="bold"
                         android:visibility="gone" />
 
@@ -168,7 +168,7 @@
                         android:paddingRight="4dp"
                         android:text="@string/message_to_label"
                         android:textColor="@color/color_black1"
-                        android:textSize="26sp"
+                        android:textSize="@dimen/left_drawer_footer_textSize"
                         android:textStyle="bold" />
 
                     <!--                    android:textColor="?android:attr/textColorSecondary"-->
@@ -183,7 +183,7 @@
                         android:maxLines="2"
                         android:paddingTop="2dp"
                         android:textColor="@color/color_black1"
-                        android:textSize="30sp" />
+                        android:textSize="@dimen/send_person_textSize" />
                     <!--                    android:textColor="?android:attr/textColorPrimary"-->
                     <!--                    android:textAppearance="@android:style/TextAppearance.Medium"-->
                     <!-- CC -->
@@ -198,7 +198,7 @@
                         android:paddingRight="4dp"
                         android:text="@string/message_view_cc_label"
                         android:textColor="@color/color_black1"
-                        android:textSize="26sp"
+                        android:textSize="@dimen/left_drawer_footer_textSize"
                         android:textStyle="bold" />
                     <!--                    android:textColor="?android:attr/textColorSecondary"-->
                     <!--                    android:textAppearance="@android:style/TextAppearance.Medium"-->
@@ -212,7 +212,7 @@
                         android:maxLines="2"
                         android:paddingTop="2dp"
                         android:textColor="@color/color_black1"
-                        android:textSize="30sp" />
+                        android:textSize="@dimen/send_person_textSize" />
                     <!--                    android:textColor="?android:attr/textColorPrimary"-->
                     <!--                    android:textAppearance="@android:style/TextAppearance.Medium"-->
                     <!-- BCC -->
@@ -227,7 +227,7 @@
                         android:paddingRight="4dp"
                         android:text="@string/message_view_bcc_label"
                         android:textColor="@color/color_black1"
-                        android:textSize="26sp"
+                        android:textSize="@dimen/left_drawer_footer_textSize"
                         android:textStyle="bold" />
                     <!--                    android:textAppearance="@android:style/TextAppearance.Medium"-->
                     <!--                    android:textColor="?android:attr/textColorSecondary"-->
@@ -241,7 +241,7 @@
                         android:maxLines="2"
                         android:paddingTop="2dp"
                         android:textColor="@color/color_black1"
-                        android:textSize="30sp" />
+                        android:textSize="@dimen/send_person_textSize" />
                     <!--                    android:textAppearance="?android:attr/textAppearanceSmall"-->
                     <!--                    -->
                     <!-- Date -->
@@ -255,7 +255,7 @@
                         android:paddingTop="8dp"
                         android:singleLine="true"
                         android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="24sp" />
+                        android:textSize="@dimen/shou_mail_date" />
 
                     <LinearLayout
                         android:id="@+id/status_icon_strip"
@@ -291,7 +291,7 @@
                 android:singleLine="false"
                 android:textColor="@color/color_black1"
                 android:textIsSelectable="true"
-                android:textSize="30sp" />
+                android:textSize="@dimen/send_person_textSize" />
 
         </LinearLayout>
 

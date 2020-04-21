@@ -94,8 +94,8 @@ public class MessageWebView extends WebView {
         /**
          * 控制着收件箱内容区WebView的字体大小
          */
+//        webSettings.setTextZoom((int) getContext().getResources().getDimension(R.dimen.webView_textSize));
         webSettings.setTextZoom(170);
-
         // Disable network images by default.  This is overridden by preferences.
         blockNetworkData(true);
     }

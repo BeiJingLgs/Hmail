@@ -45,7 +45,9 @@ public class FontSizes {
 //    public static final int SMALL = 140;         // ?android:attr/textAppearanceSmall
 //    public static final int FONT_16SP = 160;
     //TODO 控制着发件箱页面的收件人、主题、邮件内容
-    public static final int MEDIUM = 30;        // ?android:attr/textAppearanceMedium
+    public static final int MEDIUM = 30
+
+        ;        // ?android:attr/textAppearanceMedium
 //    public static final int FONT_20SP = 200;
 //    public static final int LARGE = 220;         // ?android:attr/textAppearanceLarge
 

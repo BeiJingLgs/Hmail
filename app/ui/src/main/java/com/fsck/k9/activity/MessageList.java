@@ -1,6 +1,7 @@
 package com.fsck.k9.activity;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,6 +26,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -37,6 +40,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -138,6 +142,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     //APP退出操作按钮
     private long mWaitTime = 2000;
     private long mTochTime = 0;
+    private Account account1111;
 
     public static void actionDisplaySearch(Context context, SearchSpecification search,
                                            boolean noThreading, boolean newTask) {
@@ -457,9 +462,9 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         mHeaderRecyclerView.setAdapter(headerRecyclerView);
         headerRecyclerView.setOnItemClickListener((view, position) -> {
             messageListFragment.setLimitCount();
-            Account account = accountss.get(position);
-            openRealAccount(account);
-            drawer.updateUserAccountsAndFolders(account);
+            account1111 = accountss.get(position);
+            openRealAccount(account1111);
+            drawer.updateUserAccountsAndFolders(account1111);
             headercurrentPosition = position;
             currentPosition = 0;
             headerRecyclerView.notifyDataSetChanged();
@@ -914,7 +919,6 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
         messageListWasDisplayed = savedInstanceState.getBoolean(STATE_MESSAGE_LIST_WAS_DISPLAYED);
         firstBackStackId = savedInstanceState.getInt(STATE_FIRST_BACK_STACK_ID);
     }

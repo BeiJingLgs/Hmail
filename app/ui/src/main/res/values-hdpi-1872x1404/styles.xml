@@ -11,7 +11,6 @@
     </style>
     <style name="ComposeEditTextLarge" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColorHint">#aaa</item>
-        <item name="android:textSize">@dimen/send_person_textSize</item>
     </style>
 
     <style name="ShowcaseTheme" parent="ShowcaseView.Light">

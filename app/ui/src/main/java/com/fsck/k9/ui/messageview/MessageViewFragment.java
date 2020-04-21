@@ -151,6 +151,11 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
                             } else if (is_Open_Save == 2) {   //打开
                                 Log.i("tag", "sssssssssssssssssss8888888888888888888888888");
                                 SaveDateBase(currentAttachmentViewInfo.displayName, save_name_path);
+                                try {
+                                    Thread.sleep(2000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 if (save_name_path.endsWith(".doc") || save_name_path.endsWith(".docx") || save_name_path.endsWith(".ppt")
                                         || save_name_path.endsWith(".pptx") || save_name_path.endsWith(".xls") || save_name_path.endsWith(".xlsx")
                                         || save_name_path.endsWith(".txt") || save_name_path.endsWith(".htxt") || save_name_path.endsWith(".pdf")
@@ -160,7 +165,6 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
                                         || save_name_path.endsWith(".apk") || save_name_path.endsWith(".ofdx") || save_name_path.endsWith(".cebx")
                                         || save_name_path.endsWith(".ofd") || save_name_path.endsWith(".png") || save_name_path.endsWith(".gif") || save_name_path.endsWith(".jpg") || save_name_path.endsWith(".jpeg") || save_name_path.endsWith(".bmp")) {
                                     new OpenFile(mContext).openFile(new File(save_name_path));
-
                                 } else {
                                     Toast.makeText(getActivity(), "不支持打开本文件", Toast.LENGTH_LONG).show();
                                 }
