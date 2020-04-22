@@ -25,6 +25,14 @@
     <dimen name="text_subject">34sp</dimen>
     <dimen name="shou_mail_date">24sp</dimen>
     <dimen name="displayName_textSize">18sp</dimen>
-    <dimen name="webView_textSize">170dp</dimen>
+    <dimen name="webView_textSize">200dp</dimen>
     <dimen name="minWidth1">50dp</dimen>
+    <dimen name="adapter_displayname">23sp</dimen>
+    <dimen name="mail_item_paddingright">20dp</dimen>
+    <dimen name="star">30dp</dimen>
+    <dimen name="send_mail_content">30sp</dimen>
+
+    <dimen name="common_dialog_width">560dp</dimen>
+    <dimen name="common_dialog_margin">16dp</dimen>
+    <dimen name="common_dialog_maxWidth">150dp</dimen>
 </resources>

@@ -716,8 +716,14 @@ public class AccountSetupIncoming extends K9Activity implements OnClickListener 
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("tag","bbbbbbbbbbbbbbbb1111111");
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i("tag","bbbbbbbbbbbbbbbb");
+        Log.i("tag","bbbbbbbbbbbbbbbb22222222");
     }
 }

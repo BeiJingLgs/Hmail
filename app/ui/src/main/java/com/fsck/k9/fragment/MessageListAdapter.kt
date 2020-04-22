@@ -90,10 +90,16 @@ class MessageListAdapter internal constructor(
         get() = if (appearance.senderAboveSubject) {
 //            appearance.fontSizes.messageListSender
 //            36
+            /**
+             * 这里是第一行Subject
+             */
             context.resources.getDimension(R.dimen.messageListSender_a).toInt()
         } else {
 //            appearance.fontSizes.messageListSubject
 //            30
+            /**
+             * 这里是第一行Subject
+             */
             context.resources.getDimension(R.dimen.messageListSender_b).toInt()
         }
 
@@ -236,10 +242,14 @@ class MessageListAdapter internal constructor(
     private fun addBeforePreviewSpan(text: Spannable, length: Int, messageRead: Boolean) {
         val fontSize = if (appearance.senderAboveSubject) {
 //            appearance.fontSizes.messageListSubject  //22
-            28
+            /**
+             * 这里是第二行
+             * displayname
+             */
+            context.resources.getDimension(R.dimen.adapter_displayname).toInt()
         } else {
 //            appearance.fontSizes.messageListSender
-            28
+            context.resources.getDimension(R.dimen.adapter_displayname).toInt()
         }
 
         if (fontSize != FontSizes.FONT_DEFAULT) {

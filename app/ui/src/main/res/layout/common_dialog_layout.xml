@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="560dp"
+    android:layout_width="@dimen/common_dialog_width"
     android:layout_height="wrap_content"
-
     android:background="@drawable/bg_dialog"
     android:orientation="vertical"
-    android:paddingTop="20dp">
+    android:paddingTop="@dimen/mail_item_padding">
 
     <TextView
         android:id="@+id/dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="@dimen/common_dialog_margin"
+        android:layout_marginRight="@dimen/common_dialog_margin"
+        android:layout_marginBottom="@dimen/common_dialog_margin"
         android:gravity="center"
         android:text="保存文件"
         android:textColor="@color/color_black1"
-        android:textSize="30sp"
+        android:textSize="@dimen/send_person_textSize"
         android:visibility="visible" />
     <View
         android:layout_width="match_parent"
@@ -29,11 +28,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="@dimen/common_dialog_margin"
+        android:layout_marginRight="@dimen/common_dialog_margin"
         android:layout_marginBottom="10dp"
-        android:maxWidth="150dp"
-        android:maxHeight="150dp"
+        android:maxWidth="@dimen/common_dialog_maxWidth"
+        android:maxHeight="@dimen/common_dialog_maxWidth"
         android:src="@drawable/shezhi"
         android:visibility="gone" />
 
@@ -41,46 +40,46 @@
         android:id="@+id/dialog_fujian_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="@dimen/mail_item_padding"
+        android:layout_marginTop="@dimen/common_dialog_margin"
+        android:layout_marginRight="@dimen/mail_item_padding"
         android:gravity="center|left"
         android:lineSpacingExtra="3dp"
         android:lineSpacingMultiplier="1.2"
         android:text=""
         android:textColor="@color/color_black1"
-        android:textSize="24sp" />
+        android:textSize="@dimen/shou_mail_date" />
 
     <TextView
         android:id="@+id/fujian_size"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="@dimen/mail_item_padding"
+        android:layout_marginRight="@dimen/mail_item_padding"
         android:gravity="center|left"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/mail_item_padding"
         android:lineSpacingExtra="3dp"
         android:lineSpacingMultiplier="1.2"
         android:text=""
         android:textColor="@color/color_black1"
-        android:textSize="24sp" />
+        android:textSize="@dimen/shou_mail_date" />
     <TextView
         android:id="@+id/save_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="@dimen/mail_item_padding"
+        android:layout_marginRight="@dimen/mail_item_padding"
         android:gravity="center|left"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/mail_item_padding"
         android:lineSpacingExtra="3dp"
         android:lineSpacingMultiplier="1.2"
         android:text=""
         android:textColor="@color/color_black1"
-        android:textSize="24sp" />
+        android:textSize="@dimen/shou_mail_date" />
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/common_dialog_margin"
         android:background="@color/color_black1" />
 
     <LinearLayout
@@ -96,12 +95,12 @@
             android:layout_weight="1"
             android:background="@null"
             android:gravity="center"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
+            android:paddingTop="@dimen/common_dialog_margin"
+            android:paddingBottom="@dimen/common_dialog_margin"
             android:singleLine="true"
             android:text="取消"
             android:textColor="@color/color_black1"
-            android:textSize="24sp" />
+            android:textSize="@dimen/shou_mail_date" />
 
         <View
             android:id="@+id/column_line"
@@ -117,12 +116,12 @@
             android:layout_weight="1"
             android:background="@null"
             android:gravity="center"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
+            android:paddingTop="@dimen/common_dialog_margin"
+            android:paddingBottom="@dimen/common_dialog_margin"
             android:singleLine="true"
             android:text="确定"
             android:textColor="@color/color_black1"
-            android:textSize="24sp" />
+            android:textSize="@dimen/shou_mail_date" />
     </LinearLayout>
 </LinearLayout>
 

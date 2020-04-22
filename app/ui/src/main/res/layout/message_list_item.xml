@@ -6,7 +6,7 @@
     android:layout_gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/mail_item_padding"
-    android:paddingRight="@dimen/mail_item_padding">
+    android:paddingRight="@dimen/mail_item_paddingright">
 
     <com.fsck.k9.ui.ContactBadge
         android:id="@+id/contact_badge"
@@ -127,7 +127,7 @@
         <CheckBox
             android:id="@+id/star"
             style="@style/MessageStarStyle"
-            android:layout_width="@dimen/footer_text_left_right"
+            android:layout_width="@dimen/star"
             android:layout_height="@dimen/footer_text_left_right"
             android:layout_below="@+id/date"
             android:layout_alignParentRight="true"

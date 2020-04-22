@@ -1,6 +1,7 @@
 package com.fsck.k9.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import com.fsck.k9.mail.internet.Viewable;
 import com.fsck.k9.ui.R;
 import com.fsck.k9.ui.helper.SizeFormatter;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -22,22 +25,28 @@ public class FujianAdapter extends RecyclerView.Adapter<FujianAdapter.MyViewHold
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
     private List<FujianBean> mList;
+
     public FujianAdapter(Context context, List<FujianBean> list) {
-        this.mContext=context;
-        this.mList=list;
+        this.mContext = context;
+        this.mList = list;
     }
-    public  void setData(List<FujianBean> list){
-        this.mList=list;
+
+    public void setData(List<FujianBean> list) {
+        this.mList = list;
     }
+
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
         this.mOnItemClickListener = mOnItemClickListener;
     }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.fujian_adapter_item, parent, false);
         return new MyViewHolder(view);
     }
+
+
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
@@ -67,10 +76,10 @@ public class FujianAdapter extends RecyclerView.Adapter<FujianAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return mList.size()>0?mList.size():0;
+        return mList.size() > 0 ? mList.size() : 0;
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
+    class MyViewHolder extends RecyclerView.ViewHolder {
         private final ImageView img_icon;
         private final TextView fujian_name;
         private final TextView fujian_date;
@@ -84,6 +93,7 @@ public class FujianAdapter extends RecyclerView.Adapter<FujianAdapter.MyViewHold
             fujian_size = itemView.findViewById(R.id.fujian_size);
         }
     }
+
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }

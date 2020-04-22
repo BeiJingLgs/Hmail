@@ -684,7 +684,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
             String cancelText = getString(R.string.dialog_confirm_delete_cancel_button);
 
             fragment = ConfirmationDialogFragment.newInstance(dialogId, title, message,
-                    confirmText, cancelText,null);
+                    confirmText, cancelText, null);
         } else if (dialogId == R.id.dialog_confirm_spam) {
             String title = getString(R.string.dialog_confirm_spam_title);
             String message = getResources().getQuantityString(R.plurals.dialog_confirm_spam_message, 1);
@@ -692,7 +692,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
             String cancelText = getString(R.string.dialog_confirm_spam_cancel_button);
 
             fragment = ConfirmationDialogFragment.newInstance(dialogId, title, message,
-                    confirmText, cancelText,null);
+                    confirmText, cancelText, null);
         } else if (dialogId == R.id.dialog_attachment_progress) {
             String message = getString(R.string.dialog_attachment_progress_title);
             long size = currentAttachmentViewInfo.size;
@@ -733,7 +733,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     }
 
     @Override
-    public void doPositiveClick(int dialogId,Account account) {
+    public void doPositiveClick(int dialogId, Account account) {
         if (dialogId == R.id.dialog_confirm_delete) {
             delete();
         } else if (dialogId == R.id.dialog_confirm_spam) {
@@ -743,12 +743,12 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     }
 
     @Override
-    public void doNegativeClick(int dialogId,Account account) {
+    public void doNegativeClick(int dialogId, Account account) {
         /* do nothing */
     }
 
     @Override
-    public void dialogCancelled(int dialogId,Account account) {
+    public void dialogCancelled(int dialogId, Account account) {
         /* do nothing */
     }
 
@@ -916,7 +916,17 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
         @Override
         public void onMessageViewInfoLoadFinished(MessageViewInfo messageViewInfo) {
             if (dialog1 != null) {
-//                currentAttachmentViewInfo=messageViewInfo.attachments.get(0);
+                List<AttachmentViewInfo> attachments = messageViewInfo.attachments;
+                for (int i = 0; i < attachments.size(); i++) {
+                    AttachmentViewInfo attachmentViewInfo = attachments.get(i);
+                    String displayName = attachments.get(i).displayName;
+                    if (currentAttachmentViewInfo != null) {
+                        if (currentAttachmentViewInfo.displayName.equals(displayName)) {
+                            currentAttachmentViewInfo = attachmentViewInfo;
+                            break;
+                        }
+                    }
+                }
                 dialog1.dismiss();
                 Log.i("tag", "sssssssssssssssssss9999999999999999999999999");
                 Message message = new Message();
@@ -1192,12 +1202,6 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
     public void onSaveAttachment(final AttachmentViewInfo attachment) {
 
         currentAttachmentViewInfo = attachment;
-//        Log.i("tag", "tag+111111111111");
-//        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-//        intent.setType(attachment.mimeType);
-//        intent.putExtra(Intent.EXTRA_TITLE, attachment.displayName);
-//        intent.addCategory(Intent.CATEGORY_OPENABLE);
-//        startActivityForResult(intent, REQUEST_CODE_CREATE_DOCUMENT);
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             new RxPermissions(getActivity()).requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(permission -> {
                 if (permission.granted) { //用户已经同意权限
@@ -1325,8 +1329,6 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
                          *   下载完整邮件
                          */
                         DownloadEmail();
-//                        SharedPreferences sp = getActivity().getSharedPreferences("fj", Context.MODE_PRIVATE);
-//                        sp.edit().
                         Log.i("tag", "sssssssssssssssssss1111111111111111111");
                     } else {
                         Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
@@ -1334,9 +1336,7 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
                     /**
                      * 大于2.2Mb下载全部
                      */
-                } else
-//                    if (attachment.size > FileSize)
-                {
+                } else {
                     if (NetworkUtils.isNetWorkAvailable(getActivity())) {
                         /**
                          *   下载完整邮件
@@ -1347,19 +1347,6 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
                         Toast.makeText(getActivity(), "请连接网络", Toast.LENGTH_SHORT).show();
                     }
                 }
-
-//                else {
-//                    if (NetworkUtils.isNetWorkAvailable(getActivity())) {
-//                        ShowDialog();
-//                        SaveDateBase(displayName, save_name_path);
-//                        if (dialog1 != null) {
-//                            dialog1.dismiss();
-//                        }
-//                        Log.i("tag", "sssssssssssssssssss33333333333333333333333333333");
-//                    } else {
-//                        Toast.makeText(getActivity(), "网络不可用", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
 
                 dialog.dismiss();
                 is_Open_Save = 1;

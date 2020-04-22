@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
@@ -25,6 +26,7 @@ import com.fsck.k9.util.Filepath;
 import com.fsck.k9.util.OpenFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
     private FujianAdapter adapter;
     private int num = 0;
     private List<String> StringList;
+    private long fileSize;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +115,21 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
         rb_four.setOnClickListener(this);
         buttonOne();
     }
+    /**
+     * 获取指定文件大小     *     * @param file     * @return     * @throws Exception
+     */
+    private static long getFileSize(File file) throws Exception {
+        long size = 0;
+        if (file.exists()) {
+            FileInputStream fis = null;
+            fis = new FileInputStream(file);
+            size = fis.available();
+        } else {
+            file.createNewFile();
+            Log.e("获取文件大小", "文件不存在!");
+        }
+        return size;
+    }
 
     private void initData() {
         Cursor cursor = MyApplication.getInstance().getDb().query(FujianBeanDB.BIAO_NAME, null, null, null, null, null, null, null);
@@ -124,14 +142,13 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
             String returnuri = cursor.getString(cursor.getColumnIndex(FujianBeanDB.RETURNURI));
             File installFile = new File(returnuri);
             if (installFile.exists()) {
+//                String size =  String.valueOf(fileSize);
                 String mimetype = cursor.getString(cursor.getColumnIndex(FujianBeanDB.MIMETYPE));
                 String date = cursor.getString(cursor.getColumnIndex(FujianBeanDB.DATE));
                 String size = cursor.getString(cursor.getColumnIndex(FujianBeanDB.FILE_SIZE));
                 String internaluri = cursor.getString(cursor.getColumnIndex(FujianBeanDB.INTERNALURI));
                 String displayname = returnuri.substring(FILEPATH.length(), returnuri.length());
                 FujianBean fujianBean = new FujianBean(returnuri, mimetype, displayname, size, internaluri, date, returnuri);
-
-
                 if (displayname.endsWith(".png") || displayname.endsWith(".gif") || displayname.endsWith(".jpg") || displayname.endsWith(".jpeg") || displayname.endsWith(".bmp")) {
                     imgList.add(fujianBean);
                 } else if (displayname.endsWith(".doc") || displayname.endsWith(".docx") || displayname.endsWith(".ppt")

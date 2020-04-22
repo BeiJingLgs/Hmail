@@ -465,11 +465,11 @@ public class MessageCompose extends K9Activity implements OnClickListener,
          *设置输入控件的字体大小
          */
         int fontSize = K9.getFontSizes().getMessageComposeInput();
-        recipientMvpView.setFontSizes(K9.getFontSizes(), fontSize);
-        quotedMessageMvpView.setFontSizes(K9.getFontSizes(), fontSize);
-        K9.getFontSizes().setViewTextSize(subjectView, fontSize);
-        K9.getFontSizes().setViewTextSize(messageContentView, fontSize);
-        K9.getFontSizes().setViewTextSize(signatureView, fontSize);
+        recipientMvpView.setFontSizes(K9.getFontSizes(), (int) getResources().getDimension(R.dimen.send_mail_content));
+        quotedMessageMvpView.setFontSizes(K9.getFontSizes(), (int) getResources().getDimension(R.dimen.send_mail_content));
+        K9.getFontSizes().setViewTextSize(subjectView, (int) getResources().getDimension(R.dimen.send_mail_content));
+        K9.getFontSizes().setViewTextSize(messageContentView, (int) getResources().getDimension(R.dimen.send_mail_content));
+        K9.getFontSizes().setViewTextSize(signatureView, (int) getResources().getDimension(R.dimen.send_mail_content));
 
 
         updateMessageFormat();

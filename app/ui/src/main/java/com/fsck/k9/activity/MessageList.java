@@ -1534,7 +1534,10 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             menu.findItem(R.id.mark_all_as_read).setVisible(false);
             Log.i("tag", "xxxxxxxxx191919");
         } else { // 444
-            menu.findItem(R.id.set_sort).setVisible(true);
+            /**
+             * 取消了排序
+             */
+            menu.findItem(R.id.set_sort).setVisible(false);//排序
             menu.findItem(R.id.select_all).setVisible(true);
             menu.findItem(R.id.compose).setVisible(true);
             menu.findItem(R.id.mark_all_as_read).setVisible(

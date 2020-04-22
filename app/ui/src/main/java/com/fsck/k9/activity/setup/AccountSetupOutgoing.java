@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -584,5 +585,17 @@ public class AccountSetupOutgoing extends K9Activity implements OnClickListener,
     private ConnectionSecurity getSelectedSecurity() {
         ConnectionSecurityHolder holder = (ConnectionSecurityHolder) mSecurityTypeView.getSelectedItem();
         return holder.connectionSecurity;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("tag","bbbbbbbbbbbbbbbb3333333");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("tag","bbbbbbbbbbbbbbbb4444444");
     }
 }
