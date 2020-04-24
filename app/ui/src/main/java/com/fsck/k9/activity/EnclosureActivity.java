@@ -151,6 +151,7 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
                 FujianBean fujianBean = new FujianBean(returnuri, mimetype, displayname, size, internaluri, date, returnuri);
                 if (displayname.endsWith(".png") || displayname.endsWith(".gif") || displayname.endsWith(".jpg") || displayname.endsWith(".jpeg") || displayname.endsWith(".bmp")) {
                     imgList.add(fujianBean);
+
                 } else if (displayname.endsWith(".doc") || displayname.endsWith(".docx") || displayname.endsWith(".ppt")
                         || displayname.endsWith(".pptx") || displayname.endsWith(".xls") || displayname.endsWith(".xlsx")
                         || displayname.endsWith(".txt") || displayname.endsWith(".htxt") || displayname.endsWith(".pdf")
