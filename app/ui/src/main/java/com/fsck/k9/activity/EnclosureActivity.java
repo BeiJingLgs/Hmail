@@ -131,6 +131,8 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
         return size;
     }
 
+
+
     private void initData() {
         Cursor cursor = MyApplication.getInstance().getDb().query(FujianBeanDB.BIAO_NAME, null, null, null, null, null, null, null);
         mList = new ArrayList<>();
