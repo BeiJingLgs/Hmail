@@ -163,8 +163,8 @@ public class UpdateUtil {
                             customDialog.setCancel("取消", new CustomDialog.IOnCancelListener() {
                                 @Override
                                 public void onCancel(CustomDialog dialog) {
-                                    SharedPreferences is_update = context.getSharedPreferences("is_update", Context.MODE_PRIVATE);
-                                    is_update.edit().putBoolean("key",false).commit();
+//                                    SharedPreferences is_update = context.getSharedPreferences("is_update", Context.MODE_PRIVATE);
+//                                    is_update.edit().putBoolean("key",false).commit();
                                 }
                             });
                             customDialog.setConfirm("更新", new CustomDialog.IOnConfirmListener(){
@@ -174,7 +174,12 @@ public class UpdateUtil {
                                 }
                             });
                             customDialog.show();
+                            if(customDialog != null) {
+                                customDialog.dismiss();
+                                Log.i("tag","QQQQQQQQQQQQQ11");
+                            }
                         }catch (Exception e){}
+
                     }
 				}
 			}
@@ -443,6 +448,10 @@ public class UpdateUtil {
 		@Override
 		protected void onPostExecute(Integer reslut) {
 			super.onPostExecute(reslut);
+			if (dialog!=null){
+			    dialog.dismiss();
+                Log.i("tag","QQQQQQQQQQQQQ22");
+            }
 				installApk(uri,apkPath);
 				return;
 			}

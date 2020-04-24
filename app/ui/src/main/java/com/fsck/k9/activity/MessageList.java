@@ -58,6 +58,7 @@ import com.fsck.k9.DI;
 import com.fsck.k9.K9;
 import com.fsck.k9.K9.SplitViewMode;
 import com.fsck.k9.Preferences;
+import com.fsck.k9.account.BackgroundAccountRemover;
 import com.fsck.k9.activity.compose.MessageActions;
 import com.fsck.k9.adapter.HeaderRecyclerView;
 import com.fsck.k9.adapter.RecyclerViewAdapter;
@@ -341,25 +342,26 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
             }
         }
         if (NetworkUtils.isNetWorkAvailable(MessageList.this)) {
-            SharedPreferences is_update = getSharedPreferences("is_update", MODE_PRIVATE);
-            boolean key = is_update.getBoolean("key", true);
-            if (key == true) {
-                Log.i("TAG", "hhhhhhhhhhhhhhhhh");
-                UpdateUtil updateUtil = new UpdateUtil(MessageList.this);
-                UpdateUtil.CheckApkTask task = updateUtil.new CheckApkTask();
-                task.execute();
-            }
+//            SharedPreferences is_update = getSharedPreferences("is_update", MODE_PRIVATE);
+//            boolean key = is_update.getBoolean("key", true);
+//            if (key == true) {
+            Log.i("TAG", "hhhhhhhhhhhhhhhhh");
+            UpdateUtil updateUtil = new UpdateUtil(MessageList.this);
+            UpdateUtil.CheckApkTask task = updateUtil.new CheckApkTask();
+            task.execute();
+//            }
         }
         /**
          * 获取用户的List
          */
         accounts = preferences.getAccounts();
+//        Toast.makeText(MessageList.this,"看看有几个"+accounts.size(),Toast.LENGTH_SHORT).show();
         for (int i = 0; i < accounts.size(); i++) {
             Account account = accounts.get(i);
             Log.i("tag", "cccccccccc" + account.toString());
-//            if (account.toString()==null){
-//
-//            }else
+            if (account.toString() == null) {
+                new BackgroundAccountRemover(MessageList.this).removeAccountAsync(account.getUuid());
+            }
             if (account.getDescription() != null) {
                 accountss.add(account);
             }

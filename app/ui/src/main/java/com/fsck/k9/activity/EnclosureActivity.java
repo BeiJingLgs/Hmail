@@ -162,8 +162,7 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
                         || displayname.endsWith(".epub") || displayname.endsWith(".chm") || displayname.endsWith(".hveb")
                         || displayname.endsWith(".heb") || displayname.endsWith(".mobi") || displayname.endsWith(".fb2")
                         || displayname.endsWith(".htm") || displayname.endsWith(".html") || displayname.endsWith(".php")
-                        || displayname.endsWith(".apk") || displayname.endsWith(".ofdx") || displayname.endsWith(".cebx")
-                        || displayname.endsWith(".ofd")
+                        || displayname.endsWith(".ofdx") || displayname.endsWith(".cebx") || displayname.endsWith(".ofd")
                 ) {
                     applicationList.add(fujianBean);
                 } else {

@@ -31,8 +31,10 @@
     <dimen name="mail_item_paddingright">20dp</dimen>
     <dimen name="star">30dp</dimen>
     <dimen name="send_mail_content">24sp</dimen>
-
     <dimen name="common_dialog_width">560dp</dimen>
     <dimen name="common_dialog_margin">16dp</dimen>
     <dimen name="common_dialog_maxWidth">150dp</dimen>
+
+
+    <dimen name="hanvon_50dp">50dp</dimen>
 </resources>

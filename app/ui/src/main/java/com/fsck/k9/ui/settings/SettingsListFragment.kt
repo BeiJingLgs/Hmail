@@ -1,10 +1,10 @@
 package com.fsck.k9.ui.settings
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -67,7 +67,7 @@ class SettingsListFragment : Fragment(), ConfirmationDialogFragment.Confirmation
 
     private fun populateSettingsList(accounts: List<Account>) {
         settingsAdapter.clear()
-
+//        Toast.makeText(context, "看看有几个.." + accounts.size, Toast.LENGTH_SHORT).show()
 //        val generalSection = Section().apply {
 //            val generalSettingsActionItem = SettingsActionItem(
 //                    getString(R.string.general_settings_title),
@@ -79,7 +79,6 @@ class SettingsListFragment : Fragment(), ConfirmationDialogFragment.Confirmation
 //        settingsAdapter.add(generalSection)
         val accountSection = Section().apply {
             for (account in accounts) {
-
                 if (account.description != null) {
                     add(AccountItem(account, context, accountSetting, this@SettingsListFragment))
                 }
