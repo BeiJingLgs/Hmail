@@ -358,8 +358,9 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 //        Toast.makeText(MessageList.this,"看看有几个"+accounts.size(),Toast.LENGTH_SHORT).show();
         for (int i = 0; i < accounts.size(); i++) {
             Account account = accounts.get(i);
-            Log.i("tag", "cccccccccc" + account.toString());
-            if (account.toString() == null) {
+            String name = account.getName();
+            Log.i("tag", "cccccccccc" + name);
+            if (account.toString() == null || name.equals("")) {
                 new BackgroundAccountRemover(MessageList.this).removeAccountAsync(account.getUuid());
             }
             if (account.getDescription() != null) {

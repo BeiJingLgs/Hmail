@@ -5,17 +5,25 @@ package com.fsck.k9.activity.setup;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.TextKeyListener;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.fsck.k9.Account;
 import com.fsck.k9.Core;
 import com.fsck.k9.Preferences;
+import com.fsck.k9.activity.MessageList;
+import com.fsck.k9.helper.Utility;
 import com.fsck.k9.ui.R;
 import com.fsck.k9.activity.K9Activity;
 import com.fsck.k9.util.NetworkUtils;
@@ -35,6 +43,15 @@ public class AccountSetupOptions extends K9Activity implements OnClickListener {
 
     private Account mAccount;
 
+
+    private EditText mDescription;
+
+    private EditText mName;
+
+
+    private Button mDoneButton;
+
+
     public static void actionOptions(Context context, Account account, boolean makeDefault) {
         Intent i = new Intent(context, AccountSetupOptions.class);
         i.putExtra(EXTRA_ACCOUNT, account.getUuid());
@@ -42,18 +59,44 @@ public class AccountSetupOptions extends K9Activity implements OnClickListener {
         context.startActivity(i);
     }
 
+    //=======
+    private void validateFields() {
+        mDoneButton.setEnabled(Utility.requiredFieldValid(mName));
+        Utility.setCompoundDrawablesAlpha(mDoneButton, mDoneButton.isEnabled() ? 255 : 128);
+    }
+
+    //=======
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setLayout(R.layout.account_setup_options);
+//=========
+        mDescription = findViewById(R.id.account_description);
+        mName = findViewById(R.id.account_name);
+        mDoneButton = findViewById(R.id.done);
+        mDoneButton.setOnClickListener(this);
 
+        TextWatcher validationTextWatcher = new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                validateFields();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        };
+        mName.addTextChangedListener(validationTextWatcher);
+
+        mName.setKeyListener(TextKeyListener.getInstance(false, TextKeyListener.Capitalize.WORDS));
+        //=================
         mCheckFrequencyView = findViewById(R.id.account_check_frequency);
         mDisplayCountView = findViewById(R.id.account_display_count);
         mNotifyView = findViewById(R.id.account_notify);
 
-        findViewById(R.id.back).setVisibility(View.GONE);
-        findViewById(R.id.back1).setVisibility(View.VISIBLE);
-        findViewById(R.id.next).setOnClickListener(this);
+//        findViewById(R.id.back).setVisibility(View.GONE);
+//        findViewById(R.id.back1).setVisibility(View.VISIBLE);
         SpinnerOption checkFrequencies[] = {
 //            new SpinnerOption(-1,
 //            getString(R.string.account_setup_options_mail_check_frequency_never)),
@@ -107,6 +150,19 @@ public class AccountSetupOptions extends K9Activity implements OnClickListener {
                 .getAutomaticCheckIntervalMinutes());
         SpinnerOption.setSpinnerOptionValue(mDisplayCountView, mAccount
                 .getDisplayCount());
+
+
+        //===============
+        if (mAccount.getName() != null) {
+            mName.setText(mAccount.getName());
+        }
+//        else{
+//            mName.setText(mAccount.getEmail());
+//        }
+        if (!Utility.requiredFieldValid(mName)) {
+            mDoneButton.setEnabled(false);
+        }
+        //===================
     }
 
     private void onDone() {
@@ -118,18 +174,28 @@ public class AccountSetupOptions extends K9Activity implements OnClickListener {
                 .getSelectedItem()).value);
 
         mAccount.setFolderPushMode(Account.FolderMode.NONE);
-
+        //========================
+        if (Utility.requiredFieldValid(mDescription)) {
+            mAccount.setDescription(mDescription.getText().toString());
+        }
+        String s = mName.getText().toString();
+        Log.i("tag", "cccccccccc1111" + s);
+        mAccount.setName(mName.getText().toString());
+        //=======================
         Preferences.getPreferences(getApplicationContext()).saveAccount(mAccount);
         if (mAccount.equals(Preferences.getPreferences(this).getDefaultAccount()) ||
                 getIntent().getBooleanExtra(EXTRA_MAKE_DEFAULT, false)) {
             Preferences.getPreferences(this).setDefaultAccount(mAccount);
+            Log.i("tag", "cccccccccc1111222222");
         }
         Core.setServicesEnabled(this);
-        AccountSetupNames.actionSetNames(this, mAccount);
+//        AccountSetupNames.actionSetNames(this, mAccount);
+        MessageList.launch(this);
         finish();
     }
+
     public void onClick(View v) {
-        if (v.getId() == R.id.next) {
+        if (v.getId() == R.id.done) {
 
             if (NetworkUtils.isNetWorkAvailable(AccountSetupOptions.this)) {
                 onDone();

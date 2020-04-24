@@ -57,6 +57,7 @@ class SettingsListFragment : Fragment(), ConfirmationDialogFragment.Confirmation
 
     private fun populateSettingsList() {
         viewModel.accounts.observeNotNull(this) { accounts ->
+            //如果用户为空就直接跳到首页面
             if (accounts.isEmpty()) {
                 launchOnboarding()
             } else {

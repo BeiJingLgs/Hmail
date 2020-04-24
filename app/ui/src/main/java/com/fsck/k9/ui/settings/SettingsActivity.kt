@@ -40,6 +40,7 @@ class SettingsActivity : K9Activity() {
         intent.setClass(this, MessageList::class.java)
         // 获取class是使用::反射(那么问题来了,反射是个什么鬼?👻👻👻👻小白的悲哀啊,赶紧研究研究去)
         startActivity(intent)
+        finish()
         return true
     }
 
