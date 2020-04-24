@@ -1338,17 +1338,22 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         if (NetworkUtils.isNetWorkAvailable(getActivity())) {
             int id = v.getId();
             if (id == R.id.left_message) {//往前翻页
+
                 if (limitCount > 1) {
-                    limitCount--;
-                    List<MessageListItem> mList = new ArrayList<>();
-                    for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
-                        MessageListItem messageListItem = messageListItems.get(i);
-                        mList.add(messageListItem);
+                    if (messageListItems.size()>0){
+                        limitCount--;
+                        List<MessageListItem> mList = new ArrayList<>();
+                        for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+                            MessageListItem messageListItem = messageListItems.get(i);
+                            mList.add(messageListItem);
+                        }
+                        this.adapter.setMessages(mList);
+                        right_message_list.setVisibility(View.VISIBLE);
+                        limit_count.setText("第" + limitCount + "页");
+                        Save_Limit(limitCount);
+                    }else{
+                        Toast.makeText(context,"没有数据",Toast.LENGTH_SHORT).show();
                     }
-                    this.adapter.setMessages(mList);
-                    right_message_list.setVisibility(View.VISIBLE);
-                    limit_count.setText("第" + limitCount + "页");
-                    Save_Limit(limitCount);
                 }
             } else if (id == R.id.right_message) { //向后翻页
                 String displayName = currentFolder.displayName;
@@ -1442,54 +1447,76 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
                         }
                     }
                 } else {
-                    limitCount++;
                     int messageListSize = messageListItems.size();
-                    //能整除
-                    if (messageListSize % 8 == 0) {
-                        int limit_num1 = messageListSize / 8;
-                        if (limitCount == limit_num1) { //如果相等说明到了最后一页
-                            List<MessageListItem> mList = new ArrayList<>();
-                            for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
-                                MessageListItem messageListItem = messageListItems.get(i);
-                                mList.add(messageListItem);
+                    if (messageListSize>0){
+                        limitCount++;
+                        //能整除
+                        if (messageListSize % 8 == 0) {
+                            int limit_num1 = messageListSize / 8;
+                            if (limitCount == limit_num1) { //如果相等说明到了最后一页
+                                List<MessageListItem> mList = new ArrayList<>();
+                                for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+                                    MessageListItem messageListItem = messageListItems.get(i);
+                                    mList.add(messageListItem);
+                                }
+                                this.adapter.setMessages(mList);
+                                right_message_list.setVisibility(View.GONE);
+                                limit_count.setText("没有更多数据了");
+                                Save_Limit(limitCount);
+                            } else {  //否则不相等说明 没有翻到最后一页呢
+                                List<MessageListItem> mList = new ArrayList<>();
+                                for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+                                    MessageListItem messageListItem = messageListItems.get(i);
+                                    mList.add(messageListItem);
+                                }
+                                this.adapter.setMessages(mList);
+                                limit_count.setText("第" + limitCount + "页");
+                                Save_Limit(limitCount);
                             }
-                            this.adapter.setMessages(mList);
-                            right_message_list.setVisibility(View.GONE);
-                            limit_count.setText("没有更多数据了");
-                            Save_Limit(limitCount);
-                        } else {  //否则不相等说明 没有翻到最后一页呢
-                            List<MessageListItem> mList = new ArrayList<>();
-                            for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
-                                MessageListItem messageListItem = messageListItems.get(i);
-                                mList.add(messageListItem);
-                            }
-                            this.adapter.setMessages(mList);
-                            limit_count.setText("第" + limitCount + "页");
-                            Save_Limit(limitCount);
-                        }
-                    } else {
-                        int limit_num1 = messageListSize / 8 + 1;
-                        if (limitCount == limit_num1) { //如果相等说明到了最后一页
-                            List<MessageListItem> mList = new ArrayList<>();
-                            for (int i = (limitCount - 1) * 8; i < messageListItems.size(); i++) {
-                                MessageListItem messageListItem = messageListItems.get(i);
-                                mList.add(messageListItem);
-                            }
-                            this.adapter.setMessages(mList);
-                            right_message_list.setVisibility(View.GONE);
-                            limit_count.setText("没有更多数据了");
-                            Save_Limit(limitCount);
                         } else {
-                            List<MessageListItem> mList = new ArrayList<>();
-                            for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
-                                MessageListItem messageListItem = messageListItems.get(i);
-                                mList.add(messageListItem);
+                            int limit_num1 = messageListSize / 8 + 1;
+                            if (limitCount == limit_num1) { //如果相等说明到了最后一页
+                                List<MessageListItem> mList = new ArrayList<>();
+                                for (int i = (limitCount - 1) * 8; i < messageListItems.size(); i++) {
+                                    MessageListItem messageListItem = messageListItems.get(i);
+                                    mList.add(messageListItem);
+                                }
+                                this.adapter.setMessages(mList);
+                                right_message_list.setVisibility(View.GONE);
+                                limit_count.setText("没有更多数据了");
+                                Save_Limit(limitCount);
+                            } else {
+                                List<MessageListItem> mList = new ArrayList<>();
+                                for (int i = (limitCount - 1) * 8; i < 8 * limitCount; i++) {
+                                    MessageListItem messageListItem = messageListItems.get(i);
+                                    mList.add(messageListItem);
+                                }
+                                this.adapter.setMessages(mList);
+                                limit_count.setText("第" + limitCount + "页");
+                                Save_Limit(limitCount);
                             }
-                            this.adapter.setMessages(mList);
-                            limit_count.setText("第" + limitCount + "页");
-                            Save_Limit(limitCount);
                         }
+
+
+
+
+                    }else{
+                        Toast.makeText(context,"没有数据",Toast.LENGTH_SHORT).show();
                     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 }
             }
         }
@@ -1503,8 +1530,8 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
     public void setMessageList(MessageListInfo messageListInfo) {
         if (currentFolder == null) {
             Log.i("tag", "xxxxxxxxxxxxx1");
-        }else{
-            Log.i("tag", "xxxxxxxxxxxxx1"+currentFolder.displayName);
+        } else {
+            Log.i("tag", "xxxxxxxxxxxxx1" + currentFolder.displayName);
         }
         left_message_list.setVisibility(View.VISIBLE);
         right_message_list.setVisibility(View.VISIBLE);
@@ -1598,7 +1625,6 @@ public class MessageListFragment extends Fragment implements OnItemClickListener
         }
 
         fragmentListener.updateMenu();
-
         if (folderServerId != null) {
             currentFolder.moreMessages = messageListInfo.getHasMoreMessages();
             Log.i("tag", "currentFolder.moreMessages.." + currentFolder.moreMessages);
