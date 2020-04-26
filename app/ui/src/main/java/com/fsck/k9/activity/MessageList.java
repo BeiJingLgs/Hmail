@@ -478,12 +478,14 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
                 if (position == headercurrentPosition) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.header_ll.setBackgroundColor(getColor(R.color.color_qian_bai));
-                        holder.header_item_name.setTextSize(26F);
+//                        holder.header_item_name.setTextSize(26F);
+                        holder.header_item_name.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
                     }
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.header_ll.setBackgroundColor(getColor(R.color.color_bai));
-                        holder.header_item_name.setTextSize(20F);
+//                        holder.header_item_name.setTextSize(20F);
+                        holder.header_item_name.setTextSize(getResources().getDimension(R.dimen.hanvon_20sp));
                     }
                 }
 

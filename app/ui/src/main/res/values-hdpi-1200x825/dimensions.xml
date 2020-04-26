@@ -34,4 +34,9 @@
     <dimen name="common_dialog_width">329.4dp</dimen>
     <dimen name="common_dialog_margin">9.4dp</dimen>
     <dimen name="common_dialog_maxWidth">88.2dp</dimen>
+
+
+    <dimen name="hanvon_50dp">29.4dp</dimen>
+    <dimen name="hanvon_22sp">12.9sp</dimen>
+    <dimen name="hanvon_20sp">11.8sp</dimen>
 </resources>
