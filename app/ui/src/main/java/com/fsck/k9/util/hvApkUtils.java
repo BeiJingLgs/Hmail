@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.UserHandle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -36,6 +37,17 @@ public class hvApkUtils {
             intent.setDataAndType(Uri.fromFile(selectedFile), "application/vnd.android.package-archive");
             context.startActivity(intent);
         }
+    }
+
+
+    public static void sendStaticBroacast_hvLauncher(Context mContext,
+                                                     String action, String name, String value){
+        Intent myIntent = new Intent();
+        myIntent.setAction(action);
+        myIntent.putExtra(name, value);
+        myIntent.setComponent(new ComponentName("hanvon.aebr.hvLauncher",
+                "hanvon.aebr.hvLauncher.ui.GlobalBroadCastRecevier"));
+        mContext.sendBroadcast(myIntent);
     }
 
     public static void updateApk(String selectedFilePath, Context context) {

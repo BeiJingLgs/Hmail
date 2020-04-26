@@ -29,6 +29,7 @@ public class UpdateUtil {
 	private String apkPath;
 	private Uri uri;
 	private int contentLength;
+    private CustomDialog customDialog;
 
 
     public UpdateUtil(Context context) {
@@ -43,7 +44,15 @@ public class UpdateUtil {
 		int resultCode = -1;
 		String errorMessage;
 		UpdataInfo record;
-		protected void onPreExecute() {
+
+//        @Override
+//        protected void onCancelled() {
+//            super.onCancelled();
+//            customDialog.dismiss();
+//            Log.i("tag","11111111111111111111111111111111111111111111112222222");
+//        }
+
+        protected void onPreExecute() {
 			super.onPreExecute();
             curVersion = getVersionName();
 		}
@@ -147,7 +156,6 @@ public class UpdateUtil {
 
 		@Override
 		protected void onPostExecute(Void aVoid) {
-
 			super.onPostExecute(aVoid);
 			if (curVersion != 0 && record != null) {
 //				Log.i("tag", "1111111111: "+ Integer.parseInt(record.getVersion()));
@@ -155,7 +163,7 @@ public class UpdateUtil {
 				if (record.getVersion() != null && Integer.parseInt(record.getVersion()) > curVersion) {
 				    if (context!=null){
 				        try{
-                            CustomDialog customDialog = new CustomDialog(context);
+                            customDialog = new CustomDialog(context);
                             customDialog.setYcorShow_Btn(View.VISIBLE);
                             customDialog.setYcorShow_bar(View.GONE);
                             customDialog.setTitle("更新提示");
@@ -165,24 +173,30 @@ public class UpdateUtil {
                                 public void onCancel(CustomDialog dialog) {
 //                                    SharedPreferences is_update = context.getSharedPreferences("is_update", Context.MODE_PRIVATE);
 //                                    is_update.edit().putBoolean("key",false).commit();
+                                    if (customDialog!=null){
+                                        customDialog.dismiss();
+                                        Log.i("tag","QQQQQQQQQQQQQ22");
+                                    }
                                 }
                             });
                             customDialog.setConfirm("更新", new CustomDialog.IOnConfirmListener(){
                                 @Override
                                 public void onConfirm(CustomDialog dialog) {
+                                    if (customDialog!=null){
+                                        customDialog.dismiss();
+                                        Log.i("tag","QQQQQQQQQQQQQ22");
+                                    }
                                     new DownNewApkTask(record.getUrl()).execute();
                                 }
                             });
                             customDialog.show();
-                            if(customDialog != null) {
-                                customDialog.dismiss();
-                                Log.i("tag","QQQQQQQQQQQQQ11");
-                            }
                         }catch (Exception e){}
 
                     }
 				}
 			}
+
+			Log.i("tag","1111111111111111111111111111111111111111111111");
 		}
 
 
@@ -448,11 +462,9 @@ public class UpdateUtil {
 		@Override
 		protected void onPostExecute(Integer reslut) {
 			super.onPostExecute(reslut);
-			if (dialog!=null){
-			    dialog.dismiss();
-                Log.i("tag","QQQQQQQQQQQQQ22");
-            }
-				installApk(uri,apkPath);
+//				installApk(uri,apkPath);
+                dialog.dismiss();
+            	hvApkUtils.sendStaticBroacast_hvLauncher(context, "hanvon.action.updateapk", "filepath", apkPath);
 				return;
 			}
 
@@ -496,4 +508,5 @@ public class UpdateUtil {
 		context.startActivity(intent);
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
+
 }
