@@ -56,4 +56,6 @@
     <dimen name="hanvon_140dp">88dp</dimen>
     <dimen name="hanvon_60dp">35.3dp</dimen>
     <dimen name="hanvon_4dp">2.4dp</dimen>
+
+    <dimen name="hanvon_170sp">100sp</dimen>
 </resources>

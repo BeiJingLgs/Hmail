@@ -167,7 +167,9 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
                     applicationList.add(fujianBean);
                 } else {
                     qtList.add(fujianBean);
-                    StringList.add(fujianBean.getReturnUri());
+                    if (!displayname.endsWith(".apk")){
+                        StringList.add(fujianBean.getReturnUri());
+                    }
                 }
                 mList.add(fujianBean);
             } else {
@@ -224,10 +226,10 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
         rb_two.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));//加粗
         rb_three.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));//加粗
         rb_four.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));//加粗
-        rb_one.setTextSize(30);
-        rb_two.setTextSize(30);
-        rb_three.setTextSize(30);
-        rb_four.setTextSize(34);
+        rb_one.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
+        rb_two.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
+        rb_three.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
+        rb_four.setTextSize(getResources().getDimension(R.dimen.hanvon_26sp));
     }
 
     private void buttonThree() {
@@ -235,10 +237,10 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
         rb_two.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));//加粗
         rb_three.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));//加粗
         rb_four.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));//加粗
-        rb_one.setTextSize(30);
-        rb_two.setTextSize(30);
-        rb_three.setTextSize(34);
-        rb_four.setTextSize(30);
+        rb_one.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
+        rb_two.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
+        rb_three.setTextSize(getResources().getDimension(R.dimen.hanvon_26sp));
+        rb_four.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
     }
 
     private void buttonTwo() {
@@ -246,10 +248,10 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
         rb_two.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));//加粗
         rb_three.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));//加粗
         rb_four.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));//加粗
-        rb_one.setTextSize(30);
-        rb_two.setTextSize(34);
-        rb_three.setTextSize(30);
-        rb_four.setTextSize(30);
+        rb_one.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
+        rb_two.setTextSize(getResources().getDimension(R.dimen.hanvon_26sp));
+        rb_three.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
+        rb_four.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
     }
 
     private void buttonOne() {
@@ -257,10 +259,10 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
         rb_two.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));//加粗
         rb_three.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));//加粗
         rb_four.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));//加粗
-        rb_one.setTextSize(34);
-        rb_two.setTextSize(30);
-        rb_three.setTextSize(30);
-        rb_four.setTextSize(30);
+        rb_one.setTextSize(getResources().getDimension(R.dimen.hanvon_26sp));
+        rb_two.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
+        rb_three.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
+        rb_four.setTextSize(getResources().getDimension(R.dimen.hanvon_22sp));
     }
 
     @Override
