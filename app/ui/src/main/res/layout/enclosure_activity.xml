@@ -12,20 +12,20 @@
            android:id="@+id/RB_one"
            android:layout_width="0dp"
            android:layout_weight="1"
-           android:layout_height="80dp"
+           android:layout_height="@dimen/left_drawer_footer_text_height"
            android:text="全部"
            android:textColor="@color/color_black1"
-           android:textSize="30sp"
+           android:textSize="@dimen/hanvon_30sp"
            android:gravity="center"
            android:button="@null"/>
        <RadioButton
            android:id="@+id/RB_two"
            android:layout_width="0dp"
            android:layout_weight="1"
-           android:layout_height="80dp"
+           android:layout_height="@dimen/left_drawer_footer_text_height"
            android:text="文档"
            android:textColor="@color/color_black1"
-           android:textSize="30sp"
+           android:textSize="@dimen/hanvon_30sp"
            android:gravity="center"
 
            android:button="@null"/>
@@ -33,20 +33,20 @@
            android:id="@+id/RB_three"
            android:layout_width="0dp"
            android:layout_weight="1"
-           android:layout_height="80dp"
+           android:layout_height="@dimen/left_drawer_footer_text_height"
            android:text="图片"
            android:textColor="@color/color_black1"
-           android:textSize="30sp"
+           android:textSize="@dimen/hanvon_30sp"
            android:gravity="center"
            android:button="@null"/>
        <RadioButton
            android:id="@+id/RB_four"
            android:layout_width="0dp"
            android:layout_weight="1"
-           android:layout_height="80dp"
+           android:layout_height="@dimen/left_drawer_footer_text_height"
            android:text="其他"
            android:textColor="@color/color_black1"
-           android:textSize="30sp"
+           android:textSize="@dimen/hanvon_30sp"
            android:gravity="center"
            android:button="@null"/>
    </RadioGroup>
