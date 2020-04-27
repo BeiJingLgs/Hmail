@@ -44,6 +44,7 @@ public class FoldableLinearLayout extends LinearLayout {
     private String mUnFoldedLabel;
     private int mIconActionCollapseId;
     private int mIconActionExpandId;
+    private Context mContext;
 
     public FoldableLinearLayout(Context context) {
         super(context);
@@ -67,6 +68,7 @@ public class FoldableLinearLayout extends LinearLayout {
      * @param attrs
      */
     private void processAttributes(Context context, AttributeSet attrs) {
+        mContext = context;
         Theme theme = context.getTheme();
         TypedValue outValue = new TypedValue();
         boolean found = theme.resolveAttribute(R.attr.iconActionCollapse, outValue, true);
@@ -183,6 +185,7 @@ public class FoldableLinearLayout extends LinearLayout {
     private void initialiseInnerViews() {
         mFoldableIcon = mFoldableLayout.findViewById(R.id.foldableIcon);
         mFoldableTextView = mFoldableLayout.findViewById(R.id.foldableText);
+        mFoldableTextView.setTextSize(mContext.getResources().getDimension(R.dimen.hanvon_20sp));
         mFoldableTextView.setText(mFoldedLabel);
         // retrieve and cache the system's short animation time
         mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);

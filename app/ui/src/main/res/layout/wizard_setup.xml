@@ -13,22 +13,23 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/manual_setup"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:visibility="gone"
-                    android:background="?selectableItemBackground"
-                    android:text="@string/account_setup_basics_manual_setup_action" />
         <Button
+            android:id="@+id/manual_setup"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?selectableItemBackground"
-            />
+            android:text="@string/account_setup_basics_manual_setup_action"
+            android:visibility="gone" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground" />
+
         <Button
             android:id="@+id/next"
             style="?android:attr/buttonBarButtonStyle"
@@ -36,6 +37,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?selectableItemBackground"
+            android:textSize="@dimen/hanvon_26sp"
             android:text="@string/next_action" />
     </LinearLayout>
 

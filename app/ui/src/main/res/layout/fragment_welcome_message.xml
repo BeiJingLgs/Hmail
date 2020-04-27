@@ -19,9 +19,9 @@
                 android:id="@+id/welcome_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:padding="@dimen/hanvon_8dp"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="24sp" />
+                android:textSize="@dimen/hanvon_26sp" />
 
             <View
                 android:layout_width="match_parent"

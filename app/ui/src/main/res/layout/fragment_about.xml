@@ -17,17 +17,17 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:layout_margin="16dp"
+                android:layout_margin="@dimen/hanvon_16dp"
                 android:src="@mipmap/email_icon" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                android:textSize="30sp"
+                android:paddingLeft="@dimen/hanvon_16dp"
+                android:paddingTop="@dimen/hanvon_16dp"
+                android:paddingBottom="@dimen/hanvon_16dp"
+                android:textSize="@dimen/hanvon_30sp"
                 android:text="@string/about_title"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="?android:attr/textColorPrimary" />
@@ -40,14 +40,14 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
-                android:paddingLeft="16dp"
+                android:paddingLeft="@dimen/hanvon_16dp"
                 android:paddingTop="8dp"
-                android:paddingRight="16dp"
+                android:paddingRight="@dimen/hanvon_16dp"
                 android:paddingBottom="8dp">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="@dimen/hanvon_40dp"
+                    android:layout_height="@dimen/hanvon_40dp"
                     android:layout_gravity="center"
                     android:src="?attr/iconSettingsAbout" />
 
@@ -55,12 +55,12 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingLeft="30dp">
+                    android:paddingLeft="@dimen/hanvon_30dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/hanvon_26sp"
                         android:text="@string/version"
                         android:textColor="?android:attr/textColorPrimary" />
 
@@ -68,7 +68,7 @@
                         android:id="@+id/version"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="22sp"
+                        android:textSize="@dimen/hanvon_24sp"
                         android:text="Version" />
                 </LinearLayout>
             </LinearLayout>
@@ -83,14 +83,14 @@
                 android:focusable="true"
                 android:visibility="gone"
                 android:gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:paddingTop="8dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="8dp">
+                android:paddingLeft="@dimen/hanvon_16dp"
+                android:paddingTop="@dimen/hanvon_8dp"
+                android:paddingRight="@dimen/hanvon_16dp"
+                android:paddingBottom="@dimen/hanvon_8dp">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="@dimen/hanvon_40dp"
+                    android:layout_height="@dimen/hanvon_40dp"
                     android:layout_gravity="center"
                     android:src="?attr/iconSettingsAbout" />
 
@@ -105,7 +105,7 @@
                         android:id="@+id/update_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/hanvon_26sp"
                         android:text="有新版本待更新"
                         android:textColor="?android:attr/textColorPrimary" />
 
@@ -113,7 +113,7 @@
                         android:id="@+id/update_btn"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:textSize="22sp"
+                        android:textSize="@dimen/hanvon_24sp"
                         android:text="更新" />
                 </LinearLayout>
             </LinearLayout>
@@ -139,14 +139,14 @@
                 android:focusable="true"
                 android:visibility="gone"
                 android:gravity="center_vertical"
-                android:paddingLeft="16dp"
+                android:paddingLeft="@dimen/hanvon_16dp"
                 android:paddingTop="8dp"
-                android:paddingRight="16dp"
+                android:paddingRight="@dimen/hanvon_16dp"
                 android:paddingBottom="8dp">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="@dimen/hanvon_24dp"
+                    android:layout_height="@dimen/hanvon_24dp"
                     android:layout_gravity="center"
                     android:src="?attr/iconAboutAuthors" />
 
@@ -184,14 +184,14 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
-                android:paddingLeft="16dp"
+                android:paddingLeft="@dimen/hanvon_16dp"
                 android:paddingTop="8dp"
-                android:paddingRight="16dp"
+                android:paddingRight="@dimen/hanvon_16dp"
                 android:paddingBottom="8dp">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="@dimen/hanvon_24dp"
+                    android:layout_height="@dimen/hanvon_24dp"
                     android:layout_gravity="center"
                     android:src="?attr/iconAboutLicense" />
 
@@ -218,7 +218,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/hanvon_16dp"
                 android:visibility="gone">
 
                 <Button
@@ -261,7 +261,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="16dp"
+                android:padding="@dimen/hanvon_16dp"
                 android:visibility="gone"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -275,9 +275,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
+                android:paddingLeft="@dimen/hanvon_16dp"
+                android:paddingTop="@dimen/hanvon_16dp"
+                android:paddingBottom="@dimen/hanvon_16dp"
                 android:text="@string/about_libraries"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="?android:attr/textColorPrimary"

@@ -9,14 +9,14 @@
     android:focusable="true"
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
-    android:paddingLeft="8dp">
+    android:paddingLeft="@dimen/hanvon_8dp">
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/hanvon_60dp"
+        android:layout_height="@dimen/hanvon_60dp"
         android:contentDescription="@string/account_settings_action"
-        android:padding="8dp"
+        android:padding="@dimen/hanvon_8dp"
         android:src="?attr/iconActionSettings" />
 
     <TextView
@@ -25,11 +25,12 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ellipsize="end"
-        android:paddingBottom="8dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="16dp"
-        android:paddingTop="8dp"
+        android:paddingBottom="@dimen/hanvon_8dp"
+        android:paddingLeft="@dimen/hanvon_24dp"
+        android:paddingRight="@dimen/hanvon_16dp"
+        android:paddingTop="@dimen/hanvon_8dp"
         android:singleLine="true"
+        android:textSize="@dimen/hanvon_26sp"
         android:textAppearance="?android:attr/textAppearanceListItem"
         tools:text="List item with simple text" />
 

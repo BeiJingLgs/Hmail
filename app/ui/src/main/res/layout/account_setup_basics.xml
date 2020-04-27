@@ -27,6 +27,7 @@
                 android:singleLine="true"
                 android:inputType="textEmailAddress"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/hanvon_26sp"
                 android:layout_width="fill_parent" />
 
             <EditText
@@ -34,6 +35,8 @@
                 android:inputType="textPassword"
                 android:hint="@string/account_setup_basics_password_hint"
                 android:singleLine="true"
+                android:layout_marginTop="@dimen/hanvon_20dp"
+                android:textSize="@dimen/hanvon_26sp"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
                 android:nextFocusDown="@+id/next" />
@@ -42,6 +45,8 @@
                 android:id="@+id/show_password"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
+                android:layout_marginTop="@dimen/hanvon_8dp"
+                android:textSize="@dimen/hanvon_24sp"
                 android:text="@string/account_setup_basics_show_password" />
 
             <com.fsck.k9.view.ClientCertificateSpinner
@@ -54,7 +59,7 @@
                 android:id="@+id/foldable_advanced_options"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/hanvon_16dp"
                 custom:foldedLabel="@string/client_certificate_advanced_options"
                 custom:unFoldedLabel="@string/client_certificate_advanced_options" >
 
@@ -62,6 +67,7 @@
                     android:id="@+id/account_client_certificate"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/hanvon_24sp"
                     android:text="@string/account_setup_basics_client_certificate" />
             </com.fsck.k9.view.FoldableLinearLayout>
 

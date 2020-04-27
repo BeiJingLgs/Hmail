@@ -8,13 +8,13 @@
     android:focusable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="8dp">
+    android:paddingLeft="@dimen/hanvon_8dp">
 
     <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/hanvon_60dp"
+        android:layout_height="@dimen/hanvon_60dp"
         android:contentDescription="@string/account_settings_action"
-        android:padding="8dp"
+        android:padding="@dimen/hanvon_8dp"
         android:src="?attr/iconSettingsAccount" />
 
     <LinearLayout
@@ -22,8 +22,8 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="24dp"
-        android:paddingRight="16dp">
+        android:paddingLeft="@dimen/hanvon_24dp"
+        android:paddingRight="@dimen/hanvon_16dp">
 
         <TextView
             android:id="@+id/name"
@@ -31,8 +31,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:paddingBottom="4dp"
-            android:paddingTop="8dp"
+            android:paddingTop="@dimen/hanvon_8dp"
             android:singleLine="true"
+            android:textSize="@dimen/hanvon_24sp"
             android:textAppearance="?android:attr/textAppearanceListItem"
             tools:text="Personal" />
 
@@ -43,16 +44,17 @@
             android:ellipsize="end"
             android:paddingBottom="8dp"
             android:singleLine="true"
+            android:textSize="@dimen/hanvon_20sp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             tools:text="test@example.org" />
     </LinearLayout>
     <Button
         android:id="@+id/delete_user"
-        android:layout_width="120dp"
+        android:layout_width="@dimen/hanvon_140dp"
         android:layout_height="match_parent"
         android:text="删除用户"
-        android:textSize="22sp"
+        android:textSize="@dimen/hanvon_26sp"
         android:textColor="@color/color_black1"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="@dimen/hanvon_20dp"
         />
 </LinearLayout>

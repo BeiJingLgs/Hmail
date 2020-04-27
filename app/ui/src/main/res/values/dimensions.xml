@@ -38,4 +38,24 @@
 
 
     <dimen name="hanvon_50dp">50dp</dimen>
+    <dimen name="hanvon_22sp">22sp</dimen>
+    <dimen name="hanvon_20sp">20sp</dimen>
+
+    <dimen name="hanvon_400dp">400dp</dimen>
+    <dimen name="hanvon_20dp">20dp</dimen>
+    <dimen name="hanvon_30sp">30sp</dimen>
+    <dimen name="hanvon_10dp">10dp</dimen>
+    <dimen name="hanvon_30dp">30dp</dimen>
+    <dimen name="hanvon_26sp">26sp</dimen>
+    <dimen name="hanvon_8dp">8dp</dimen>
+    <dimen name="hanvon_240dp">240dp</dimen>
+    <dimen name="hanvon_24sp">24sp</dimen>
+    <dimen name="hanvon_16dp">16dp</dimen>
+    <dimen name="hanvon_40dp">40dp</dimen>
+    <dimen name="hanvon_120dp">120dp</dimen>
+    <dimen name="hanvon_24dp">24dp</dimen>
+    <dimen name="hanvon_140dp">140dp</dimen>
+    <dimen name="hanvon_60dp">60dp</dimen>
+    <dimen name="hanvon_4dp">4dp</dimen>
+
 </resources>

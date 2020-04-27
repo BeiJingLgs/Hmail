@@ -1108,7 +1108,6 @@ public class MessageViewFragment extends Fragment implements ConfirmationDialogF
                             permissionPageUtils.OpenPermissionPage();
                             dialog.dismiss();
                         }
-
                         @Override
                         public void onNegtiveClick() {
                             dialog.dismiss();

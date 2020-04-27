@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="@dimen/hanvon_26sp"
                 android:textColor="?android:attr/textColorPrimary" />
 
             <EditText
@@ -33,12 +34,14 @@
                 android:inputType="textUri"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
+                android:textSize="@dimen/hanvon_26sp"
                 android:contentDescription="@string/account_setup_outgoing_smtp_server_label" />
 
             <TextView
                 android:text="@string/account_setup_outgoing_security_label"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
+                android:textSize="@dimen/hanvon_26sp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?android:attr/textColorPrimary" />
 
@@ -52,6 +55,7 @@
                 android:text="@string/account_setup_outgoing_port_label"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
+                android:textSize="@dimen/hanvon_26sp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?android:attr/textColorPrimary" />
 
@@ -61,12 +65,14 @@
                 android:inputType="number"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
+                android:textSize="@dimen/hanvon_26sp"
                 android:contentDescription="@string/account_setup_outgoing_port_label" />
 
             <CheckBox
                 android:id="@+id/account_require_login"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/hanvon_26sp"
                 android:text="@string/account_setup_outgoing_require_login_label" />
 
             <LinearLayout
@@ -80,6 +86,7 @@
                     android:text="@string/account_setup_outgoing_username_label"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
+                    android:textSize="@dimen/hanvon_26sp"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?android:attr/textColorPrimary" />
 
@@ -88,12 +95,14 @@
                     android:singleLine="true"
                     android:inputType="textEmailAddress"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/hanvon_26sp"
                     android:layout_width="fill_parent"
                     android:contentDescription="@string/account_setup_outgoing_username_label" />
 
                 <TextView
                     android:text="@string/account_setup_outgoing_authentication_label"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/hanvon_26sp"
                     android:layout_width="fill_parent"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?android:attr/textColorPrimary" />
@@ -109,6 +118,7 @@
                     android:text="@string/account_setup_outgoing_password_label"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
+                    android:textSize="@dimen/hanvon_26sp"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?android:attr/textColorPrimary" />
 
@@ -117,6 +127,7 @@
                     android:singleLine="true"
                     android:inputType="textPassword"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/hanvon_26sp"
                     android:layout_width="fill_parent"
                     android:contentDescription="@string/account_setup_outgoing_password_label" />
 
@@ -124,6 +135,7 @@
                     android:id="@+id/account_client_certificate_label"
                     android:text="@string/account_setup_incoming_client_certificate_label"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/hanvon_26sp"
                     android:layout_width="fill_parent"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?android:attr/textColorPrimary"
