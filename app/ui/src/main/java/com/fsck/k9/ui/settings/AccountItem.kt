@@ -1,13 +1,11 @@
 package com.fsck.k9.ui.settings
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
 import com.fsck.k9.Account
 import com.fsck.k9.fragment.ConfirmationDialogFragment
 import com.fsck.k9.ui.R
 import com.fsck.k9.ui.settings.account.AccountSettingsFragment
-import com.fsck.k9.util.CustomDialog
-import com.fsck.k9.util.UpdateUtil.DownNewApkTask
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.account_list_item.*

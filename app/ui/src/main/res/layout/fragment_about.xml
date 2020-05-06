@@ -41,9 +41,9 @@
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/hanvon_16dp"
-                android:paddingTop="8dp"
+                android:paddingTop="@dimen/hanvon_8dp"
                 android:paddingRight="@dimen/hanvon_16dp"
-                android:paddingBottom="8dp">
+                android:paddingBottom="@dimen/hanvon_8dp">
 
                 <ImageView
                     android:layout_width="@dimen/hanvon_40dp"
@@ -99,7 +99,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingLeft="30dp">
+                    android:paddingLeft="@dimen/hanvon_30dp">
 
                     <TextView
                         android:id="@+id/update_tv"

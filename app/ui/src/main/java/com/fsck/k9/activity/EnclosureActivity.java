@@ -61,7 +61,6 @@ public class EnclosureActivity extends K9Activity implements View.OnClickListene
         initView();
         initRecyclerView();
         initOnclick();
-
     }
 
     private void initOnclick() {

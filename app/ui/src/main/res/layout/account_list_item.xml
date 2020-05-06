@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:paddingBottom="8dp"
+            android:paddingBottom="@dimen/hanvon_8dp"
             android:singleLine="true"
             android:textSize="@dimen/hanvon_20sp"
             android:textAppearance="?android:attr/textAppearanceSmall"
