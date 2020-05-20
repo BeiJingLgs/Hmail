@@ -1041,7 +1041,7 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             recipientPresenter.onMenuSetSignOnly(true);
         } else if (id == R.id.openpgp_sign_only_disable) {
             recipientPresenter.onMenuSetSignOnly(false);
-        } else if (id == R.id.add_attachment) {
+        } else if (id == R.id.add_attachment) { //添加附件
             attachmentPresenter.onClickAddAttachment(recipientPresenter);
         } else if (id == R.id.read_receipt) {
             onReadReceipt();

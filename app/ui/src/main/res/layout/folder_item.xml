@@ -14,6 +14,7 @@
             android:layout_height="@dimen/left_drawer_footer_text_height"
             android:text="收件箱"
             android:gravity="center"
+            android:maxLines="1"
             android:textColor="@color/color_black1"
             android:textSize="@dimen/left_drawer_footer_textSize"/>
         <View
@@ -27,7 +28,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/hanvon_2dp"
         android:background="@drawable/xuxian"
         />
 

@@ -58,4 +58,8 @@
     <dimen name="hanvon_4dp">2.4dp</dimen>
 
     <dimen name="hanvon_170sp">100sp</dimen>
+
+
+
+    <dimen name="hanvon_2dp">2dp</dimen>
 </resources>

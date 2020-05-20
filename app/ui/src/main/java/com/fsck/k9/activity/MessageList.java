@@ -1,16 +1,10 @@
 package com.fsck.k9.activity;
-
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -25,9 +19,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -39,8 +30,6 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -51,7 +40,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.fsck.k9.Account;
 import com.fsck.k9.Account.SortType;
 import com.fsck.k9.DI;
@@ -84,7 +72,6 @@ import com.fsck.k9.ui.R;
 import com.fsck.k9.ui.Theme;
 import com.fsck.k9.ui.dialog.CommonDialog;
 import com.fsck.k9.ui.folders.FoldersViewModel;
-import com.fsck.k9.ui.helper.SizeFormatter;
 import com.fsck.k9.ui.managefolders.ManageFoldersActivity;
 import com.fsck.k9.ui.messagelist.DefaultFolderProvider;
 import com.fsck.k9.ui.messageview.MessageViewFragment;
@@ -92,21 +79,16 @@ import com.fsck.k9.ui.messageview.MessageViewFragment.MessageViewFragmentListene
 import com.fsck.k9.ui.messageview.PlaceholderFragment;
 import com.fsck.k9.ui.onboarding.OnboardingActivity;
 import com.fsck.k9.ui.settings.SettingsActivity;
-import com.fsck.k9.util.CustomDialog;
 import com.fsck.k9.util.NetworkUtils;
 import com.fsck.k9.util.UpdateUtil;
 import com.fsck.k9.util.WifiOpenHelper;
-import com.fsck.k9.util.WifiUtils;
 import com.fsck.k9.util.WrapRecyclerView;
 import com.fsck.k9.view.ViewSwitcher;
 import com.fsck.k9.view.ViewSwitcher.OnSwitchCompleteListener;
 import com.mikepenz.materialdrawer.Drawer.OnDrawerListener;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-
 import kotlin.jvm.functions.Function1;
 import timber.log.Timber;
-
-import static com.mikepenz.iconics.Iconics.getApplicationContext;
 
 
 /**
@@ -638,6 +620,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
 
     /**
      * Get references to existing fragments if the activity was restarted.
+     *
      */
     private void findFragments() {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -683,7 +666,7 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
      * This method has to be called after {@link #findFragments()} because the result depends on
      * the availability of a {@link MessageViewFragment} instance.
      * </p>
-     *
+     *初始化这个方法
      * @param savedInstanceState The saved instance state that was passed to the activity as argument to
      *                           {@link #onCreate(Bundle)}. May be {@code null}.
      */

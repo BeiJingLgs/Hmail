@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="button_minWidth">100sp</dimen>
     <dimen name="widget_padding">8dp</dimen>
-    <dimen name="left_drawer_width">200dp</dimen>
+    <dimen name="left_drawer_width">140dp</dimen>     //主界面  左边栏宽度
     <dimen name="left_drawer_top_text_height">70dp</dimen>
     <dimen name="left_drawer_top_textSize">20sp</dimen>
     <dimen name="left_drawer_footer_text_height">80dp</dimen>
@@ -61,6 +61,5 @@
     <dimen name="hanvon_170sp">170sp</dimen>
 
 
-    <dimen name="hanvon_2dp">2dp</dimen>
-
+    <dimen name="hanvon_2dp">3dp</dimen>     //主界面
 </resources>
