@@ -13,6 +13,37 @@ public class MimeMessageHelper {
     private MimeMessageHelper() {
     }
 
+
+
+//    public static void setBody2(Part part, Multipart body) throws MessagingException {
+//        part.setBody(body);
+//
+//        if (part instanceof Message) {
+//            part.setHeader("MIME-Version", "1.0");
+//        }
+//
+//        if (body instanceof Multipart) {
+//            Multipart multipart =body;
+//            multipart.setParent(part);
+//            String contentType = Headers.contentTypeForMultipart(multipart.getMimeType(), multipart.getBoundary());
+//            part.setHeader(MimeHeader.HEADER_CONTENT_TYPE, contentType);
+//            // note: if this is ever changed to 8bit, multipart/signed parts must always be 7bit!
+//            setEncoding(part, MimeUtil.ENC_7BIT);
+//        } else if (body instanceof RawDataBody) {
+//            String encoding = ((RawDataBody) body).getEncoding();
+//            part.setHeader(MimeHeader.HEADER_CONTENT_TRANSFER_ENCODING, encoding);
+//        }
+//    }
+//
+
+
+
+
+
+
+
+
+
     public static void setBody(Part part, Body body) throws MessagingException {
         part.setBody(body);
 

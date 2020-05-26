@@ -35,6 +35,9 @@ import com.fsck.k9.mailstore.TempFileBody;
 import com.fsck.k9.message.quote.InsertableHtmlContent;
 import org.apache.james.mime4j.util.MimeUtil;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+
 
 public abstract class MessageBuilder {
     private final MessageIdGenerator messageIdGenerator;
@@ -68,6 +71,7 @@ public abstract class MessageBuilder {
     private MessageReference messageReference;
     private boolean isDraft;
     private boolean isPgpInlineEnabled;
+    private javax.mail.internet.MimeMultipart mimeMultipart;
 
     protected MessageBuilder(MessageIdGenerator messageIdGenerator,
             BoundaryGenerator boundaryGenerator, CoreResourceProvider resourceProvider) {
@@ -147,7 +151,7 @@ public abstract class MessageBuilder {
         return new MimeMultipart(boundary);
     }
 
-    private void buildBody(MimeMessage message) throws MessagingException {
+    private void buildBody(MimeMessage message) throws MessagingException{
         // Build the body.
         // TODO FIXME - body can be either an HTML or Text part, depending on whether we're in
         // HTML mode or not.  Should probably fix this so we don't mix up html and text parts.
@@ -162,13 +166,30 @@ public abstract class MessageBuilder {
             // HTML message (with alternative text part)
 
             // This is the compiled MIME part for an HTML message.
+            try {
+                mimeMultipart = new javax.mail.internet.MimeMultipart("related");
+                //创建文本节点
+                javax.mail.internet.MimeBodyPart textContent = new javax.mail.internet.MimeBodyPart();
+                textContent.setContent(text+"<br/><img src='cid:image_flower'/>","text/html;charset=UTF-8");
+                javax.mail.internet.MimeBodyPart img = new javax.mail.internet.MimeBodyPart();
+                DataHandler dataHandler = new DataHandler(new FileDataSource(""));
+                img.setDataHandler(dataHandler);
+                img.setContentID("image_flower");
+                mimeMultipart.addBodyPart(textContent);
+                mimeMultipart.addBodyPart(img);
+
+
+            } catch (javax.mail.MessagingException e) {
+                e.printStackTrace();
+            }
+
+
             MimeMultipart composedMimeMessage = createMimeMultipart();
             composedMimeMessage.setSubType("alternative");
             // Let the receiver select either the text or the HTML part.
             bodyPlain = buildText(isDraft, SimpleMessageFormat.TEXT);
             composedMimeMessage.addBodyPart(new MimeBodyPart(bodyPlain, "text/plain"));
             composedMimeMessage.addBodyPart(new MimeBodyPart(body, "text/html"));
-
             if (hasAttachments) {
                 // If we're HTML and have attachments, we have a MimeMultipart container to hold the
                 // whole message (mp here), of which one part is a MimeMultipart container
@@ -181,6 +202,8 @@ public abstract class MessageBuilder {
             } else {
                 // If no attachments, our multipart/alternative part is the only one we need.
                 MimeMessageHelper.setBody(message, composedMimeMessage);
+
+//                MimeMessageHelper.setBody2(message, mimeMultipart);
             }
         } else if (messageFormat == SimpleMessageFormat.TEXT) {
             // Text-only message.
